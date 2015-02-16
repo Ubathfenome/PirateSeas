@@ -3,8 +3,8 @@ package com.pirateseas.view.graphics;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import com.pirateseas.model.entity.Square;
-import com.pirateseas.model.entity.Triangle;
+import com.pirateseas.model.basicfigures.Square;
+import com.pirateseas.model.basicfigures.Triangle;
 
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
