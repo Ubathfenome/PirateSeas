@@ -1,6 +1,6 @@
 package com.pirateseas.view.activities;
 
-import com.pirateseas.view.graphics.MyGLSurfaceView;
+import com.pirateseas.view.graphics.GLSView;
 
 import android.app.Activity;
 import android.opengl.GLSurfaceView;
@@ -16,7 +16,7 @@ public class OpenGLES20Activity extends Activity {
 
         // Create a GLSurfaceView instance and set it
         // as the ContentView for this Activity
-        mGLView = new MyGLSurfaceView(this);
+        mGLView = new GLSView(this);
         setContentView(mGLView);
     }
 
