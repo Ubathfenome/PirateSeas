@@ -2,34 +2,37 @@ package com.pirateseas.model.entity;
 
 
 import static android.opengl.GLES20.GL_TRIANGLE_FAN;
+import static android.opengl.GLES20.GL_TRIANGLE_STRIP;
 import static android.opengl.GLES20.glDrawArrays;
+import static com.pirateseas.utils.Constants.BYTES_PER_FLOAT;
 
-import static com.pirateseas.controller.utils.Constants.BYTES_PER_FLOAT;
-
-import com.pirateseas.controller.utils.Geometry.Point;
-import com.pirateseas.controller.utils.Geometry.Vector;
-
-import com.pirateseas.controller.utils.data.VertexArray;
-import com.pirateseas.controller.utils.programs.TextureShaderProgram;
+import com.pirateseas.utils.Geometry.Point;
+import com.pirateseas.utils.Geometry.Vector;
+import com.pirateseas.utils.data.VertexArray;
+import com.pirateseas.utils.programs.ColorShaderProgram;
+import com.pirateseas.utils.programs.TextureShaderProgram;
 
 public class Entity {
 	
-	private static final int POSITION_COMPONENT_COUNT = 2;
+	private static final int POSITION_COMPONENT_COUNT = 3;
     private static final int TEXTURE_COORDINATES_COMPONENT_COUNT = 2;
     private static final int STRIDE = (POSITION_COMPONENT_COUNT 
         + TEXTURE_COORDINATES_COMPONENT_COUNT) * BYTES_PER_FLOAT;
+		
+	private static final int[] SPEEDS = {0, 2, 5, 10};
 	
 	// Position attribs
 	private Point mCoords;
-	private Vector mDirection;
+	protected Vector mDirection;
 	private float mWidth;
 	private float mHeight;
 	private float mDepth;
 	
 	private final float[] mSize = {mWidth, mHeight, mDepth};
+	private boolean isTextured = false;
 	
 	// Common attribs
-	private int mHealthPoints = 0;
+	protected int mHealthPoints = 0;
 	private int mSpeed = 0;	
 	
 	private final VertexArray mVertexArray;
@@ -47,6 +50,7 @@ public class Entity {
 	}
 	
 	public void bindData(TextureShaderProgram textureProgram) {
+		isTextured = true;
         mVertexArray.setVertexAttribPointer(
             0, 
             textureProgram.getPositionAttributeLocation(), 
@@ -60,12 +64,25 @@ public class Entity {
             STRIDE);
     }
 	
-	public void draw() {                                
-        glDrawArrays(GL_TRIANGLE_FAN, 0, 6);
+	public void bindData(ColorShaderProgram colorProgram) {
+        mVertexArray.setVertexAttribPointer(
+            0, 
+            colorProgram.getPositionAttributeLocation(), 
+            POSITION_COMPONENT_COUNT, 0);
+    }
+	
+	public void draw() {
+		if (isTextured){ // Textures are being used
+			glDrawArrays(GL_TRIANGLE_STRIP, 0, mVertexArray.getVertexPointsNum(POSITION_COMPONENT_COUNT + TEXTURE_COORDINATES_COMPONENT_COUNT));
+		} else { // Colours are being used
+			glDrawArrays(GL_TRIANGLE_STRIP, 0, mVertexArray.getVertexPointsNum(POSITION_COMPONENT_COUNT));
+		}
     }
 	
 	public boolean intersectionWithEntity(Entity other){
 		boolean intersection = false;
+		
+		// TODO
 		
 //		// Intersection with front panel
 //		if (mCoords.z + mWidth / 2 <= other.Position.z - other.getSize()[2] / 2 && 
@@ -99,6 +116,27 @@ public class Entity {
 			mHealthPoints -= points;
 		else
 			throw new IllegalArgumentException("Encontrado valor de puntos negativo al modificar HelthPoints");
+	}
+	
+	public boolean isAlive(){
+		return mHealthPoints > 0 ? true : false;
+	}
+	
+	public void changeSpeed(int speedLevel){
+		if(speedLevel >= 0 && speedLevel <= SPEEDS.length)
+			mSpeed = SPEEDS[speedLevel];
+	}
+	
+	public boolean[] compareTo(Entity other){
+		boolean[] entityCompass = new boolean[4]; // North, East, South, West
+		
+		// Initialize
+		for(boolean c : entityCompass)
+			c = false;
+		
+		// TODO 
+		
+		return entityCompass;
 	}
 	
 	public float[] getSize(){

@@ -1,4 +1,4 @@
-package com.pirateseas.controller.utils;
+package com.pirateseas.utils;
 
 import static android.opengl.GLES20.GL_COMPILE_STATUS;
 import static android.opengl.GLES20.GL_FRAGMENT_SHADER;

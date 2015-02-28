@@ -19,10 +19,10 @@ import android.util.Log;
 import com.pirateseas.R;
 import com.pirateseas.model.basicfigures.Plane;
 //import com.pirateseas.model.scene.Sea;
-import com.pirateseas.controller.utils.programs.ColorShaderProgram;
-import com.pirateseas.controller.utils.programs.TextureShaderProgram;
-import com.pirateseas.controller.utils.MatrixHelper;
-import com.pirateseas.controller.utils.TextureHelper;
+import com.pirateseas.utils.programs.ColorShaderProgram;
+import com.pirateseas.utils.programs.TextureShaderProgram;
+import com.pirateseas.utils.MatrixHelper;
+import com.pirateseas.utils.TextureHelper;
 
 /**
  * Provides drawing instructions for a GLSurfaceView object. This class
@@ -117,7 +117,7 @@ public class GLRenderer implements Renderer {
         multiplyMM(mViewProjectionMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
 		
 		// Draw the water plane
-		positionWaterPlane();
+		positionWaterPlane(eyeZ * 10);
 		textureProgram.useProgram();
         textureProgram.setUniforms(mMVPMatrix, waterTexture);
 		//sea.bindData(textureProgram);
@@ -133,11 +133,11 @@ public class GLRenderer implements Renderer {
         mSkyPlane.draw();
     }
 
-	private void positionWaterPlane() {
+	private void positionWaterPlane(float scaleFactor) {
         // The plane is defined in terms of X & Y coordinates, so we rotate it
         // 90 degrees to lie flat on the XZ plane.
         setIdentityM(mModelMatrix, 0);
-        scaleM(mModelMatrix, 0, 20.0f, 1.0f, 20.0f);
+        scaleM(mModelMatrix, 0, scaleFactor, 1.0f, scaleFactor);
 		rotateM(mModelMatrix, 0, -90f, 1f, 0f, 0f);
         multiplyMM(mMVPMatrix, 0, mViewProjectionMatrix, 0, mModelMatrix, 0);
     }
@@ -145,7 +145,6 @@ public class GLRenderer implements Renderer {
 	private void positionSkyPlane() {
         // The plane is defined in terms of X & Y coordinates, so it lie flat on the XY plane.
         setIdentityM(mModelMatrix, 0);
-        //rotateM(mModelMatrix, 0, 90f, 0f, 0f, 1f);
         scaleM(mModelMatrix, 0, 1f, 1f, 1f);
 		// Positive Z-axis translation goes OUT of the screen (Negative goes INTO the screen)
         translateM(mModelMatrix, 0, 0, 0, -2f);
@@ -155,6 +154,7 @@ public class GLRenderer implements Renderer {
 	public void resetEye() {
 		eyeX = 0;
 	    eyeY = 1.2f;		
+		eyeZ = 4.2f;
 	}
 	
 	public float getEyeX(){
@@ -164,9 +164,14 @@ public class GLRenderer implements Renderer {
 	public float getEyeY(){
 		return eyeY;
 	}
+	
+	public float getEyeZ(){
+		return eyeZ;
+	}
 
-	public void setEye(float x, float y) {
+	public void setEye(float x, float y, float z) {
 		eyeX = x;
-		eyeY = y;		
+		eyeY = y;
+		eyeZ = z;
 	}
 }

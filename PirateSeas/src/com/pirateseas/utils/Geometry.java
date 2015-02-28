@@ -1,4 +1,4 @@
-package com.pirateseas.controller.utils;
+package com.pirateseas.utils;
 
 import android.util.FloatMath;
 
@@ -32,6 +32,18 @@ public class Geometry{
             this.y = y;
             this.z = z;
         }
+		
+		public Vector(Vector other) {
+            this.x = other.x;
+            this.y = other.y;
+            this.z = other.z;
+        }
+		
+		public Vector(Point orig, Point dest){
+			this.x = dest.x - orig.x;
+			this.y = dest.y - orig.y;
+			this.z = dest.z - orig.z;
+		}
         
         public float length() {
             return FloatMath.sqrt(
@@ -39,6 +51,14 @@ public class Geometry{
               + y * y 
               + z * z);
         }
+		
+		public Vector getOrtogonalVector(Point p){
+			return null;			
+		}
+		
+		public float getAngle(Vector other){
+			return (float) Math.acos(dotProduct(other)/(length() * other.length()));
+		}
         
         // http://en.wikipedia.org/wiki/Cross_product        
         public Vector crossProduct(Vector other) {

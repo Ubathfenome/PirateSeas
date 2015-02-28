@@ -3,12 +3,12 @@ package com.pirateseas.model.basicfigures;
 import static android.opengl.GLES20.GL_TRIANGLE_FAN;
 import static android.opengl.GLES20.glDrawArrays;
 
-import com.pirateseas.controller.utils.data.VertexArray;
-import com.pirateseas.controller.utils.programs.TextureShaderProgram;
-import com.pirateseas.controller.utils.Geometry;
-import com.pirateseas.controller.utils.Geometry.Point;
+import com.pirateseas.utils.data.VertexArray;
+import com.pirateseas.utils.programs.TextureShaderProgram;
+import com.pirateseas.utils.Geometry;
+import com.pirateseas.utils.Geometry.Point;
 
-import static com.pirateseas.controller.utils.Constants.BYTES_PER_FLOAT;
+import static com.pirateseas.utils.Constants.BYTES_PER_FLOAT;
 
 public class AdvancedPlane {
 	

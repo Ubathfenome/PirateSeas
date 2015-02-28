@@ -1,9 +1,9 @@
 package com.pirateseas.model.scene;
 
 import com.pirateseas.model.basicfigures.AdvancedPlane;
-import com.pirateseas.controller.utils.Geometry;
-import com.pirateseas.controller.utils.Geometry.Point;
-import com.pirateseas.controller.utils.data.VertexArray;
+import com.pirateseas.utils.Geometry;
+import com.pirateseas.utils.Geometry.Point;
+import com.pirateseas.utils.data.VertexArray;
 
 public class Sea extends AdvancedPlane{
 	

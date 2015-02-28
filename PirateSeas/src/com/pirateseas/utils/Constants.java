@@ -6,7 +6,7 @@
  * We make no guarantees that this code is fit for any purpose. 
  * Visit http://www.pragmaticprogrammer.com/titles/kbogla for more book information.
 ***/
-package com.pirateseas.controller.utils;
+package com.pirateseas.utils;
 
 public class Constants {
     public static final int BYTES_PER_FLOAT = 4;

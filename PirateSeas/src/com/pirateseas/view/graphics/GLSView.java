@@ -67,9 +67,18 @@ public class GLSView extends GLSurfaceView {
 			Log.v(TAG, "rendererEyeX: " + mRenderer.getEyeX() + " | x: " + x + " | dx: " + dx);
 			Log.v(TAG, "rendererEyeY: " + mRenderer.getEyeY() + " | y: " + y + " | dy: " + dy);
 			mRenderer.setEye(mRenderer.getEyeX()
-					+ ((dx + dy) * TOUCH_SCALE_FACTOR) / 1000, mRenderer.getEyeY());
+					+ (dx  * TOUCH_SCALE_FACTOR) / 1000, mRenderer.getEyeY(), mRenderer.getEyeZ());
 			requestRender();
+			break;
+			
+		case MotionEvent.ACTION_UP:
+			Toast.makeText(getContext(), "x: " + mRenderer.getEyeX() + " | y: " +
+					mRenderer.getEyeY() + " | z: " + mRenderer.getEyeZ(), 
+					Toast.LENGTH_SHORT).show();
+			break;
 		}
+		
+		
 
 		mPreviousX = x;
 		mPreviousY = y;

@@ -72,6 +72,7 @@ public class GameActivity extends Activity {
 	               .setNegativeButton("No", new DialogInterface.OnClickListener() {
 	                   public void onClick(DialogInterface dialog, int id) {
 	                       // User cancelled the dialog
+	                	   // TODO 
 	                	   onResume();
 	                   }
 	               });
