@@ -5,7 +5,6 @@ import static android.opengl.GLES20.glDrawArrays;
 
 import com.pirateseas.utils.data.VertexArray;
 import com.pirateseas.utils.programs.TextureShaderProgram;
-import com.pirateseas.utils.Geometry;
 import com.pirateseas.utils.Geometry.Point;
 
 import static com.pirateseas.utils.Constants.BYTES_PER_FLOAT;

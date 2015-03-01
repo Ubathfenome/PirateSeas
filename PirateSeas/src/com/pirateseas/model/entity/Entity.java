@@ -1,24 +1,16 @@
 package com.pirateseas.model.entity;
 
-
-import static android.opengl.GLES20.GL_TRIANGLE_FAN;
-import static android.opengl.GLES20.GL_TRIANGLE_STRIP;
-import static android.opengl.GLES20.glDrawArrays;
-import static com.pirateseas.utils.Constants.BYTES_PER_FLOAT;
+import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 
 import com.pirateseas.utils.Geometry.Point;
 import com.pirateseas.utils.Geometry.Vector;
-import com.pirateseas.utils.data.VertexArray;
-import com.pirateseas.utils.programs.ColorShaderProgram;
-import com.pirateseas.utils.programs.TextureShaderProgram;
 
 public class Entity {
 	
-	private static final int POSITION_COMPONENT_COUNT = 3;
-    private static final int TEXTURE_COORDINATES_COMPONENT_COUNT = 2;
-    private static final int STRIDE = (POSITION_COMPONENT_COUNT 
-        + TEXTURE_COORDINATES_COMPONENT_COUNT) * BYTES_PER_FLOAT;
-		
+	protected Drawable mImage;
+	
 	private static final int[] SPEEDS = {0, 2, 5, 10};
 	
 	// Position attribs
@@ -29,16 +21,13 @@ public class Entity {
 	private float mDepth;
 	
 	private final float[] mSize = {mWidth, mHeight, mDepth};
-	private boolean isTextured = false;
-	
+		
 	// Common attribs
+	protected ShipType sType;
 	protected int mHealthPoints = 0;
 	private int mSpeed = 0;	
-	
-	private final VertexArray mVertexArray;
-	
-	public Entity(VertexArray vertexArray, Point coordinates, Vector direction, float width, float height, float depth){
-		this.mVertexArray = vertexArray;
+		
+	public Entity(Context context, Point coordinates, Vector direction, float width, float height, float depth){
 		this.mCoords = coordinates;
 		this.mDirection = direction;
 		this.mWidth = width;
@@ -46,37 +35,11 @@ public class Entity {
 		this.mDepth = depth;
 		mSize[0] = width;
 		mSize[1] = height;
-		mSize[2] = depth;
+		mSize[2] = depth;	
 	}
 	
-	public void bindData(TextureShaderProgram textureProgram) {
-		isTextured = true;
-        mVertexArray.setVertexAttribPointer(
-            0, 
-            textureProgram.getPositionAttributeLocation(), 
-            POSITION_COMPONENT_COUNT,
-            STRIDE);
-        
-        mVertexArray.setVertexAttribPointer(
-            POSITION_COMPONENT_COUNT, 
-            textureProgram.getTextureCoordinatesAttributeLocation(),
-            TEXTURE_COORDINATES_COMPONENT_COUNT, 
-            STRIDE);
-    }
-	
-	public void bindData(ColorShaderProgram colorProgram) {
-        mVertexArray.setVertexAttribPointer(
-            0, 
-            colorProgram.getPositionAttributeLocation(), 
-            POSITION_COMPONENT_COUNT, 0);
-    }
-	
-	public void draw() {
-		if (isTextured){ // Textures are being used
-			glDrawArrays(GL_TRIANGLE_STRIP, 0, mVertexArray.getVertexPointsNum(POSITION_COMPONENT_COUNT + TEXTURE_COORDINATES_COMPONENT_COUNT));
-		} else { // Colours are being used
-			glDrawArrays(GL_TRIANGLE_STRIP, 0, mVertexArray.getVertexPointsNum(POSITION_COMPONENT_COUNT));
-		}
+	public void draw(Canvas canvas) {
+		mImage.draw(canvas);
     }
 	
 	public boolean intersectionWithEntity(Entity other){

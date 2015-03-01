@@ -6,11 +6,10 @@ import static android.opengl.Matrix.translateM;
 import static android.opengl.Matrix.scaleM;
 import static android.opengl.Matrix.setIdentityM;
 import static android.opengl.Matrix.setLookAtM;
-
 import android.content.Context;
-
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView.Renderer;
+
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
@@ -18,6 +17,7 @@ import android.util.Log;
 
 import com.pirateseas.R;
 import com.pirateseas.model.basicfigures.Plane;
+import com.pirateseas.model.scene.Sea;
 //import com.pirateseas.model.scene.Sea;
 import com.pirateseas.utils.programs.ColorShaderProgram;
 import com.pirateseas.utils.programs.TextureShaderProgram;
@@ -52,8 +52,8 @@ public class GLRenderer implements Renderer {
     private final float upZ = 0f;
     
 	// Object definition area
-	// private Sea sea;
-    private Plane mWaterPlane;
+	private Sea sea;
+    //private Plane mWaterPlane;
     private Plane mSkyPlane;
 
     // mMVPMatrix is an abbreviation for "Model View Projection Matrix"
@@ -79,8 +79,8 @@ public class GLRenderer implements Renderer {
         // Set the background frame color
         GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-		//sea = new Sea();
-        mWaterPlane = new Plane();
+		sea = new Sea();
+        //mWaterPlane = new Plane();
         mSkyPlane = new Plane();
         
         // Load textures
@@ -88,7 +88,7 @@ public class GLRenderer implements Renderer {
         colorProgram = new ColorShaderProgram(mActivityContext);
 
         waterTexture = TextureHelper.loadTexture(mActivityContext, R.drawable.blue_water_texture);
-        skyTexture = TextureHelper.loadTexture(mActivityContext, R.drawable.horizon_sky_texture);
+        skyTexture = TextureHelper.loadTexture(mActivityContext, R.drawable.sky_clear);
     }
 	
 	@Override
@@ -120,10 +120,10 @@ public class GLRenderer implements Renderer {
 		positionWaterPlane(eyeZ * 10);
 		textureProgram.useProgram();
         textureProgram.setUniforms(mMVPMatrix, waterTexture);
-		//sea.bindData(textureProgram);
-		//sea.draw();
-        mWaterPlane.bindData(textureProgram);
-        mWaterPlane.draw();
+		sea.bindData(textureProgram);
+		sea.draw();
+        //mWaterPlane.bindData(textureProgram);
+        //mWaterPlane.draw();
         
         // Draw the sky plane
      	positionSkyPlane();

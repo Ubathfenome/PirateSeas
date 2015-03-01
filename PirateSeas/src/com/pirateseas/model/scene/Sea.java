@@ -7,7 +7,7 @@ import com.pirateseas.utils.data.VertexArray;
 
 public class Sea extends AdvancedPlane{
 	
-	private AdvancedPlane mPlane;
+	private static AdvancedPlane mPlane;
 	
 	private Point modelOrigin;
 	
@@ -27,8 +27,11 @@ public class Sea extends AdvancedPlane{
            -1f,  1f,   0f, 2f, 
            -1f, -1f,   0f, 0f };
 	
+	private static VertexArray vArray = new VertexArray(VERTEX_DATA);
+	
 	public Sea(){
-		super(new VertexArray(VERTEX_DATA));
+		super(vArray);		
+		mPlane = new AdvancedPlane(vArray);
 		modelOrigin = mPlane.getModelOrigin();
 	}
 
