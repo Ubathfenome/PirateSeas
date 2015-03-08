@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Normal screens -->
+<resources>
+
+    <dimen name="text_size">12sp</dimen>
+
+</resources>
