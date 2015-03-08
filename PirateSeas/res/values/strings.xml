@@ -1,8 +1,41 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
+<!--
+  Copyright 2012 The Android Open Source Project
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  -->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
     <string name="app_name">PirateSeas</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
+	
+	<!-- Screen Slide Content -->
+	<string name="title_screen_slide">Screen Slide</string>
+	<string name="action_finish">Finish</string>
+	<string name="action_previous">Previous</string>
+    <string name="action_next">Next</string>
+	<string name="title_template_step">Step <xliff:g id="step_number">%1$d</xliff:g>: Tutorial</string>
+	
+	<!--  Loading messages -->
+	<string-array name="loading_messages">
+        <item>Loading Seas...</item>
+		<item>Loading Sky...</item>
+        <item>Loading Light...</item>
+        <item>Loading UI...</item>
+		<item>Loading Treasures...</item>
+		<item>Loading Ships...</item>
+		<item>Loading Cannons...</item>
+		<item>Loading Pirates...</item>
+        <item>Loading Yarrr...</item>
+		<item>Let\'s sail, mate!</item>
+    </string-array>
 
 </resources>

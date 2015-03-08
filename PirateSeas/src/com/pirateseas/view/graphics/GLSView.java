@@ -1,15 +1,17 @@
 package com.pirateseas.view.graphics;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
+@SuppressLint("ClickableViewAccessibility")
 public class GLSView extends GLSurfaceView {
 
 	private final GLRenderer mRenderer;
-	
+
 	private static final String TAG = "SurfaceView";
 
 	public GLSView(Context context) {
@@ -40,49 +42,72 @@ public class GLSView extends GLSurfaceView {
 		float y = e.getY();
 
 		switch (e.getAction()) {
-		case MotionEvent.ACTION_DOWN:
-			if (x < getWidth() / 4 && y < getHeight() / 4) {
-				// Reset eyeX & Y
-				mRenderer.resetEye();
-				Toast.makeText(getContext(), "Resetting default eye location",
-						Toast.LENGTH_SHORT).show();
-			}
-			break;
-		case MotionEvent.ACTION_MOVE:
-
-			float dx = x - mPreviousX;
-			float dy = y - mPreviousY;
-
-			// reverse direction of rotation above the mid-line
-			if (y > getHeight() / 2) {
-				dx = dx * -1;
-			}
-
-			// reverse direction of rotation to left of the mid-line
-			if (x < getWidth() / 2) {
-				dy = dy * -1;
-			}
-
-			// Move eyeX & Y
-			Log.v(TAG, "rendererEyeX: " + mRenderer.getEyeX() + " | x: " + x + " | dx: " + dx);
-			Log.v(TAG, "rendererEyeY: " + mRenderer.getEyeY() + " | y: " + y + " | dy: " + dy);
-			mRenderer.setEye(mRenderer.getEyeX()
-					+ (dx  * TOUCH_SCALE_FACTOR) / 1000, mRenderer.getEyeY(), mRenderer.getEyeZ());
-			requestRender();
-			break;
+			case MotionEvent.ACTION_DOWN:
+				if (x < getWidth() / 4 && y < getHeight() / 4) {
+					// Reset eyeX & Y
+					mRenderer.resetEye();
+					Toast.makeText(getContext(), "Resetting default eye location",
+							Toast.LENGTH_SHORT).show();
+				} else {
 			
-		case MotionEvent.ACTION_UP:
-			Toast.makeText(getContext(), "x: " + mRenderer.getEyeX() + " | y: " +
-					mRenderer.getEyeY() + " | z: " + mRenderer.getEyeZ(), 
-					Toast.LENGTH_SHORT).show();
-			break;
+				}
+				break;
+			case MotionEvent.ACTION_MOVE:
+				// Circular movement of the wheel to the right
+				// Circular movement of the wheel to the left
+				// Linear movement of the bumper to the front
+				// Linear movement of the bumper to the right
+				// Linear movement of the bumper to the left
+			
+				// Free camera movement
+				float dx = x - mPreviousX;
+				float dy = y - mPreviousY;
+			
+				// reverse direction of rotation above the mid-line
+				if (y > getHeight() / 2) {
+					dx = dx * -1;
+				}
+			
+				// reverse direction of rotation to left of the mid-line
+				if (x < getWidth() / 2) {
+					dy = dy * -1;
+				}
+			
+				// Move eyeX & Y
+				Log.v(TAG, "rendererEyeX: " + mRenderer.getEyeX() + " | x: " + x
+						+ " | dx: " + dx);
+				Log.v(TAG, "rendererEyeY: " + mRenderer.getEyeY() + " | y: " + y
+						+ " | dy: " + dy);
+				mRenderer.setEye(mRenderer.getEyeX() + (dx * TOUCH_SCALE_FACTOR)
+						/ 500, mRenderer.getEyeY(), mRenderer.getEyeZ());
+				requestRender();
+				break;
+			
+			case MotionEvent.ACTION_UP:
+				Toast.makeText(
+						getContext(),
+						"x: " + mRenderer.getEyeX() + " | y: "
+								+ mRenderer.getEyeY() + " | z: "
+								+ mRenderer.getEyeZ(), Toast.LENGTH_SHORT).show();
+				break;
 		}
-		
-		
 
 		mPreviousX = x;
 		mPreviousY = y;
 		return true;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.view.View#performClick()
+	 */
+	@Override
+	public boolean performClick() {
+		
+		// TODO Al hacer Click...
+		
+		return super.performClick();
 	}
 
 }

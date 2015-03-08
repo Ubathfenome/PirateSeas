@@ -17,7 +17,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
         <activity
-            android:name="com.pirateseas.view.activities.GameActivity"
+            android:name=".view.activities.MainMenuActivity"
             android:label="@string/app_name"
             android:theme="@style/FullscreenTheme"
             android:screenOrientation="landscape" >
@@ -26,6 +26,24 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+		<activity
+			android:name=".view.activities.GameActivity"
+			android:label="@string/app_name"
+			android:theme="@style/FullscreenTheme"
+			android:screenOrientation="landscape">
+		</activity>
+		<activity
+			android:name=".view.activities.TutorialActivity"
+			android:label="@string/app_name"
+			android:theme="@style/FullscreenTheme"
+			android:screenOrientation="landscape">
+		</activity>
+		<activity
+			android:name=".controller.sensors.SensorActivity"
+			android:label="@string/app_name"
+			android:theme="@style/FullscreenTheme"
+			android:screenOrientation="landscape">
+		</activity>
     </application>
 
 </manifest>

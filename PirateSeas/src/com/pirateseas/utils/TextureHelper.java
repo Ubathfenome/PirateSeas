@@ -22,7 +22,7 @@ import android.util.Log;
  * Texture loader for OpenGL ES 2.0 objects
  * 
  * @author learnopengles
- * @source Excerpted from "OpenGL ES for Android", published by The Pragmatic Bookshelf.
+ * @source Exported from "OpenGL ES for Android", published by The Pragmatic Bookshelf.
  *
  */
 public class TextureHelper {
@@ -79,14 +79,6 @@ public class TextureHelper {
             GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         // Load the bitmap into the bound texture.
         texImage2D(GL_TEXTURE_2D, 0, bitmap, 0);
-
-        // Note: Following code may cause an error to be reported in the
-        // ADB log as follows: E/IMGSRV(20095): :0: HardwareMipGen:
-        // Failed to generate texture mipmap levels (error=3)
-        // No OpenGL error will be encountered (glGetError() will return
-        // 0). If this happens, just squash the source image to be
-        // square. It will look the same because of texture coordinates,
-        // and mipmap generation will work.
 
         glGenerateMipmap(GL_TEXTURE_2D);
 

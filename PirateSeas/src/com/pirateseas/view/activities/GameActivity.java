@@ -6,12 +6,14 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.FragmentManager;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
 import android.content.DialogInterface;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 
-public class GameActivity extends Activity {
+public class GameActivity extends Activity implements SensorEventListener{
 
 	private GLSurfaceView mGLView;
 
@@ -22,7 +24,9 @@ public class GameActivity extends Activity {
         // Create a GLSurfaceView instance and set it
         // as the ContentView for this Activity
         mGLView = new GLSView(this);
-        setContentView(mGLView);
+		
+		// Launch the game!!
+		setContentView(mGLView);
     }
 
     @Override
@@ -48,9 +52,7 @@ public class GameActivity extends Activity {
 	 * @see android.app.Activity#onBackPressed()
 	 */
 	@Override
-	public void onBackPressed() {
-		onPause();
-		
+	public void onBackPressed() {		
 		// Pop up messageBox asking if the user is sure to leave
 		LeaveGameDialogFragment exitDialog = new LeaveGameDialogFragment();
 		exitDialog.show(getFragmentManager(),"LeaveGameDialog");
@@ -66,19 +68,30 @@ public class GameActivity extends Activity {
 	               .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 	                   public void onClick(DialogInterface dialog, int id) {
 	                       // Exit
+						   // TODO Save
 	                	   dummyActivity.finish();
 	                   }
 	               })
 	               .setNegativeButton("No", new DialogInterface.OnClickListener() {
 	                   public void onClick(DialogInterface dialog, int id) {
-	                       // User cancelled the dialog
-	                	   // TODO 
-	                	   onResume();
+	                       // User cancels the dialog
 	                   }
 	               });
 	        // Create the AlertDialog object and return it
 	        return builder.create();
 	    }
+	}
+
+	@Override
+	public void onSensorChanged(SensorEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onAccuracyChanged(Sensor sensor, int accuracy) {
+		// TODO Auto-generated method stub
+		
 	}
     
 }

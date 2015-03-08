@@ -1,6 +1,7 @@
 package com.pirateseas.view.graphics;
 
 import static android.opengl.Matrix.multiplyMM;
+import static android.opengl.Matrix.multiplyMV;
 import static android.opengl.Matrix.rotateM;
 import static android.opengl.Matrix.translateM;
 import static android.opengl.Matrix.scaleM;
@@ -9,20 +10,26 @@ import static android.opengl.Matrix.setLookAtM;
 import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView.Renderer;
+import android.os.SystemClock;
+import android.util.Log;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import android.util.Log;
-
 import com.pirateseas.R;
-import com.pirateseas.model.basicfigures.Plane;
+import com.pirateseas.model.entity.Ship;
+import com.pirateseas.model.entity.ShipType;
 import com.pirateseas.model.scene.Sea;
-//import com.pirateseas.model.scene.Sea;
+import com.pirateseas.model.scene.Sky;
+import com.pirateseas.model.scene.Sun;
 import com.pirateseas.utils.programs.ColorShaderProgram;
 import com.pirateseas.utils.programs.TextureShaderProgram;
+import com.pirateseas.utils.programs.LightPointShaderProgram;
+import com.pirateseas.utils.Geometry.Point;
+import com.pirateseas.utils.Geometry.Vector;
 import com.pirateseas.utils.MatrixHelper;
 import com.pirateseas.utils.TextureHelper;
+import com.pirateseas.utils.Constants;
 
 /**
  * Provides drawing instructions for a GLSurfaceView object. This class
@@ -36,6 +43,7 @@ import com.pirateseas.utils.TextureHelper;
 public class GLRenderer implements Renderer {
 
     private static final String TAG = "GLRenderer";
+	private static final int SECONDS_PER_REVOLUTION = 120;
     
     private final Context mActivityContext;
     
@@ -52,22 +60,36 @@ public class GLRenderer implements Renderer {
     private final float upZ = 0f;
     
 	// Object definition area
+	// Scene objects
 	private Sea sea;
-    //private Plane mWaterPlane;
-    private Plane mSkyPlane;
+	private Sky sky;
+	private Sun sun;
+	// Entities
+	private Ship playerShip;
 
-    // mMVPMatrix is an abbreviation for "Model View Projection Matrix"
+	// World matrices definition area
     private final float[] mMVPMatrix = new float[16];
 	private final float[] mViewProjectionMatrix = new float[16];
 	private final float[] mModelMatrix = new float[16];
 	private final float[] mViewMatrix = new float[16];
     private final float[] mProjectionMatrix = new float[16];
 	
+	// Light matrices definition area
+	private float[] mLightModelMatrix = new float[16];
+	private final float[] mLightPosInModelSpace = new float[] {0.0f, 0.0f, 0.0f, 1.0f};
+	private final float[] mLightPosInWorldSpace = new float[4];
+	private final float[] mLightPosInEyeSpace = new float[4];
+	
+	// Shader programs definition area
 	private TextureShaderProgram textureProgram;
     private ColorShaderProgram colorProgram;
+	private LightPointShaderProgram lightPointProgram;
 
+	// Textures to be used
     private int waterTexture;
+    private int rippleTexture;
     private int skyTexture;
+	private int shipTexture;
     
     public GLRenderer(final Context activityContext){
     	this.mActivityContext = activityContext;
@@ -77,18 +99,25 @@ public class GLRenderer implements Renderer {
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
 
         // Set the background frame color
-        GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        GLES20.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
+		// Initialize objects
 		sea = new Sea();
-        //mWaterPlane = new Plane();
-        mSkyPlane = new Plane();
+		sky = new Sky();
+		sun = new Sun();
+		
+		playerShip = new Ship(mActivityContext, ShipType.LIGHT, new Point(0,0,0), new Vector(0,0,1), 2f, 3f, 5f, 10, Constants.UNLIMITED);
         
         // Load textures
+		lightPointProgram = new LightPointShaderProgram(mActivityContext);
 		textureProgram = new TextureShaderProgram(mActivityContext);
         colorProgram = new ColorShaderProgram(mActivityContext);
 
         waterTexture = TextureHelper.loadTexture(mActivityContext, R.drawable.blue_water_texture);
         skyTexture = TextureHelper.loadTexture(mActivityContext, R.drawable.sky_clear);
+		
+		shipTexture = TextureHelper.loadTexture(mActivityContext, R.drawable.ship_base);
+		rippleTexture = TextureHelper.loadTexture(mActivityContext, R.drawable.sea_ripples);
     }
 	
 	@Override
@@ -106,6 +135,8 @@ public class GLRenderer implements Renderer {
 
     @Override
     public void onDrawFrame(GL10 unused) {
+        long time = SystemClock.uptimeMillis() % (SECONDS_PER_REVOLUTION * 1000L);
+        float angleInDegrees = (360.0f / (SECONDS_PER_REVOLUTION * 1000.0f)) * ((int) time);
 		
         // Clear the rendering surface (Reset background color to 'Black').
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
@@ -116,22 +147,63 @@ public class GLRenderer implements Renderer {
 		// Multiply the view and projection matrices together.
         multiplyMM(mViewProjectionMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
 		
+		// Draw the sky plane
+     	positionSkyPlane(eyeZ * 10);
+     	textureProgram.useProgram();
+        textureProgram.setUniforms(mMVPMatrix, skyTexture);
+		sky.bindData(textureProgram);
+		sky.draw();
+		
 		// Draw the water plane
 		positionWaterPlane(eyeZ * 10);
 		textureProgram.useProgram();
         textureProgram.setUniforms(mMVPMatrix, waterTexture);
 		sea.bindData(textureProgram);
 		sea.draw();
-        //mWaterPlane.bindData(textureProgram);
-        //mWaterPlane.draw();
-        
-        // Draw the sky plane
-     	positionSkyPlane();
-     	textureProgram.useProgram();
-        textureProgram.setUniforms(mMVPMatrix, skyTexture);
-        mSkyPlane.bindData(textureProgram);
-        mSkyPlane.draw();
+		
+		// Draw enemy Ships
+		// TODO
+		
+		// Draw the player Ship
+		positionPlayerShip();
+		textureProgram.useProgram();
+		if(playerShip.isMoving())
+			textureProgram.setUniforms(mMVPMatrix, rippleTexture);
+		textureProgram.setUniformsLevel1(mMVPMatrix, shipTexture);
+		playerShip.bindData(textureProgram);
+		playerShip.draw();
+		
+		// Draw the Sun Light
+		positionLight(angleInDegrees);
+		lightPointProgram.useProgram();
+		lightPointProgram.setUniforms(mLightPosInModelSpace);
+		sun.transformInWorldSpace(lightPointProgram, mLightModelMatrix, mViewProjectionMatrix);
+		sun.draw();
+		
+		// Draw GUI
+		// TODO
     }
+	
+	private void positionLight(float angleInDegrees){
+		// Draw the light moving around
+		setIdentityM(mLightModelMatrix, 0);
+        translateM(mLightModelMatrix, 0, 0.0f, 0.0f, -2.0f);
+		// Obtener coordenadas de angulo 23? 26'(703 / 30 = 23.433333333) y radio 9; @source: http://www.pawean.com/MVM/Coordenadas%20Cartesianas3D.html
+		// x = 9 * cos(23.433333333) * cos(0f) = 8.257710772f
+		// y = 9 * cos(23.433333333) * sin(0f) = 0f
+		// z = 9 * sin(23.433333333) = 3.579135763f
+        rotateM(mLightModelMatrix, 0, angleInDegrees, 8.257f, 1.0f, 3.579f);
+        translateM(mLightModelMatrix, 0, 0.0f, 0.0f, 3.5f);
+		
+		multiplyMV(mLightPosInWorldSpace, 0, mLightModelMatrix, 0, mLightPosInModelSpace, 0);
+        multiplyMV(mLightPosInEyeSpace, 0, mViewMatrix, 0, mLightPosInWorldSpace, 0);
+	}
+	
+	private void positionPlayerShip(){
+		setIdentityM(mModelMatrix, 0);
+		rotateM(mModelMatrix, 0, 180, 1f, 0f, 0f);
+		multiplyMM(mMVPMatrix, 0, mViewProjectionMatrix, 0, mModelMatrix, 0);
+	}
 
 	private void positionWaterPlane(float scaleFactor) {
         // The plane is defined in terms of X & Y coordinates, so we rotate it
@@ -142,12 +214,13 @@ public class GLRenderer implements Renderer {
         multiplyMM(mMVPMatrix, 0, mViewProjectionMatrix, 0, mModelMatrix, 0);
     }
 	
-	private void positionSkyPlane() {
+	private void positionSkyPlane(float scaleFactor) {
         // The plane is defined in terms of X & Y coordinates, so it lie flat on the XY plane.
         setIdentityM(mModelMatrix, 0);
-        scaleM(mModelMatrix, 0, 1f, 1f, 1f);
+        scaleM(mModelMatrix, 0, scaleFactor, scaleFactor, 1f);
+		// We move the plane to the farthest extreme of the Render Box
 		// Positive Z-axis translation goes OUT of the screen (Negative goes INTO the screen)
-        translateM(mModelMatrix, 0, 0, 0, -2f);
+        translateM(mModelMatrix, 0, 0, 0, -5f);
         multiplyMM(mMVPMatrix, 0, mViewProjectionMatrix, 0, mModelMatrix, 0);
     }
 

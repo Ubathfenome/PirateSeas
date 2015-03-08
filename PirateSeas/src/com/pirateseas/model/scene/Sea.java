@@ -1,15 +1,11 @@
 package com.pirateseas.model.scene;
 
 import com.pirateseas.model.basicfigures.AdvancedPlane;
-import com.pirateseas.utils.Geometry;
-import com.pirateseas.utils.Geometry.Point;
 import com.pirateseas.utils.data.VertexArray;
 
 public class Sea extends AdvancedPlane{
 	
 	private static AdvancedPlane mPlane;
-	
-	private Point modelOrigin;
 	
 	private static final float[] VERTEX_DATA = {
         // Order of coordinates: X, Y, S, T
@@ -20,11 +16,11 @@ public class Sea extends AdvancedPlane{
         // Triangle Fan (The first vertex of a triangle fan acts like a hub.
 		// The vertices following connect with the previous non-starting 
 		// vertex and the hub)
-            0f,  0f,   1f, 1f, 
+            0f,  0f,   0.5f, 0.5f, 
            -1f, -1f,   0f, 0f,  
-            1f, -1f,   2f, 0f, 
-            1f,  1f,   2f, 2f, 
-           -1f,  1f,   0f, 2f, 
+            1f, -1f,   1f, 0f, 
+            1f,  1f,   1f, 1f, 
+           -1f,  1f,   0f, 1f, 
            -1f, -1f,   0f, 0f };
 	
 	private static VertexArray vArray = new VertexArray(VERTEX_DATA);
@@ -32,7 +28,5 @@ public class Sea extends AdvancedPlane{
 	public Sea(){
 		super(vArray);		
 		mPlane = new AdvancedPlane(vArray);
-		modelOrigin = mPlane.getModelOrigin();
 	}
-
 }

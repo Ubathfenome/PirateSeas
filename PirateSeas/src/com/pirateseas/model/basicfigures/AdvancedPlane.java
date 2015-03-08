@@ -35,16 +35,6 @@ public class AdvancedPlane {
             TEXTURE_COORDINATES_COMPONENT_COUNT, 
             STRIDE);
     }
-	
-	public Point getModelOrigin(){
-		// TODO Change point
-		return new Point(0,0,0);
-	}
-	
-	public Point getTextureOrigin(){
-		// TODO Change point
-		return new Point(0,0,0);
-	}
         
     public void draw() {                                
         glDrawArrays(GL_TRIANGLE_FAN, 0, 6);

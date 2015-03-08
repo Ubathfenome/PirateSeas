@@ -11,21 +11,21 @@ public class Entity {
 	
 	protected Drawable mImage;
 	
-	private static final int[] SPEEDS = {0, 2, 5, 10};
+	protected static final int[] SPEEDS = {0, 2, 5, 10};
 	
 	// Position attribs
-	private Point mCoords;
+	protected Point mCoords;
 	protected Vector mDirection;
 	private float mWidth;
 	private float mHeight;
 	private float mDepth;
 	
-	private final float[] mSize = {mWidth, mHeight, mDepth};
+	protected final float[] mSize = {mWidth, mHeight, mDepth};
 		
 	// Common attribs
 	protected ShipType sType;
 	protected int mHealthPoints = 0;
-	private int mSpeed = 0;	
+	protected int mSpeed = 0;	
 		
 	public Entity(Context context, Point coordinates, Vector direction, float width, float height, float depth){
 		this.mCoords = coordinates;
@@ -106,4 +106,11 @@ public class Entity {
 		return mSize;
 	}
 
+	public Vector getDirection(){
+		return mDirection;
+	}
+	
+	public boolean isMoving(){
+		return mSpeed > 0 ? true : false;
+	}
 }

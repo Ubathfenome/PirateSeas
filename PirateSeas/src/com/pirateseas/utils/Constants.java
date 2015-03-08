@@ -10,4 +10,7 @@ package com.pirateseas.utils;
 
 public class Constants {
     public static final int BYTES_PER_FLOAT = 4;
+	public static final int STATE_ALIVE = 1;
+	public static final int STATE_DEAD = 0;
+	public static final int UNLIMITED = -1;
 }
