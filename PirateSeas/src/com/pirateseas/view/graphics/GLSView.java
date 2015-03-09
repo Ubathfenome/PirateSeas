@@ -12,7 +12,7 @@ public class GLSView extends GLSurfaceView {
 
 	private final GLRenderer mRenderer;
 
-	private static final String TAG = "SurfaceView";
+	private static final String TAG = "com.pirateseas.view.graphics.SurfaceView";
 
 	public GLSView(Context context) {
 		super(context);
@@ -34,6 +34,10 @@ public class GLSView extends GLSurfaceView {
 
 	@Override
 	public boolean onTouchEvent(MotionEvent e) {
+		
+		int pointerCounter = e.getPointerCount(); // Number of pulsations
+		
+		
 		// MotionEvent reports input details from the touch screen
 		// and other input controls. In this case, you are only
 		// interested in events where the touch position changed.

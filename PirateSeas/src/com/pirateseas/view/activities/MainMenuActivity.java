@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.pirateseas.R;
+import com.pirateseas.global.Constants;
 import com.pirateseas.controller.sensors.SensorActivity;
 
 import android.view.View;
@@ -14,11 +15,6 @@ import android.widget.Button;
 
 public class MainMenuActivity extends Activity {
 	
-	public final static String DISPLAY_TUTORIAL = "com.pirateseas.DISPLAY_TUTORIAL";
-	public final static String NEW_GAME = "com.pirateseas.NEW_GAME";
-	
-	private final static int CHECK_SENSOR_LIST = 0x00;
-	
 	private boolean newGame = false;
 	
 	protected Context context;
@@ -26,6 +22,8 @@ public class MainMenuActivity extends Activity {
 	private Button btnNewGame;
 	private Button btnLoadGame;
 	private Button btnConfig;
+	private Button btnHelp;
+	private Button btnExit;
 
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -42,7 +40,7 @@ public class MainMenuActivity extends Activity {
 			public void onClick(View v){
 				newGame = true;
 				Intent checkSensorListIntent = new Intent(context, SensorActivity.class);
-				startActivityForResult(checkSensorListIntent, CHECK_SENSOR_LIST);
+				startActivityForResult(checkSensorListIntent, Constants.REQUEST_SENSOR_LIST);
 			}
 		});
 		
@@ -51,15 +49,30 @@ public class MainMenuActivity extends Activity {
 			public void onClick(View v){
 				newGame = false;
 				Intent checkSensorListIntent = new Intent(context, SensorActivity.class);
-				startActivityForResult(checkSensorListIntent, CHECK_SENSOR_LIST);
+				startActivityForResult(checkSensorListIntent, Constants.REQUEST_SENSOR_LIST);
 			}
 		});
 		
 		btnConfig = (Button) findViewById(R.id.btn_config);
 		btnConfig.setOnClickListener(new OnClickListener(){
 			public void onClick(View v){
-				//Intent configIntent = new Intent(context, ConfigActivity.class);
-				//startActivity(configIntent);
+				// Intent configIntent = new Intent(context, ConfigActivity.class);
+				// startActivity(configIntent);
+			}
+		});
+		
+		btnHelp = (Button) findViewById(R.id.btn_help);
+		btnHelp.setOnClickListener(new OnClickListener(){
+			public void onClick(View v){
+				// Intent helpIntent = new Intent(context, HelpActivity.class);
+				// startActivity(helpIntent);
+			}
+		});
+		
+		btnExit = (Button) findViewById(R.id.btn_exit);
+		btnExit.setOnClickListener(new OnClickListener(){
+			public void onClick(View v){
+				finish();
 			}
 		});
 	}
@@ -93,10 +106,11 @@ public class MainMenuActivity extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch(requestCode){
-			case CHECK_SENSOR_LIST:
+			case Constants.REQUEST_SENSOR_LIST:
 				if (resultCode == RESULT_OK){
 					
 					// TODO
+					int[] sensorTypes = data.getIntArrayExtra(Constants.SENSOR_LIST);
 					
 					launchGame(newGame);
 				}

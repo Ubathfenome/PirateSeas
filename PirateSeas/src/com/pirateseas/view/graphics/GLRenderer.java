@@ -17,11 +17,11 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import com.pirateseas.R;
-import com.pirateseas.model.entity.Ship;
-import com.pirateseas.model.entity.ShipType;
-import com.pirateseas.model.scene.Sea;
-import com.pirateseas.model.scene.Sky;
-import com.pirateseas.model.scene.Sun;
+import com.pirateseas.model.openglmodel.entity.Ship;
+import com.pirateseas.model.openglmodel.entity.ShipType;
+import com.pirateseas.model.openglmodel.scene.Sea;
+import com.pirateseas.model.openglmodel.scene.Sky;
+import com.pirateseas.model.openglmodel.scene.Sun;
 import com.pirateseas.utils.programs.ColorShaderProgram;
 import com.pirateseas.utils.programs.TextureShaderProgram;
 import com.pirateseas.utils.programs.LightPointShaderProgram;
@@ -29,7 +29,6 @@ import com.pirateseas.utils.Geometry.Point;
 import com.pirateseas.utils.Geometry.Vector;
 import com.pirateseas.utils.MatrixHelper;
 import com.pirateseas.utils.TextureHelper;
-import com.pirateseas.utils.Constants;
 
 /**
  * Provides drawing instructions for a GLSurfaceView object. This class
@@ -49,7 +48,7 @@ public class GLRenderer implements Renderer {
     
     private float eyeX = 0;
     private float eyeY = 1.2f;
-    private float eyeZ = 4.2f;
+    private float eyeZ = 1.2f;
     
     private final float lookX = 0f;
     private final float lookY = 0f;
@@ -106,7 +105,7 @@ public class GLRenderer implements Renderer {
 		sky = new Sky();
 		sun = new Sun();
 		
-		playerShip = new Ship(mActivityContext, ShipType.LIGHT, new Point(0,0,0), new Vector(0,0,1), 2f, 3f, 5f, 10, Constants.UNLIMITED);
+		playerShip = new Ship(mActivityContext, ShipType.LIGHT, new Point(0,0,0), new Vector(0,0,1), 2f, 3f, 5f, 10, com.pirateseas.global.Constants.UNLIMITED);
         
         // Load textures
 		lightPointProgram = new LightPointShaderProgram(mActivityContext);
@@ -202,6 +201,7 @@ public class GLRenderer implements Renderer {
 	private void positionPlayerShip(){
 		setIdentityM(mModelMatrix, 0);
 		rotateM(mModelMatrix, 0, 180, 1f, 0f, 0f);
+		scaleM(mModelMatrix, 0, 0.4f, 1.0f, 0.4f);
 		multiplyMM(mMVPMatrix, 0, mViewProjectionMatrix, 0, mModelMatrix, 0);
 	}
 
@@ -220,14 +220,21 @@ public class GLRenderer implements Renderer {
         scaleM(mModelMatrix, 0, scaleFactor, scaleFactor, 1f);
 		// We move the plane to the farthest extreme of the Render Box
 		// Positive Z-axis translation goes OUT of the screen (Negative goes INTO the screen)
-        translateM(mModelMatrix, 0, 0, 0, -5f);
+        translateM(mModelMatrix, 0, 0f, 0.5f, -5f);
         multiplyMM(mMVPMatrix, 0, mViewProjectionMatrix, 0, mModelMatrix, 0);
     }
+	
+	public void moveWorld(float distance, float angle){
+		// Change position of water plane
+		// Change position of sky plane
+		// Change position of enemy ships
+		
+	}
 
 	public void resetEye() {
 		eyeX = 0;
 	    eyeY = 1.2f;		
-		eyeZ = 4.2f;
+		eyeZ = 1.2f;
 	}
 	
 	public float getEyeX(){

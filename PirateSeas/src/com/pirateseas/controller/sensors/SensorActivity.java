@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.pirateseas.R;
+import com.pirateseas.global.Constants;
 import com.pirateseas.controller.sensors.events.EventDayNightCycle;
 import com.pirateseas.controller.sensors.events.EventEnemyTimer;
 import com.pirateseas.controller.sensors.events.EventWeatherFog;
@@ -18,17 +19,17 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.AsyncTask;
+import android.os.SystemClock;
 import android.util.Log;
 import android.widget.TextView;
 
-public class SensorActivity extends Activity implements Serializable{
+public class SensorActivity extends Activity{
 	
 	private static final long serialVersionUID = 1L;
-	private static final String SENSOR_LIST = "com.pirateseas.view.activities.SENSOR_LIST";
 	public static final String TAG = "com.pirateseas.view.activities.SensorActivity";
 	
 	private SensorManager mSensorManager;
-	private List<Sensor> mDeviceSensors;
+	private List<Integer> mDeviceSensorTypes;
 	private Sensor mSensor;
 	
 	private TextView tv;
@@ -46,7 +47,7 @@ public class SensorActivity extends Activity implements Serializable{
 		tv = (TextView) findViewById(R.id.lbl_load_status);
 	
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-		mDeviceSensors = new ArrayList<Sensor>(); // Performance of Java's Lists @source: http://www.onjava.com/pub/a/onjava/2001/05/30/optimization.html
+		mDeviceSensorTypes = new ArrayList<Integer>(); // Performance of Java's Lists @source: http://www.onjava.com/pub/a/onjava/2001/05/30/optimization.html
 		
 		// Llamar AsyncTask
 		AsyncTask<Void,Integer,Boolean> listValidSensors = new ListSensors();
@@ -54,8 +55,9 @@ public class SensorActivity extends Activity implements Serializable{
 	}
 	
 	private void exitActivity(boolean result){
-		Intent sensorListIntent = new Intent();
-		//sensorListIntent.putExtra(SENSOR_LIST, mDeviceSensors.toArray());
+		Intent sensorListIntent = new Intent();		
+		sensorListIntent.putExtra(Constants.SENSOR_LIST, mDeviceSensorTypes.toArray());
+		
 		if(result)
 			setResult(RESULT_OK, sensorListIntent);
 		else
@@ -85,21 +87,22 @@ public class SensorActivity extends Activity implements Serializable{
 			for(int i = 0; i < count; i++){
 				SensorType type = SensorType.values()[i];
 				if((mSensor = mSensorManager.getDefaultSensor(type.getCode())) != null && triggeredSensors.contains(type)){
-					mDeviceSensors.add(mSensor);
+					mDeviceSensorTypes.add(type.getCode());
 				} else {
 					// Sorry, there is no 'type' sensor on your device.
 					// The 'event' event will be disabled.
 					Log.e(TAG, "Sorry, there is no " + type + " sensor on your device. Its event will be disabled.");
 				}
 				publishProgress((int) ((i / (float) count) * 100));
+				SystemClock.sleep(1500);
 			}
 			
-			return mDeviceSensors.isEmpty() ? false : true;
+			return mDeviceSensorTypes.isEmpty() ? false : true;
 		}
 		
 		@Override
 		protected void onProgressUpdate(Integer... progress) {
-			// Actualizar salvapantallas
+			// Actualizar animacion
 			tv.setText(getResources().getStringArray(R.array.loading_messages)[progress[0]/10]);
 		}
 		
