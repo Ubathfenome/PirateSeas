@@ -1,0 +1,77 @@
+<LinearLayout 
+	xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res/com.pirateseas"
+	android:id="@+id/UIFrame"
+	android:orientation="vertical"
+	android:layout_width="match_parent"
+    android:layout_height="match_parent">
+	
+	<LinearLayout
+		android:id="@+id/topFrame"
+		android:orientation="horizontal"
+		android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+		
+		<Space
+			android:id="@+id/enemyHBarSpace"
+			android:layout_gravity="fill" />
+		
+		<ImageButton
+			android:id="@+id/btnVolume"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:src="@drawable/ico_volume_on"
+			android:background="@drawable/xml_btn_style" />
+			
+		<ImageButton
+			android:id="@+id/btnPause"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:src="@drawable/ico_pause"
+			android:background="@drawable/xml_btn_style" />
+	</LinearLayout>
+	
+	<Space 
+		android:id="@+id/gameSpace"
+		android:layout_gravity="fill" />
+	
+	<LinearLayout
+		android:id="@+id/bottomFrame"
+		android:orientation="horizontal"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content" >
+		
+		<com.pirateseas.model.canvasmodel.ui.Throttle
+			android:id="@+id/Throttle"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content" />
+		
+		<Space
+			android:id="@+id/playerBarsSpace"
+			android:layout_gravity="fill" />
+		
+		<Space
+			android:id="@+id/playerSpace"
+			android:layout_gravity="fill" />
+		
+		<com.pirateseas.model.canvasmodel.ui.UIDisplayElement
+			android:id="@+id/playerGold"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			custom:drawableResource="@drawable/ico_gold"
+			custom:defaultValue="0" />
+			
+		<com.pirateseas.model.canvasmodel.ui.UIDisplayElement
+			android:id="@+id/playerAmmunition"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content" 
+			custom:drawableResource="@drawable/ico_ammo"
+			custom:defaultValue="0" />
+			
+		<com.pirateseas.model.canvasmodel.ui.Wheel
+			android:id="@+id/playerWheel"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content" />
+		
+	</LinearLayout>
+</LinearLayout>

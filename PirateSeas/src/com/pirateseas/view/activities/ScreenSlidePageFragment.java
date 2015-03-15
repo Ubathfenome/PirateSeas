@@ -23,6 +23,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
@@ -66,6 +67,10 @@ public class ScreenSlidePageFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
+				
+		String message = "";
+		int imageReference = 0;
+				
         // Inflate the layout containing a title and body text.
         ViewGroup rootView = (ViewGroup) inflater
                 .inflate(R.layout.fragment_screen_slide_page, container, false);
@@ -73,6 +78,28 @@ public class ScreenSlidePageFragment extends Fragment {
         // Set the title view to show the page number.
         ((TextView) rootView.findViewById(android.R.id.text1)).setText(
                 getString(R.string.title_template_step, mPageNumber + 1));
+				
+		switch(mPageNumber){
+			case 0:
+				message = "Message for the " + (mPageNumber + 1) + "st step.";
+				imageReference = R.drawable.img_tutorial_1;
+				break;
+			case 1:
+				message = "Message for the " + (mPageNumber + 1) + "nd step.";
+				imageReference = R.drawable.img_tutorial_2;
+				break;
+			case 2:
+				message = "Message for the " + (mPageNumber + 1) + "rd step.";
+				imageReference = R.drawable.img_tutorial_3;
+				break;
+			default:
+				message = "Message for the " + (mPageNumber + 1) + "th step.";
+				imageReference = R.drawable.img_tutorial_4;
+				break;
+		}
+		
+		((TextView) rootView.findViewById(R.id.text2)).setText(message);
+		((ImageView) rootView.findViewById(R.id.imgDisplayed)).setBackgroundResource(imageReference);
 
         return rootView;
     }

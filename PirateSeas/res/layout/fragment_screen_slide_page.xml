@@ -31,11 +31,16 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp" />
 
-        <TextView style="?android:textAppearanceMedium"
+        <TextView android:id="@+id/text2"
+			style="?android:textAppearanceMedium"
             android:lineSpacingMultiplier="1.2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="This is some tutorial content" />
+			
+		<ImageView android:id="@+id/imgDisplayed"
+			android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 

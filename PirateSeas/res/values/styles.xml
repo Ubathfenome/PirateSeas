@@ -7,6 +7,8 @@
         <item name="android:windowBackground">@null</item>
         <item name="metaButtonBarStyle">@style/ButtonBar</item>
         <item name="metaButtonBarButtonStyle">@style/ButtonBarButton</item>
+        <item name="drawableResource">@style/DrawableResource</item>
+        <item name="defaultValue">@style/DefaultValue</item>
     </style>
 
     <style name="ButtonBar">
@@ -19,4 +21,7 @@
 
     <style name="ButtonBarButton" />
 
+    <style name="DrawableResource" />
+    <style name="DefaultValue" />
+    
 </resources>

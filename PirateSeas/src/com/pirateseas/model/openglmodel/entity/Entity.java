@@ -4,8 +4,8 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 
-import com.pirateseas.utils.Geometry.Point;
-import com.pirateseas.utils.Geometry.Vector;
+import com.pirateseas.utils.Geometry.Point3D;
+import com.pirateseas.utils.Geometry.Vector3D;
 
 public class Entity {
 	
@@ -14,8 +14,8 @@ public class Entity {
 	protected static final int[] SPEEDS = {0, 2, 5, 10};
 	
 	// Position attribs
-	protected Point mCoords;
-	protected Vector mDirection;
+	protected Point3D mCoords;
+	protected Vector3D mDirection;
 	private float mWidth;
 	private float mHeight;
 	private float mDepth;
@@ -27,7 +27,7 @@ public class Entity {
 	protected int mHealthPoints = 0;
 	protected int mSpeed = 0;	
 		
-	public Entity(Context context, Point coordinates, Vector direction, float width, float height, float depth){
+	public Entity(Context context, Point3D coordinates, Vector3D direction, float width, float height, float depth){
 		this.mCoords = coordinates;
 		this.mDirection = direction;
 		this.mWidth = width;
@@ -106,7 +106,7 @@ public class Entity {
 		return mSize;
 	}
 
-	public Vector getDirection(){
+	public Vector3D getDirection(){
 		return mDirection;
 	}
 	

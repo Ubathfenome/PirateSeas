@@ -1,4 +1,6 @@
-package com.pirateseas.model.canvasmodel;
+package com.pirateseas.model.canvasmodel.game;
+
+import com.pirateseas.utils.ResolutionAdapter;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -13,24 +15,24 @@ public class BasicModel{
 	// Model properties
     protected double x;
     protected double y;
-    protected int height;
-    protected int width;
-    protected Drawable image;
+    protected int mHeight;
+    protected int mWidth;
+    protected Drawable mImage;
 	
-    //protected ResolutionAdapter ra;
+    protected ResolutionAdapter ra;
 	
-    private int yUp;
-    private int xLeft;
+    protected int yUp;
+    protected int xLeft;
 
 
 	public BasicModel(Context context, double x, double y, double mCanvasWidth,
             double mCanvasHeight){
 			
-		//ra = new ResolutionAdapter((int) mCanvasWidth, (int) mCanvasHeight);
+		ra = new ResolutionAdapter((int) mCanvasWidth, (int) mCanvasHeight);
 		
 		this.context = context;
-        //this.x = ra.x(x);
-        //this.y = ra.y(y);
+        this.x = ra.x(x); 
+        this.y = ra.y(y);
         this.mCanvasHeight = mCanvasHeight;
         this.mCanvasWidth = mCanvasWidth;
 	}
@@ -41,23 +43,23 @@ public class BasicModel{
      * @param canvas
      */
     public void drawOnScreen(Canvas canvas) {
-        yUp = (int) y - height / 2;
-        xLeft = (int) x - width / 2;
+        yUp = (int) y - mHeight / 2;
+        xLeft = (int) x - mWidth / 2;
  
-        image.setBounds(xLeft, yUp, xLeft + width, yUp + height);
-        image.draw(canvas);
+        mImage.setBounds(xLeft, yUp, xLeft + mWidth, yUp + mHeight);
+        mImage.draw(canvas);
     }
 	
 	public Drawable getImage() {
-        return image;
+        return mImage;
     }
  
     public void setImage(Drawable image) {
-        this.image = image;
+        this.mImage = image;
     }
  
     public Rect getBounds() {
-        return new Rect(xLeft, yUp, xLeft + width, yUp + height);
+        return new Rect(xLeft, yUp, xLeft + mWidth, yUp + mHeight);
     }
 	
 	public double getX() {
@@ -77,19 +79,19 @@ public class BasicModel{
     }
  
     public int getHeight() {
-        return height;
+        return mHeight;
     }
  
     public void setHeight(int height) {
-        this.height = height;
+        this.mHeight = height;
     }
  
     public int getWidth() {
-        return width;
+        return mWidth;
     }
  
     public void setWidth(int width) {
-        this.width = width;
+        this.mWidth = width;
     }
 
 }

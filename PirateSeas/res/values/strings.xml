@@ -15,20 +15,39 @@
   -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
+	<!-- Global strings -->
     <string name="app_name">PirateSeas</string>
+	<string name="activity_new_game">New Game</string>
+	<string name="activity_load_game">Load Game</string>
+	<string name="activity_config">Configuration</string>
+	<string name="activity_help">Help</string>
+	
+	<!-- Game strings -->
+	<string name="game_resume">Resume game</string>
+	
+	<!-- Exit Game Dialog -->
+	<string name="exit_dialog_title">Exit Confirmation Dialog</string>
+	<string name="exit_dialog_message">Any unsaved progress will be lost!</string>
+	<string name="exit_dialog_positive">Exit</string>
+	<string name="exit_dialog_negative">Cancel</string>
+	
+	<!-- Exit Tutorial Dialog -->
+	<string name="exit_tutorial_dialog_title">Exit Tutorial Confirmation Dialog</string>
+	<string name="exit_tutorial_dialog_message">The game will begin!</string>
+	<string name="exit_tutorial_dialog_positive">Proceed</string>
 	
 	<!-- Screen Slide Content -->
 	<string name="title_screen_slide">Screen Slide</string>
 	<string name="action_finish">Finish</string>
 	<string name="action_previous">Previous</string>
     <string name="action_next">Next</string>
-	<string name="title_template_step">Step <xliff:g id="step_number">%1$d</xliff:g>: Tutorial</string>
+	<string name="title_template_step">Tutorial: Step <xliff:g id="step_number">%1$d</xliff:g></string>
 	
 	<!--  Loading messages -->
 	<string-array name="loading_messages">
         <item>Loading Seas...</item>
 		<item>Loading Sky...</item>
-        <item>Loading Light...</item>
+        <item>Loading Sounds...</item>
         <item>Loading UI...</item>
 		<item>Loading Treasures...</item>
 		<item>Loading Ships...</item>

@@ -6,8 +6,8 @@ import com.pirateseas.R;
 import com.pirateseas.exceptions.NoAmmoException;
 import com.pirateseas.global.Constants;
 import com.pirateseas.model.openglmodel.basicfigures.AdvancedPlane;
-import com.pirateseas.utils.Geometry.Point;
-import com.pirateseas.utils.Geometry.Vector;
+import com.pirateseas.utils.Geometry.Point3D;
+import com.pirateseas.utils.Geometry.Vector3D;
 import com.pirateseas.utils.data.VertexArray;
 import com.pirateseas.utils.programs.TextureShaderProgram;
 
@@ -47,7 +47,7 @@ public class Ship extends Entity {
 	private int mAmmunition = 0;
 	private int mStatus = Constants.STATE_ALIVE;
 	
-	public Ship(Context context, ShipType sType, Point coordinates, Vector direction, float width, float height, float depth, int health, int ammo){
+	public Ship(Context context, ShipType sType, Point3D coordinates, Vector3D direction, float width, float height, float depth, int health, int ammo){
 		super(context, coordinates,direction,width,height,depth);
 		mPlane = new AdvancedPlane(vArray);
 		
@@ -59,13 +59,13 @@ public class Ship extends Entity {
 		
 		switch(sType){
 		case LIGHT:
-			mImage = context.getResources().getDrawable(R.drawable.ship_light);
+			mImage = context.getResources().getDrawable(R.drawable.txtr_ship_light);
 			break;
 		case MEDIUM:
-			mImage = context.getResources().getDrawable(R.drawable.ship_medium);
+			mImage = context.getResources().getDrawable(R.drawable.txtr_ship_medium);
 			break;
 		case HEAVY:
-			mImage = context.getResources().getDrawable(R.drawable.ship_base);
+			mImage = context.getResources().getDrawable(R.drawable.txtr_ship_base);
 			break;
 		}
 		
@@ -75,8 +75,8 @@ public class Ship extends Entity {
 	/**
 	*	@param angle: Angle over the XZ plane (positive = turn left; negative = turn right)
 	*/
-	public Vector move(float angle){
-		Vector direction = null;
+	public Vector3D move(float angle){
+		Vector3D direction = null;
 		
 		switch(mSpeed){
 			case 0:
@@ -97,38 +97,38 @@ public class Ship extends Entity {
 			throw new IllegalArgumentException("Encontrado valor de puntos negativo al modificar Ammunition");
 	}
 	
-	public Vector shootFront() throws NoAmmoException{
-		Vector cannonballVector = null;
+	public Vector3D shootFront() throws NoAmmoException{
+		Vector3D cannonballVector = null;
 		
 		switch(mAmmunition){
-			case Constants.UNLIMITED:
-				cannonballVector = new Vector(mDirection);
+			case Constants.SHOT_AMMO_UNLIMITED:
+				cannonballVector = new Vector3D(mDirection);
 				break;
 			case 0:
 				mAmmunition += 3;
-				throw new NoAmmoException();
+				throw new NoAmmoException(mAmmunition);
 		default:
 				mAmmunition--;
-				cannonballVector = new Vector(mDirection);
+				cannonballVector = new Vector3D(mDirection);
 				break;
 		}
 		
 		return cannonballVector;
 	}
 	
-	public Vector[] shootSide(boolean isRight) throws NoAmmoException{
-		Vector[] cannonballArray = new Vector[3];
+	public Vector3D[] shootSide(boolean isRight) throws NoAmmoException{
+		Vector3D[] cannonballArray = new Vector3D[3];
 		
 		switch(mAmmunition){
-			case Constants.UNLIMITED:
+			case Constants.SHOT_AMMO_UNLIMITED:
 				if(isRight){
-					cannonballArray[0] = new Vector(10,0,-2);
-					cannonballArray[1] = new Vector(10,0,0);
-					cannonballArray[2] = new Vector(10,0,2);
+					cannonballArray[0] = new Vector3D(10,0,-2);
+					cannonballArray[1] = new Vector3D(10,0,0);
+					cannonballArray[2] = new Vector3D(10,0,2);
 				} else {
-					cannonballArray[0] = new Vector(-10,0,-2);
-					cannonballArray[1] = new Vector(-10,0,0);
-					cannonballArray[2] = new Vector(-10,0,2);
+					cannonballArray[0] = new Vector3D(-10,0,-2);
+					cannonballArray[1] = new Vector3D(-10,0,0);
+					cannonballArray[2] = new Vector3D(-10,0,2);
 				}
 				break;
 			case 0:
@@ -136,17 +136,17 @@ public class Ship extends Entity {
 			case 2:
 				// mAmmunition += 3;
 				cannonballArray = null;
-				throw new NoAmmoException();
+				throw new NoAmmoException(mAmmunition);
 			default:
 				mAmmunition -= 3;
 				if(isRight){
-					cannonballArray[0] = new Vector(10,0,-2);
-					cannonballArray[1] = new Vector(10,0,0);
-					cannonballArray[2] = new Vector(10,0,2);
+					cannonballArray[0] = new Vector3D(10,0,-2);
+					cannonballArray[1] = new Vector3D(10,0,0);
+					cannonballArray[2] = new Vector3D(10,0,2);
 				} else {
-					cannonballArray[0] = new Vector(-10,0,-2);
-					cannonballArray[1] = new Vector(-10,0,0);
-					cannonballArray[2] = new Vector(-10,0,2);
+					cannonballArray[0] = new Vector3D(-10,0,-2);
+					cannonballArray[1] = new Vector3D(-10,0,0);
+					cannonballArray[2] = new Vector3D(-10,0,2);
 				}
 				break;
 		}

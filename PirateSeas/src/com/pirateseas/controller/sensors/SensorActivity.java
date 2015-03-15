@@ -41,7 +41,7 @@ public class SensorActivity extends Activity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		// Crear layout que muestre una animacion de carga
+		// Set animation layout while loading
 		setContentView(R.layout.activity_sensors);
 		
 		tv = (TextView) findViewById(R.id.lbl_load_status);
@@ -49,14 +49,14 @@ public class SensorActivity extends Activity{
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		mDeviceSensorTypes = new ArrayList<Integer>(); // Performance of Java's Lists @source: http://www.onjava.com/pub/a/onjava/2001/05/30/optimization.html
 		
-		// Llamar AsyncTask
+		// Call AsyncTask
 		AsyncTask<Void,Integer,Boolean> listValidSensors = new ListSensors();
 		listValidSensors.execute();
 	}
 	
 	private void exitActivity(boolean result){
 		Intent sensorListIntent = new Intent();		
-		sensorListIntent.putExtra(Constants.SENSOR_LIST, mDeviceSensorTypes.toArray());
+		sensorListIntent.putExtra(Constants.TAG_SENSOR_LIST, mDeviceSensorTypes.toArray());
 		
 		if(result)
 			setResult(RESULT_OK, sensorListIntent);
@@ -70,14 +70,14 @@ public class SensorActivity extends Activity{
 		
 		@Override
 		protected void onPreExecute(){
-			// Iniciar lista de sensores generadores de eventos
+			// Get event generator' sensor list
 			triggeredSensors.add(EventDayNightCycle.getSensorType());
 			triggeredSensors.add(EventEnemyTimer.getSensorType());
 			triggeredSensors.add(EventWeatherFog.getSensorType());
 			triggeredSensors.add(EventWeatherMaelstrom.getSensorType());
 			triggeredSensors.add(EventWeatherStorm.getSensorType());
 			
-			// Iniciar animacion
+			// Start animation
 			tv.setText(getResources().getStringArray(R.array.loading_messages)[0]);
 		}
 		
@@ -91,7 +91,10 @@ public class SensorActivity extends Activity{
 				} else {
 					// Sorry, there is no 'type' sensor on your device.
 					// The 'event' event will be disabled.
-					Log.e(TAG, "Sorry, there is no " + type + " sensor on your device. Its event will be disabled.");
+					if (triggeredSensors.contains(type))
+						Log.e(TAG, "Sorry, there is no " + type + " sensor on your device. Its event will be disabled.");
+					else
+						Log.e(TAG, "Sorry, there is no " + type + " sensor on your device.");
 				}
 				publishProgress((int) ((i / (float) count) * 100));
 				SystemClock.sleep(1500);
@@ -102,7 +105,7 @@ public class SensorActivity extends Activity{
 		
 		@Override
 		protected void onProgressUpdate(Integer... progress) {
-			// Actualizar animacion
+			// Update animation
 			tv.setText(getResources().getStringArray(R.array.loading_messages)[progress[0]/10]);
 		}
 		

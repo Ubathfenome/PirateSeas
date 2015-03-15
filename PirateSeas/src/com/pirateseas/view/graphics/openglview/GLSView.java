@@ -1,4 +1,4 @@
-package com.pirateseas.view.graphics;
+package com.pirateseas.view.graphics.openglview;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

@@ -12,6 +12,7 @@ import com.pirateseas.controller.sensors.SensorActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 public class MainMenuActivity extends Activity {
 	
@@ -21,8 +22,8 @@ public class MainMenuActivity extends Activity {
 	
 	private Button btnNewGame;
 	private Button btnLoadGame;
-	private Button btnConfig;
-	private Button btnHelp;
+	private ImageButton btnConfig;
+	private ImageButton btnHelp;
 	private Button btnExit;
 
 	/* (non-Javadoc)
@@ -53,19 +54,19 @@ public class MainMenuActivity extends Activity {
 			}
 		});
 		
-		btnConfig = (Button) findViewById(R.id.btn_config);
+		btnConfig = (ImageButton) findViewById(R.id.btn_config);
 		btnConfig.setOnClickListener(new OnClickListener(){
 			public void onClick(View v){
-				// Intent configIntent = new Intent(context, ConfigActivity.class);
-				// startActivity(configIntent);
+				Intent configIntent = new Intent(context, ConfigActivity.class);
+				startActivity(configIntent);
 			}
 		});
 		
-		btnHelp = (Button) findViewById(R.id.btn_help);
+		btnHelp = (ImageButton) findViewById(R.id.btn_help);
 		btnHelp.setOnClickListener(new OnClickListener(){
 			public void onClick(View v){
-				// Intent helpIntent = new Intent(context, HelpActivity.class);
-				// startActivity(helpIntent);
+				Intent helpIntent = new Intent(context, HelpActivity.class);
+				startActivity(helpIntent);
 			}
 		});
 		
@@ -77,12 +78,14 @@ public class MainMenuActivity extends Activity {
 		});
 	}
 	
-	private void launchGame(boolean display_tutorial){
+	private void launchGame(boolean display_tutorial, int[] sensorTypes){
 		if(display_tutorial == false){
 			Intent newGameIntent = new Intent(context, GameActivity.class);
+			newGameIntent.putExtra(Constants.TAG_SENSOR_LIST, sensorTypes);
 			startActivity(newGameIntent);
 		} else {
 			Intent tutorialIntent = new Intent(context, TutorialActivity.class);
+			tutorialIntent.putExtra(Constants.TAG_SENSOR_LIST, sensorTypes);
 			startActivity(tutorialIntent);
 		}
 	}
@@ -110,9 +113,9 @@ public class MainMenuActivity extends Activity {
 				if (resultCode == RESULT_OK){
 					
 					// TODO
-					int[] sensorTypes = data.getIntArrayExtra(Constants.SENSOR_LIST);
+					int[] sensorTypes = data.getIntArrayExtra(Constants.TAG_SENSOR_LIST);
 					
-					launchGame(newGame);
+					launchGame(newGame, sensorTypes);
 				}
 				break;
 		}

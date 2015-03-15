@@ -1,4 +1,4 @@
-package com.pirateseas.view.graphics;
+package com.pirateseas.view.graphics.openglview;
 
 import static android.opengl.Matrix.multiplyMM;
 import static android.opengl.Matrix.multiplyMV;
@@ -25,8 +25,8 @@ import com.pirateseas.model.openglmodel.scene.Sun;
 import com.pirateseas.utils.programs.ColorShaderProgram;
 import com.pirateseas.utils.programs.TextureShaderProgram;
 import com.pirateseas.utils.programs.LightPointShaderProgram;
-import com.pirateseas.utils.Geometry.Point;
-import com.pirateseas.utils.Geometry.Vector;
+import com.pirateseas.utils.Geometry.Point3D;
+import com.pirateseas.utils.Geometry.Vector3D;
 import com.pirateseas.utils.MatrixHelper;
 import com.pirateseas.utils.TextureHelper;
 
@@ -105,7 +105,7 @@ public class GLRenderer implements Renderer {
 		sky = new Sky();
 		sun = new Sun();
 		
-		playerShip = new Ship(mActivityContext, ShipType.LIGHT, new Point(0,0,0), new Vector(0,0,1), 2f, 3f, 5f, 10, com.pirateseas.global.Constants.UNLIMITED);
+		playerShip = new Ship(mActivityContext, ShipType.LIGHT, new Point3D(0,0,0), new Vector3D(0,0,1), 2f, 3f, 5f, 10, com.pirateseas.global.Constants.SHOT_AMMO_UNLIMITED);
         
         // Load textures
 		lightPointProgram = new LightPointShaderProgram(mActivityContext);
@@ -113,10 +113,10 @@ public class GLRenderer implements Renderer {
         colorProgram = new ColorShaderProgram(mActivityContext);
 
         waterTexture = TextureHelper.loadTexture(mActivityContext, R.drawable.blue_water_texture);
-        skyTexture = TextureHelper.loadTexture(mActivityContext, R.drawable.sky_clear);
+        skyTexture = TextureHelper.loadTexture(mActivityContext, R.drawable.txtr_sky_clear);
 		
-		shipTexture = TextureHelper.loadTexture(mActivityContext, R.drawable.ship_base);
-		rippleTexture = TextureHelper.loadTexture(mActivityContext, R.drawable.sea_ripples);
+		shipTexture = TextureHelper.loadTexture(mActivityContext, R.drawable.txtr_ship_base);
+		rippleTexture = TextureHelper.loadTexture(mActivityContext, R.drawable.txtr_sea_ripples);
     }
 	
 	@Override
