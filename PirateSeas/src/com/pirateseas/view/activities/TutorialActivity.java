@@ -52,12 +52,18 @@ public class TutorialActivity extends FragmentActivity{
         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
         mPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+			int tmpPosition = 0;
+			
             @Override
             public void onPageSelected(int position) {
-				if (position > NUM_PAGES){
-					checkEndTutorial();
-				}
+				tmpPosition = position;
             }
+			
+			@Override
+			public void onPageScrollStateChanged(int state){
+				if (state == ViewPager.SCROLL_STATE_DRAGGING && tmpPosition == (NUM_PAGES - 1))
+					checkEndTutorial();
+			}
         });
     }
 	

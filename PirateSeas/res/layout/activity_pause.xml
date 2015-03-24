@@ -2,31 +2,40 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="@dimen/padding_size"
 	android:orientation="vertical"
 	android:background="@drawable/xml_border"
 	android:gravity="center">
 	
-		<Button android:id="@+id/btn_resume"
+		<TextView 
+			android:id="@+id/txtPauseLabel"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="@string/game_resume"
-			android:background="@drawable/xml_btn_style" />
+			android:textSize="@dimen/title_size"
+			android:text="@string/label_pause"
+			android:paddingBottom="@dimen/small_padding_size"/>
 			
-		<ImageButton android:id="@+id/btn_config"
+		<ImageButton android:id="@+id/btnPauseSettings"
 			android:src="@drawable/ico_settings"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="@string/activity_config"
+			android:text="@string/activity_settings"
 			android:background="@drawable/xml_btn_style" />
 		
-		<ImageButton android:id="@+id/btn_help"
+		<ImageButton android:id="@+id/btnPauseHelp"
 			android:src="@drawable/ico_help"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="@string/activity_help"
 			android:background="@drawable/xml_btn_style" />
 			
-		<Button android:id="@+id/btn_exit"
+		<Button android:id="@+id/btnPauseResume"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/game_resume"
+			android:background="@drawable/xml_btn_style" />
+			
+		<Button android:id="@+id/btnPauseExit"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="@string/exit_dialog_positive"

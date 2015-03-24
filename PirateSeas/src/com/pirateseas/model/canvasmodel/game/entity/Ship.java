@@ -1,6 +1,7 @@
 package com.pirateseas.model.canvasmodel.game.entity;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Point;
 
 import com.pirateseas.R;
@@ -10,34 +11,44 @@ import com.pirateseas.global.Constants;
 public class Ship extends Entity {
 
 	private int mAmmunition = 0;
-	private int mStatus = Constants.STATE_ALIVE;
+	private int mStatus = Constants.STATE_DEAD;
+	
+	private int reloadTime = Constants.SHIP_RELOAD_SHORT;
+	
+	private ShipType sType;
 	
 	private Context context;
 	
 	public Ship(Context context, ShipType sType, double x, double y, double canvasWidth, 
-				double canvasHeight, Point coordinates, int width, int height, int length, int health, int ammo){
+				double canvasHeight, Point coordinates, int width, int height, int length, int ammo){
 		super(context, x, y, canvasWidth, canvasHeight, coordinates, width, height, length);
 		
 		this.context = context;
 		
 		this.mAmmunition = ammo;
-		gainHealth(health);
+		
+		this.sType = sType;
+		gainHealth(sType.defaultHealthPoints());
+		setImage(context.getResources().getDrawable(sType.drawableValue()));
 		
 		if(mHealthPoints > 0)
 			setStatus(Constants.STATE_ALIVE);
 		
-		switch(sType){
-		case LIGHT:
-			setImage(context.getResources().getDrawable(R.drawable.txtr_ship_light));
-			break;
-		case MEDIUM:
-			setImage(context.getResources().getDrawable(R.drawable.txtr_ship_medium));
-			break;
-		case HEAVY:
-			setImage(context.getResources().getDrawable(R.drawable.txtr_ship_base));
-			break;
-		}
+	}
+	
+	public Ship(Context context, Ship baseShip, ShipType sType, Point coordinates, int width, int height, int length, int health, int ammo){
+		super(context, baseShip.x, baseShip.y, baseShip.mCanvasWidth, baseShip.mCanvasHeight, coordinates, width, height, length);
 		
+		this.context = context;
+		
+		this.mAmmunition = ammo;
+		
+		this.sType = sType;
+		gainHealth(sType.defaultHealthPoints());
+		setImage(context.getResources().getDrawable(sType.drawableValue()));
+		
+		if(mHealthPoints > 0)
+			setStatus(Constants.STATE_ALIVE);
 	}
 	
 	public void gainAmmo(int ammo){
@@ -50,23 +61,22 @@ public class Ship extends Entity {
 	public Shot shootFront() throws NoAmmoException{
 		Shot cannonballVector = null;
 		
-		switch(mAmmunition){
-			case Constants.SHOT_AMMO_UNLIMITED:
-				cannonballVector = new Shot(context, this.x, this.y, this.mCanvasWidth, this.mCanvasHeight, new Point(0, 3));
-				break;
-			case 0:
-				throw new NoAmmoException(mAmmunition);
-		default:
+		if(mAmmunition > 0 || mAmmunition == Constants.SHOT_AMMO_UNLIMITED){
+			cannonballVector = new Shot(context, this.x, this.y, this.mCanvasWidth, this.mCanvasHeight, new Point(0, 3 * sType.rangeMultiplier()));
+			cannonballVector.setDamage((int) (10 * sType.powerMultiplier()));
+			if(mAmmunition != Constants.SHOT_AMMO_UNLIMITED)
 				mAmmunition--;
-				cannonballVector = new Shot(context, this.x, this.y, this.mCanvasWidth, this.mCanvasHeight, new Point(0, 3));
-				break;
+		} else {
+			throw new NoAmmoException(mAmmunition);
 		}
-		
+
 		return cannonballVector;
 	}
 	
 	public Shot[] shootSide(boolean isRight) throws NoAmmoException{
 		Shot[] cannonballArray = new Shot[3];
+		
+		// TODO Adaptar segun el tipo de barco
 		
 		switch(mAmmunition){
 			case Constants.SHOT_AMMO_UNLIMITED:
@@ -99,6 +109,26 @@ public class Ship extends Entity {
 				break;
 		}
 		return cannonballArray;
+	}
+	
+	/**
+     * Draws on the screen the image of the model
+     * 
+     * @param canvas
+     */
+    public void drawOnScreen(Canvas canvas) {
+        yUp = (int) y - mHeight / 2;
+        xLeft = (int) x - mWidth / 2;
+ 
+        mImage.setBounds(xLeft, yUp, xLeft + mWidth, yUp + mHeight);
+        mImage.draw(canvas);
+    }
+
+	/**
+	 * @return the sType
+	 */
+	public ShipType getType() {
+		return sType;
 	}
 
 	/**

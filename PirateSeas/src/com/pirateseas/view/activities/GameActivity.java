@@ -1,6 +1,7 @@
 package com.pirateseas.view.activities;
 
 import com.pirateseas.R;
+import com.pirateseas.global.Constants;
 import com.pirateseas.view.graphics.canvasview.CanvasView;
 
 import android.app.Activity;
@@ -16,11 +17,13 @@ import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 
 public class GameActivity extends Activity implements SensorEventListener{
+	
+	private static final String TAG = "com.pirateseas.GAME_ACTIVITY";
 
 	private GLSurfaceView mGLView;
 	private CanvasView mCanvasView;
 	
-	private Intent intentData;
+	protected int[] sensorTypes = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -32,7 +35,8 @@ public class GameActivity extends Activity implements SensorEventListener{
 		
 		mCanvasView = new CanvasView(this);
 		
-		intentData = getIntent();
+		// Receive the device event triggering sensor list
+		sensorTypes = getIntent().getIntArrayExtra(Constants.TAG_SENSOR_LIST);
 		
 		// Launch the game!!
 		setContentView(mCanvasView);
@@ -47,6 +51,11 @@ public class GameActivity extends Activity implements SensorEventListener{
 
     @Override
     protected void onResume() {
+		if (!mCanvasView.mainLogic.isAlive() && mCanvasView.mainLogic.getState() != Thread.State.NEW){
+			//Log.e(TAG, "MainLogic is DEAD. Re-starting...");
+			mCanvasView.launchMainLogic();
+			mCanvasView.mainLogic.start();
+		}
 		CanvasView.pauseGame(false);
 		
         super.onResume();
@@ -74,6 +83,9 @@ public class GameActivity extends Activity implements SensorEventListener{
 	                   public void onClick(DialogInterface dialog, int id) {
 	                       // Exit
 						   // TODO Save
+	                	   
+						   mCanvasView.mStatus = Constants.GAME_STATE_END;
+						   mCanvasView.mainLogic.setRunning(false);
 	                	   dummyActivity.finish();
 	                   }
 	               })

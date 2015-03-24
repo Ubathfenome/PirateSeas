@@ -23,7 +23,7 @@ public class Throttle extends View {
 	private static final int[] Y_COORDS = {0, 5, 10, 15};
 	
 	private static final int MODULE_MOVED = 5;
-	private static final String TAG = null;
+	private static final String TAG = "Throttle";
 	
 	public Throttle(Context context, int maxLevels){
 		super(context);

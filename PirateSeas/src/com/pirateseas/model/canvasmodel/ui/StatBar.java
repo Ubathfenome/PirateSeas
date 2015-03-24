@@ -34,7 +34,7 @@ public class StatBar extends BasicModel {
 		
 		// Bar background
 		mPaintLine.setColor(Color.BLACK);
-		mPaintLine.setStrokeWidth(20);
+		mPaintLine.setStrokeWidth(15);
 		canvas.drawLine((int)x, (int) y - 10, (int) mCanvasWidth, (int) y - 10, mPaintLine);
 		
 		// Bar max value
@@ -42,7 +42,7 @@ public class StatBar extends BasicModel {
 			mPaintLine.setColor(Color.RED);
 		else if (mType == Constants.BAR_EXPERIENCE)
 			mPaintLine.setColor(0x0f00ff00);
-		mPaintLine.setStrokeWidth(15);
+		mPaintLine.setStrokeWidth(10);
 		canvas.drawLine((int) x + 5, (int) y - 10, (int) mCanvasWidth - 2, (int) y - 10, mPaintLine);
 		
 		// Bar current value
@@ -50,7 +50,7 @@ public class StatBar extends BasicModel {
 			mPaintLine.setColor(Color.BLUE);
 		else if (mType == Constants.BAR_EXPERIENCE)
 			mPaintLine.setColor(Color.GREEN);
-		mPaintLine.setStrokeWidth(15);
+		mPaintLine.setStrokeWidth(10);
 		canvas.drawLine((int) x + 5, (int) y - 10, (int) ((x + 5) + (( mCanvasWidth - 2) / (maxValue + 1)) * currentValue + 1), (int) y - 10, mPaintLine);
 	}
 	

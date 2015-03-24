@@ -34,7 +34,7 @@
 			android:screenOrientation="landscape">
 		</activity>
 		<activity
-			android:name=".view.activities.ConfigActivity"
+			android:name=".view.activities.SettingsActivity"
 			android:screenOrientation="landscape">
 		</activity>
 		<activity

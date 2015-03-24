@@ -1,7 +1,7 @@
 package com.pirateseas.controller.sensors;
 
 public enum SensorType {
-	TYPE_ALL(-1),
+	//TYPE_ALL(-1),
 	TYPE_ACCELEROMETER(1),
 	TYPE_MAGNETIC_FIELD(2),
 	//TYPE_ORIENTATION(3), // Deprecated since API 8

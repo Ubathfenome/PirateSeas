@@ -1,5 +1,10 @@
 package com.pirateseas.utils;
 
+import com.pirateseas.global.Constants;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+
 /**
  * Class to improve the view with different resolutions
  * @author Miguel
@@ -9,8 +14,12 @@ public class ResolutionAdapter {
 
 	private int screenWidth;
 	private int screenHeight;
+	private int resolutionWidth;
+	private int resolutionHeight;	
 	private double factorX;
 	private double factorY;
+	
+	private SharedPreferences mPreferences;
 
 	/**
 	 * Constructor
@@ -18,9 +27,13 @@ public class ResolutionAdapter {
 	 * @param screenWidth
 	 * @param screenHeight
 	 */
-	public ResolutionAdapter(int screenWidth, int screenHeight) {
+	public ResolutionAdapter(Context context, int screenWidth, int screenHeight) {
 		this.screenWidth = screenWidth;
 		this.screenHeight = screenHeight;
+		
+		mPreferences = context.getSharedPreferences(Constants.TAG_PREF_NAME, Context.MODE_PRIVATE);
+		this.resolutionWidth = mPreferences.getInt(Constants.DEVICE_WIDTH_RES, 1024);
+		this.resolutionHeight = mPreferences.getInt(Constants.DEVICE_HEIGHT_RES, 768);
 		instanceFactor();
 	}
 
@@ -28,8 +41,8 @@ public class ResolutionAdapter {
 	 * Set the default factor for the views 
 	 */
 	private void instanceFactor() {
-		factorY = screenHeight / 1024d;
-		factorX = screenWidth / 768d;
+		factorY = screenHeight / resolutionHeight;
+		factorX = screenWidth / resolutionWidth;
 	}
 
 	/**

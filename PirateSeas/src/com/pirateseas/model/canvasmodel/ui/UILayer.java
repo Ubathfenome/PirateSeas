@@ -1,6 +1,8 @@
 package com.pirateseas.model.canvasmodel.ui;
 
 import com.pirateseas.R;
+import com.pirateseas.controller.androidGameAPI.Player;
+import com.pirateseas.model.canvasmodel.game.entity.Ship;
 import com.pirateseas.view.activities.PauseActivity;
 import com.pirateseas.view.activities.GameActivity;
 
@@ -28,6 +30,12 @@ public class UILayer extends ViewGroup {
 	private ImageButton btnVolume;
 	private ImageButton btnPause;
 	
+	private Throttle mThrottleControl;
+	private Wheel mWheelControl;
+	
+	private UIDisplayElement mGold;
+	private UIDisplayElement mAmmo;
+	
 	/** The amount of space used by children in the left gutter. */
     private int mLeftWidth;
 
@@ -38,7 +46,7 @@ public class UILayer extends ViewGroup {
     private final Rect mTmpContainerRect = new Rect();
     private final Rect mTmpChildRect = new Rect();
 	
-	public UILayer(final Context context){
+	public UILayer(final Context context, Player player, Ship ship){
 		super(context);
 		
 		uiLayerView = inflate(context, R.layout.custom_ui_layout, null);
@@ -59,6 +67,16 @@ public class UILayer extends ViewGroup {
 				((GameActivity)context).startActivity(pauseIntent);
 			}
 		});
+		
+		mThrottleControl = (Throttle) findViewById(R.id.controlThrottle);
+		
+		mWheelControl = (Wheel) findViewById(R.id.controlWheel);
+		
+		mGold = (UIDisplayElement) findViewById(R.id.playerGold);
+		mGold.setElementValue(player.getGold());
+		
+		mAmmo = (UIDisplayElement) findViewById(R.id.playerAmmunition);
+		mAmmo.setElementValue(ship.getAmmunition());
 	}
 	
 	/**

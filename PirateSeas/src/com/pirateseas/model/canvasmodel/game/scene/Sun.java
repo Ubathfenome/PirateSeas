@@ -11,6 +11,6 @@ public class Sun extends BasicModel{
             double mCanvasHeight){
 		super(context, mCanvasHeight, mCanvasHeight, mCanvasHeight, mCanvasHeight);
 		
-		setImage(context.getResources().getDrawable(R.drawable.txtr_sun_orb));
+		setImage(context.getResources().getDrawable(R.drawable.txtr_orb_sun));
 	}
 }

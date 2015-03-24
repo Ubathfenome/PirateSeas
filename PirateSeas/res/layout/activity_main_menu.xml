@@ -3,8 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 	android:orientation="vertical"
-	android:background="@drawable/img_screen_sketch_1"
+	android:background="@drawable/img_menu_background"
 	android:gravity="center">
+	
+		<TextView 
+			android:id="@+id/txtTitleLabel"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textSize="@dimen/title_size"
+			android:text="@string/game_title"/>
 	
 		<Button android:id="@+id/btn_newgame"
 			android:layout_width="wrap_content"
@@ -23,11 +30,11 @@
     		android:layout_height="wrap_content"
 			android:orientation="horizontal">
 			
-		    <ImageButton android:id="@+id/btn_config"
+		    <ImageButton android:id="@+id/btn_settings"
 				android:src="@drawable/ico_settings"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="@string/activity_config"
+				android:text="@string/activity_settings"
 				android:background="@drawable/xml_btn_style" />
 			
 			<ImageButton android:id="@+id/btn_help"

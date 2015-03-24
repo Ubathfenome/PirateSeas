@@ -24,6 +24,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 /**
@@ -99,7 +100,7 @@ public class ScreenSlidePageFragment extends Fragment {
 		}
 		
 		((TextView) rootView.findViewById(R.id.text2)).setText(message);
-		((ImageView) rootView.findViewById(R.id.imgDisplayed)).setBackgroundResource(imageReference);
+		((ScrollView) rootView.findViewById(R.id.content)).setBackgroundResource(imageReference);
 
         return rootView;
     }

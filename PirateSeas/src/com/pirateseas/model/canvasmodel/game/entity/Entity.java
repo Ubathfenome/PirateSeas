@@ -57,14 +57,18 @@ public class Entity extends BasicModel{
 		if(points > 0)
 			mHealthPoints += points;
 		else
-			throw new IllegalArgumentException("Encontrado valor de puntos negativo al modificar HelthPoints");
+			throw new IllegalArgumentException("Encontrado valor de puntos negativo al modificar HealthPoints");
 	}
 	
 	public void looseHealth(int points){
 		if(points > 0)
 			mHealthPoints -= points;
 		else
-			throw new IllegalArgumentException("Encontrado valor de puntos negativo al modificar HelthPoints");
+			throw new IllegalArgumentException("Encontrado valor de puntos negativo al modificar HealthPoints");
+	}
+	
+	public int getHealth(){
+		return mHealthPoints;
 	}
 	
 	public boolean isAlive(){
@@ -82,6 +86,14 @@ public class Entity extends BasicModel{
 		// TODO 
 		
 		return entityCompass;
+	}
+	
+	public Point getCoordinates(){
+		return entityCoordinates;
+	}
+	
+	public void setCoordinates(Point point){
+		this.entityCoordinates = point;
 	}
 	
 	public boolean isMoving(){

@@ -34,7 +34,7 @@
 			android:screenOrientation="landscape">
 		</activity>
 		<activity
-			android:name=".view.activities.ConfigActivity"
+			android:name=".view.activities.SettingsActivity"
 			android:screenOrientation="landscape">
 		</activity>
 		<activity
@@ -48,7 +48,12 @@
 		<activity
 			android:name=".view.activities.PauseActivity"
 			android:screenOrientation="landscape"
-			android:theme="@android:style/Theme.Dialog">
+			android:theme="@style/NoTitleDialog">
+		</activity>
+		<activity
+			android:name=".view.activities.BrightnessUpdateActivity"
+			android:screenOrientation="landscape"
+			android:theme="@android:style/Theme.Translucent.NoTitleBar">
 		</activity>
     </application>
 

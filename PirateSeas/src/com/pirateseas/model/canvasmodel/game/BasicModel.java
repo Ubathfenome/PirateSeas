@@ -27,12 +27,14 @@ public class BasicModel{
 
 	public BasicModel(Context context, double x, double y, double mCanvasWidth,
             double mCanvasHeight){
-			
-		ra = new ResolutionAdapter((int) mCanvasWidth, (int) mCanvasHeight);
+				
+		ra = new ResolutionAdapter(context, (int) mCanvasWidth, (int) mCanvasHeight);
 		
 		this.context = context;
         this.x = ra.x(x); 
         this.y = ra.y(y);
+        this.mWidth = ra.width((int) mCanvasWidth);
+        this.mHeight = ra.height((int) mCanvasHeight);
         this.mCanvasHeight = mCanvasHeight;
         this.mCanvasWidth = mCanvasWidth;
 	}

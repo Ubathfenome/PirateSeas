@@ -4,6 +4,7 @@ import com.pirateseas.R;
 import com.pirateseas.global.Constants;
 import com.pirateseas.view.activities.GameActivity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -97,7 +98,7 @@ public class Shot extends Entity{
 			// Obtener pantalla
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
 				Point size = new Point();
-				// TODO getWindowManager().getDefaultDisplay().getSize(size);
+				((Activity) context).getWindowManager().getDefaultDisplay().getSize(size);
 				mBitmap = Bitmap.createBitmap(size.x, size.y,
 						Bitmap.Config.ARGB_8888);
 			} else {

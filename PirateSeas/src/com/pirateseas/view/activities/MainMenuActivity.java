@@ -3,14 +3,19 @@ package com.pirateseas.view.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Point;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.pirateseas.R;
 import com.pirateseas.global.Constants;
 import com.pirateseas.controller.sensors.SensorActivity;
 
+import android.view.Display;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 
@@ -20,9 +25,12 @@ public class MainMenuActivity extends Activity {
 	
 	protected Context context;
 	
+	protected static int screenResolutionWidth;
+	protected static int screenResolutionHeight;
+	
 	private Button btnNewGame;
 	private Button btnLoadGame;
-	private ImageButton btnConfig;
+	private ImageButton btnSettings;
 	private ImageButton btnHelp;
 	private Button btnExit;
 
@@ -35,6 +43,24 @@ public class MainMenuActivity extends Activity {
 		setContentView(R.layout.activity_main_menu);
 		
 		context = this;
+		
+		// Obtener pantalla
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+			Point size = new Point();
+			getWindowManager().getDefaultDisplay().getSize(size);
+			screenResolutionWidth = size.x;
+			screenResolutionHeight = size.y;
+		} else {
+			Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+			screenResolutionWidth = display.getWidth();
+			screenResolutionHeight = display.getHeight();
+		}
+		
+		SharedPreferences mPreferences = context.getSharedPreferences(Constants.TAG_PREF_NAME, Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = mPreferences.edit();
+		editor.putInt(Constants.DEVICE_WIDTH_RES, screenResolutionWidth);
+		editor.putInt(Constants.DEVICE_HEIGHT_RES, screenResolutionHeight);
+		editor.commit();
 		
 		btnNewGame = (Button) findViewById(R.id.btn_newgame);
 		btnNewGame.setOnClickListener(new OnClickListener(){
@@ -54,11 +80,11 @@ public class MainMenuActivity extends Activity {
 			}
 		});
 		
-		btnConfig = (ImageButton) findViewById(R.id.btn_config);
-		btnConfig.setOnClickListener(new OnClickListener(){
+		btnSettings = (ImageButton) findViewById(R.id.btn_settings);
+		btnSettings.setOnClickListener(new OnClickListener(){
 			public void onClick(View v){
-				Intent configIntent = new Intent(context, ConfigActivity.class);
-				startActivity(configIntent);
+				Intent settingsIntent = new Intent(context, SettingsActivity.class);
+				startActivity(settingsIntent);
 			}
 		});
 		
