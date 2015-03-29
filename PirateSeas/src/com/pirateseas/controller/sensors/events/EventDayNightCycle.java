@@ -23,7 +23,7 @@ public class EventDayNightCycle {
 		return hour * HOUR_DEGREE_RATIO;
 	}
 	
-	public void adjustScreenBrightness(Context context, int brightnessLevel){
+	public static void adjustScreenBrightness(Context context, float brightnessLevel){
 		if (brightnessLevel < 8)
 			brightnessLevel = 8;
 		else if (brightnessLevel > 100)

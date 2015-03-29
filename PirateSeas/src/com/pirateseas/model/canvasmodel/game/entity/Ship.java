@@ -11,9 +11,9 @@ import com.pirateseas.global.Constants;
 public class Ship extends Entity {
 
 	private int mAmmunition = 0;
-	private int mStatus = Constants.STATE_DEAD;
 	
-	private int reloadTime = Constants.SHIP_RELOAD_SHORT;
+	private int mReloadTime;
+	private int mRange;
 	
 	private ShipType sType;
 	
@@ -28,6 +28,8 @@ public class Ship extends Entity {
 		this.mAmmunition = ammo;
 		
 		this.sType = sType;
+		this.mRange = sType.rangeMultiplier();
+		this.mReloadTime = (int) sType.powerMultiplier() * Constants.SHIP_RELOAD;
 		gainHealth(sType.defaultHealthPoints());
 		setImage(context.getResources().getDrawable(sType.drawableValue()));
 		
@@ -55,14 +57,14 @@ public class Ship extends Entity {
 		if(ammo > 0)
 			mAmmunition += ammo;
 		else
-			throw new IllegalArgumentException("Encontrado valor de puntos negativo al modificar Ammunition");
+			throw new IllegalArgumentException("Encontrado valor de puntos negativo al modificar mAmmunition");
 	}
 	
 	public Shot shootFront() throws NoAmmoException{
 		Shot cannonballVector = null;
 		
 		if(mAmmunition > 0 || mAmmunition == Constants.SHOT_AMMO_UNLIMITED){
-			cannonballVector = new Shot(context, this.x, this.y, this.mCanvasWidth, this.mCanvasHeight, new Point(0, 3 * sType.rangeMultiplier()));
+			cannonballVector = new Shot(context, this.x, this.y, this.mCanvasWidth, this.mCanvasHeight, new Point(0, Constants.SHIP_BASIC_RANGE * sType.rangeMultiplier()));
 			cannonballVector.setDamage((int) (10 * sType.powerMultiplier()));
 			if(mAmmunition != Constants.SHOT_AMMO_UNLIMITED)
 				mAmmunition--;
@@ -75,41 +77,84 @@ public class Ship extends Entity {
 	
 	public Shot[] shootSide(boolean isRight) throws NoAmmoException{
 		Shot[] cannonballArray = new Shot[3];
+		Shot cannonballVector = null;
 		
-		// TODO Adaptar segun el tipo de barco
-		
-		switch(mAmmunition){
-			case Constants.SHOT_AMMO_UNLIMITED:
-				if(isRight){
-					cannonballArray[0] = new Shot(context, this.x, this.y, this.mCanvasWidth, this.mCanvasHeight, new Point(3, -1));
-					cannonballArray[1] = new Shot(context, this.x, this.y, this.mCanvasWidth, this.mCanvasHeight, new Point(3, 0));
-					cannonballArray[2] = new Shot(context, this.x, this.y, this.mCanvasWidth, this.mCanvasHeight, new Point(3, 1));
-				} else {
-					cannonballArray[0] = new Shot(context, this.x, this.y, this.mCanvasWidth, this.mCanvasHeight, new Point(-3,-1));
-					cannonballArray[1] = new Shot(context, this.x, this.y, this.mCanvasWidth, this.mCanvasHeight, new Point(-3,0));
-					cannonballArray[2] = new Shot(context, this.x, this.y, this.mCanvasWidth, this.mCanvasHeight, new Point(-3,1));
-				}
-				break;
-			case 0:
-			case 1:
-			case 2:
-				cannonballArray = null;
-				throw new NoAmmoException(mAmmunition);
-			default:
-				mAmmunition -= 3;
-				if(isRight){
-					cannonballArray[0] = new Shot(context, this.x, this.y, this.mCanvasWidth, this.mCanvasHeight, new Point(3, -1));
-					cannonballArray[1] = new Shot(context, this.x, this.y, this.mCanvasWidth, this.mCanvasHeight, new Point(3, 0));
-					cannonballArray[2] = new Shot(context, this.x, this.y, this.mCanvasWidth, this.mCanvasHeight, new Point(3, 1));
-				} else {
-					cannonballArray[0] = new Shot(context, this.x, this.y, this.mCanvasWidth, this.mCanvasHeight, new Point(-3,-1));
-					cannonballArray[1] = new Shot(context, this.x, this.y, this.mCanvasWidth, this.mCanvasHeight, new Point(-3,0));
-					cannonballArray[2] = new Shot(context, this.x, this.y, this.mCanvasWidth, this.mCanvasHeight, new Point(-3,1));
-				}
-				break;
+		if(mAmmunition > 3 || mAmmunition == Constants.SHOT_AMMO_UNLIMITED){
+			for(int i = 0; i < cannonballArray.length; i++){
+				if(isRight)
+					cannonballVector = new Shot(context, this.x, this.y, this.mCanvasWidth, this.mCanvasHeight, new Point(Constants.SHIP_BASIC_RANGE * sType.rangeMultiplier(), i - 1));
+				else
+					cannonballVector = new Shot(context, this.x, this.y, this.mCanvasWidth, this.mCanvasHeight, new Point(-Constants.SHIP_BASIC_RANGE * sType.rangeMultiplier(), i - 1));
+				cannonballVector.setDamage((int) (10 * sType.powerMultiplier()));
+								
+				cannonballArray[i] = cannonballVector;
+				if(mAmmunition != Constants.SHOT_AMMO_UNLIMITED)
+					mAmmunition--;
+			}
+		} else {
+			cannonballArray = null;
+			throw new NoAmmoException(mAmmunition);
 		}
+		
 		return cannonballArray;
 	}
+	
+/*
+	public void turn(int degrees){
+		setEntityDirection(degrees);
+		
+		switch(sType){
+			case LIGHT:
+				switch(degrees){
+					case 0:
+						setImage(R.drawable.txtr_ship_light_right);
+						break;
+					case 90:
+						setImage(R.drawable.txtr_ship_light_front);
+						break;
+					case 180:
+						setImage(R.drawable.txtr_ship_light_left);
+						break;
+					case 270:
+						setImage(R.drawable.txtr_ship_light_back);
+						break;
+				}
+				break;
+			case MEDIUM:
+				switch(degrees){
+					case 0:
+						setImage(R.drawable.txtr_ship_medium_right);
+						break;
+					case 90:
+						setImage(R.drawable.txtr_ship_medium_front);
+						break;
+					case 180:
+						setImage(R.drawable.txtr_ship_medium_left);
+						break;
+					case 270:
+						setImage(R.drawable.txtr_ship_medium_back);
+						break;
+				}
+				break;
+			case HEAVY:
+				switch(degrees){
+					case 0:
+						setImage(R.drawable.txtr_ship_heavy_right);
+						break;
+					case 90:
+						setImage(R.drawable.txtr_ship_heavy_front);
+						break;
+					case 180:
+						setImage(R.drawable.txtr_ship_heavy_left);
+						break;
+					case 270:
+						setImage(R.drawable.txtr_ship_heavy_back);
+						break;
+				}
+			break;
+		}
+	}
+*/
 	
 	/**
      * Draws on the screen the image of the model
@@ -125,24 +170,38 @@ public class Ship extends Entity {
     }
 
 	/**
+	 * @return the mReloadTime
+	 */
+	public int getReloadTime() {
+		return mReloadTime;
+	}
+
+	/**
+	 * @param mReloadTime the mReloadTime to set
+	 */
+	public void setReloadTime(int mReloadTime) {
+		this.mReloadTime = mReloadTime;
+	}
+
+	/**
+	 * @return the mRange
+	 */
+	public int getRange() {
+		return mRange;
+	}
+
+	/**
+	 * @param mRange the mRange to set
+	 */
+	public void setRange(int mRange) {
+		this.mRange = mRange;
+	}
+
+	/**
 	 * @return the sType
 	 */
 	public ShipType getType() {
 		return sType;
-	}
-
-	/**
-	 * @return the mStatus
-	 */
-	public int getStatus() {
-		return mStatus;
-	}
-
-	/**
-	 * @param mStatus the mStatus to set
-	 */
-	public void setStatus(int mStatus) {
-		this.mStatus = mStatus;
 	}
 
 	/**

@@ -29,6 +29,9 @@ public class PauseActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_pause);
+		// TODO
+		// UNDO
+		// requestWindowFeature(Window.FEATURE_NO_TITLE);
 		
 		context = this;
 		
@@ -62,7 +65,8 @@ public class PauseActivity extends Activity {
 		btnExit = (Button) findViewById(R.id.btnPauseExit);
 		btnExit.setOnClickListener(new OnClickListener(){
 			public void onClick(View v){
-				//((GameActivity) context).onBackPressed();
+				// TODO Check this...
+				((GameActivity) context).onBackPressed();
 				finish();
 			}
 		});

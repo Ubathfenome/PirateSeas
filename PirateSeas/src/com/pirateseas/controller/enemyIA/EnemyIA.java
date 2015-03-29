@@ -1,5 +1,6 @@
 package com.pirateseas.controller.enemyIA;
 
+import com.pirateseas.global.Constants;
 import com.pirateseas.model.canvasmodel.game.entity.Ship;
 
 public class EnemyIA {
@@ -17,7 +18,7 @@ public class EnemyIA {
 	}
 	
 	public Ship getNextMove(){
-		
+		// TODO
 		
 		return null;
 	}
@@ -27,12 +28,39 @@ public class EnemyIA {
 	}
 	
 	private boolean playerWithinReach(){
-		return false;
+		int enemyRange = Constants.SHIP_BASIC_RANGE * enemyShip.getRange();
 		
+		if (Math.abs(enemyShip.getCoordinates().y - playerShip.getCoordinates().y) <= enemyRange)
+			return true;
+		if (Math.abs(enemyShip.getCoordinates().x - playerShip.getCoordinates().x) <= enemyRange)
+			return true;
+		return false;
 	}
 	
 	private boolean playerIsAligned(){
-		return false;		
+		int direction = playerShip.compareTo(enemyShip);
+		int enemyDirection = enemyShip.getEntityDirection();
+		
+		switch(direction){
+			case 0:
+				if(enemyDirection == 270 || enemyDirection == 180 || enemyDirection == 90)
+					return true;
+				break;
+			case 90:
+				if(enemyDirection == 270 || enemyDirection == 180 || enemyDirection == 0)
+					return true;
+				break;
+			case 180:
+				if(enemyDirection == 270 || enemyDirection == 90 || enemyDirection == 0)
+					return true;
+				break;
+			case 270:
+				if(enemyDirection == 180 || enemyDirection == 90 || enemyDirection == 0)
+					return true;
+				break;
+		}
+		
+		return false;
 	}
 	
 	

@@ -139,6 +139,7 @@ public class MainMenuActivity extends Activity {
 				if (resultCode == RESULT_OK){
 					
 					// TODO
+					
 					int[] sensorTypes = data.getIntArrayExtra(Constants.TAG_SENSOR_LIST);
 					
 					launchGame(newGame, sensorTypes);

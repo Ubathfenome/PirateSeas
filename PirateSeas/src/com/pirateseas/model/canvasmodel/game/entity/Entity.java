@@ -2,6 +2,7 @@ package com.pirateseas.model.canvasmodel.game.entity;
 
 import com.pirateseas.global.Constants;
 import com.pirateseas.model.canvasmodel.game.BasicModel;
+import com.pirateseas.utils.Geometry;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -15,10 +16,13 @@ public class Entity extends BasicModel{
 	protected int entityHeight;
 	protected int entityLength;
 	
+	protected int entityDirection; // 0..359 degrees
+	
 	protected Point entityCoordinates;
+	
+	private int mStatus = Constants.STATE_DEAD;
 		
 	// Common attribs
-	protected ShipType sType;
 	protected int mHealthPoints = 0;
 	protected int mSpeed = 0;	
 		
@@ -30,6 +34,8 @@ public class Entity extends BasicModel{
 		this.entityLength = eLength;
 		
 		this.entityCoordinates = eCoords;
+		
+		entityDirection = 90;
 		
 		mSpeed = Constants.ENTITY_SPEED[0];
 	}
@@ -81,9 +87,10 @@ public class Entity extends BasicModel{
 	}
 	
 	public int compareTo(Entity other){
-		int entityCompass = -1; // 0..359 degrees
+		int entityCompass = -1; // 0..359 degrees		
+		Point origin = new Point(0, 0);
 		
-		// TODO 
+		entityCompass = (int) Geometry.getRotationAngle(entityCoordinates, origin, other.getCoordinates());
 		
 		return entityCompass;
 	}
@@ -98,5 +105,33 @@ public class Entity extends BasicModel{
 	
 	public boolean isMoving(){
 		return mSpeed > 0 ? true : false;
+	}
+	
+	/**
+	 * @return the mStatus
+	 */
+	public int getStatus() {
+		return mStatus;
+	}
+
+	/**
+	 * @param mStatus the mStatus to set
+	 */
+	public void setStatus(int mStatus) {
+		this.mStatus = mStatus;
+	}
+
+	/**
+	 * @return the entityDirection
+	 */
+	public int getEntityDirection() {
+		return entityDirection;
+	}
+
+	/**
+	 * @param entityDirection the entityDirection to set
+	 */
+	public void setEntityDirection(int entityDirection) {
+		this.entityDirection = entityDirection;
 	}
 }

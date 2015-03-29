@@ -109,8 +109,16 @@ public class SensorActivity extends Activity{
 	}
 	
 	private void exitActivity(boolean result){
-		Intent sensorListIntent = new Intent();		
-		sensorListIntent.putExtra(Constants.TAG_SENSOR_LIST, mDeviceSensorTypes.toArray());
+		Intent sensorListIntent = new Intent();
+		
+		Object[] tmpObjectArray = mDeviceSensorTypes.toArray();
+		int[] extraIntArray = new int[tmpObjectArray.length];
+		
+		for(int i = 0; i < tmpObjectArray.length; i++){
+			extraIntArray[i] = (int) tmpObjectArray[i];
+		}
+		
+		sensorListIntent.putExtra(Constants.TAG_SENSOR_LIST, extraIntArray);
 		
 		SharedPreferences.Editor editor = mPreferences.edit();
 		editor.putString(Constants.PREF_SENSOR_LIST, putPreferenceSensorList());

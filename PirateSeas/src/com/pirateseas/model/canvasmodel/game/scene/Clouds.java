@@ -5,6 +5,10 @@ import android.content.Context;
 import com.pirateseas.R;
 import com.pirateseas.model.canvasmodel.game.BasicModel;
 
+/**
+* Extends from View?
+* @see: http://developer.android.com/guide/topics/graphics/prop-animation.html#object-animator
+*/
 public class Clouds extends BasicModel{
 	
 	public Clouds(Context context, double x, double y, double mCanvasWidth,

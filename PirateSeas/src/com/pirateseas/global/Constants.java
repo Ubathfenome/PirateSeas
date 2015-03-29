@@ -11,6 +11,7 @@ public class Constants{
 	// Math factors
 	public static final float TOUCH_SCALE_FACTOR = 180.0f / 320;
 	
+	public static final int SECONDS_TO_NANOS = 1000000000;
 	public static final int MILLIS_PER_HOUR = 3600000;
 	public static final int BYTES_PER_FLOAT = 4;
 	
@@ -20,6 +21,9 @@ public class Constants{
 	// Entity states
 	public static final int STATE_ALIVE = 0;
 	public static final int STATE_DEAD = 1;
+	
+	public static final int SHIP_RELOAD = 2;
+	public static final int SHIP_BASIC_RANGE = 3;
 	
 	public static final int SHOT_AMMO_UNLIMITED = -1;
 	public static final int SHOT_FIRED = 0;
@@ -52,11 +56,18 @@ public class Constants{
 	
 	public static final String DEVICE_HEIGHT_RES = "deviceHeightPref";
 	public static final String DEVICE_WIDTH_RES = "deviceWidthPref";
+	
 	public static final String FONT_NAME = "TooneyNoodleNF";
 	
-	public static final int SHIP_RELOAD_SHORT = 0;
-	public static final int SHIP_RELOAD_MEDIUM = 1;
-	public static final int SHIP_RELOAD_LONG = 2;
+	public static final String FRONT = "Front";
+	public static final String BACK = "Back";
+	public static final String RIGHT = "Right";
+	public static final String LEFT = "Left";
+	
+	public static final String ITEMLIST_NATURE = "Nature";
+	public static final Object SHOP_NATURE = "Shop";
+	public static final Object TREASURE_NATURE = "Treasure";
+
 	
 	
 	

@@ -8,4 +8,6 @@ public class EventWeatherStorm {
 		return SensorType.TYPE_RELATIVE_HUMIDITY;
 	}
 	
+	
+	
 }

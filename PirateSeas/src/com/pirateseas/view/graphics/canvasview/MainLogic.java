@@ -46,8 +46,10 @@ public class MainLogic extends Thread {
 	public void run() {
 		Canvas canvas;
 
-		if(!this.mCanvasView.isInitialized())
+		if(!this.mCanvasView.isInitialized()){
 			this.mCanvasView.initialize();
+			this.mCanvasView.loadGame();
+		}
 
 		long initTime; // Loop initial time
 		long diffTime; // Loop duration time

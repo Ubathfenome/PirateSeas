@@ -1,13 +1,17 @@
 package com.pirateseas.view.graphics.canvasview;
 
+import java.util.List;
+
 import com.pirateseas.R;
 import com.pirateseas.controller.androidGameAPI.Player;
 import com.pirateseas.controller.sensors.events.EventDayNightCycle;
 import com.pirateseas.controller.timer.GameTimer;
+import com.pirateseas.exceptions.NoAmmoException;
 import com.pirateseas.exceptions.SaveGameException;
 import com.pirateseas.global.Constants;
 import com.pirateseas.model.canvasmodel.game.entity.Ship;
 import com.pirateseas.model.canvasmodel.game.entity.ShipType;
+import com.pirateseas.model.canvasmodel.game.entity.Shot;
 import com.pirateseas.model.canvasmodel.game.scene.Sea;
 import com.pirateseas.model.canvasmodel.game.scene.Sky;
 import com.pirateseas.model.canvasmodel.ui.UILayer;
@@ -43,8 +47,8 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	// private Clouds clouds;
 	// private Sun sun;
 	private Ship playerShip;
-	// private Ship enemyShip;
-	// private List<Shot> shotList;
+	private Ship enemyShip;
+	private List<Shot> shotList;
 	// private UILayer ui;
 	
 	private boolean mInitialized = false;
@@ -167,31 +171,59 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 						break;
 					case MotionEvent.ACTION_MOVE:
 						break;
-					case MotionEvent.ACTION_UP:
-						/*
-						if(isTouching(Throttle)){
-						} else if(isTouching(Wheel)){
-						} else {
-							if (motionUp(event)){
-								shotList.add(ship.shootFront());
-							} else if(motionSide(event).equals(Constants.RIGHT)){
-								Shot[] shotArray = ship.shootSide(true);
-								for(Shot shot : shotArray){
-									shotList.add(shot);
-								}
-							} else if(motionSide(event).equals(Constants.LEFT)){
-								Shot[] shotArray = ship.shootSide(false);
-								for(Shot shot : shotArray){
-									shotList.add(shot);
-								}
+					case MotionEvent.ACTION_UP:						
+						if (motionUp(event).equals(Constants.FRONT)){
+							try {
+								shotList.add(playerShip.shootFront());
+							} catch (NoAmmoException e) {
+							}
+						} else if(motionSide(event).equals(Constants.RIGHT)){
+							Shot[] shotArray = null;
+							try {
+								shotArray = playerShip.shootSide(true);
+							} catch (NoAmmoException e) {
+							}
+							for(Shot shot : shotArray){
+								shotList.add(shot);
+							}
+						} else if(motionSide(event).equals(Constants.LEFT)){
+							Shot[] shotArray = null;
+							try {
+								shotArray = playerShip.shootSide(false);
+							} catch (NoAmmoException e) {
+							}
+							for(Shot shot : shotArray){
+								shotList.add(shot);
 							}
 						}
-						*/
+
 						break;
 				}
 			}
 		}
 		return true;
+	}
+	
+	private String motionUp(MotionEvent event){
+		int numberOfPoints = event.getHistorySize();
+		float firstY = event.getHistoricalY(0);
+		float lastY = event.getHistoricalY(numberOfPoints - 1);
+		
+		if(firstY > lastY)
+			return Constants.FRONT;
+		else
+			return Constants.BACK;		
+	}
+	
+	private String motionSide(MotionEvent event){
+		int numberOfPoints = event.getHistorySize();
+		float firstX = event.getHistoricalX(0);
+		float lastX = event.getHistoricalX(numberOfPoints - 1);
+		
+		if(firstX < lastX)
+			return Constants.RIGHT;
+		else
+			return Constants.LEFT;		
 	}
 	
 	public static void pauseGame(boolean hasToBePaused){

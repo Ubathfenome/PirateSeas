@@ -14,8 +14,6 @@ public class Island extends BasicModel{
 	
 	private Context context; 
 	
-	private List<Item> itemList = null;
-	
 	private Random rand;
 	private boolean hasShop;
 	
@@ -23,7 +21,7 @@ public class Island extends BasicModel{
             double mCanvasHeight){
 		super(context, x, y, mCanvasHeight, mCanvasHeight);
 		
-		setImage(context.getResources().getDrawable(R.drawable.txtr_island));
+		//setImage(context.getResources().getDrawable(R.drawable.txtr_island));
 
 		rand = new Random();
 		
@@ -31,7 +29,10 @@ public class Island extends BasicModel{
 			hasShop = true;
 		else{
 			hasShop = false;
-			
 		}
+	}
+	
+	public boolean hasShop(){
+		return hasShop;
 	}
 }
