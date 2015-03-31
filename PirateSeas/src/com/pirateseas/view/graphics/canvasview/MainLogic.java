@@ -48,7 +48,6 @@ public class MainLogic extends Thread {
 
 		if(!this.mCanvasView.isInitialized()){
 			this.mCanvasView.initialize();
-			this.mCanvasView.loadGame();
 		}
 
 		long initTime; // Loop initial time

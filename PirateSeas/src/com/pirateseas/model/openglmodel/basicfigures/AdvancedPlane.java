@@ -7,8 +7,8 @@ import static android.opengl.GLES20.glDrawArrays;
 import static android.opengl.GLES20.glBlendFunc;
 
 import com.pirateseas.global.Constants;
-import com.pirateseas.utils.data.VertexArray;
-import com.pirateseas.utils.programs.TextureShaderProgram;
+import com.pirateseas.utils.approach3d.data.VertexArray;
+import com.pirateseas.utils.approach3d.programs.TextureShaderProgram;
 
 public class AdvancedPlane {
 	

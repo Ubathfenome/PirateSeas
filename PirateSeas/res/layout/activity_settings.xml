@@ -12,28 +12,55 @@
 		android:layout_height="wrap_content"
 		android:textSize="@dimen/title_size"
 		android:text="@string/label_settings"
-		android:paddingBottom="@dimen/small_padding_size"/>
+		android:paddingBottom="@dimen/padding_size"/>
+	
+	<LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="horizontal"
+	    android:padding="50dp"
+	    android:gravity="center">
 			
-	<SeekBar
-		android:id="@+id/sbVolume"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"/>
+		<SeekBar
+			android:id="@+id/sbVolume"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_weight="1" />
+		
+		<TextView 
+			android:id="@+id/txtVolumeLabel"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textSize="@dimen/text_size"
+			android:labelFor="@id/sbVolume"
+			android:text="@string/lbl_volume"
+			android:layout_marginLeft="8dp"
+			android:layout_marginRight="8dp"/>
+	
+	</LinearLayout>
 		
 	<LinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:orientation="horizontal">
+		android:orientation="horizontal"
+		android:gravity="center|bottom">
 		
 		<Button
 			android:id="@+id/btnSettingsAccept"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="@string/btn_accept" />
+			android:text="@string/btn_accept"
+			android:layout_marginLeft="8dp"
+			android:layout_marginRight="8dp"
+			android:background="@drawable/xml_btn_style" />
 			
 		<Button
 			android:id="@+id/btnSettingsCancel" 
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="@string/btn_cancel"/>
+			android:text="@string/btn_cancel"
+			android:layout_marginLeft="8dp"
+			android:layout_marginRight="8dp"
+			android:background="@drawable/xml_btn_style"/>
 	</LinearLayout>
 </LinearLayout>

@@ -1,9 +1,5 @@
 package com.pirateseas.controller.androidGameAPI;
 
-import java.util.List;
-
-import com.pirateseas.model.canvasmodel.game.objects.Item;
-
 public class Player{
 	
 	// @see: http://developer.android.com/distribute/stories/games.html
@@ -13,6 +9,13 @@ public class Player{
 	private int gold = 0;
 	private int experience = 0;
 	private int passedDays = 0;
+	
+	public Player(){
+		this.level = 0;
+		this.gold = 0;
+		this.experience = 0;
+		this.passedDays = 0;
+	}
 	
 	public Player(int level, int gold, int xp, int days){
 		this.level = level;

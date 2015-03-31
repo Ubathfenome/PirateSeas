@@ -16,12 +16,12 @@ public class StatBar extends BasicModel {
 	private int currentValue;
 	
 	public StatBar(Context context, double x, double y, double mCanvasWidth, double mCanvasHeight, int type){
-		super(context, x, y, mCanvasWidth, mCanvasHeight);
+		super(context, x, y, mCanvasWidth, mCanvasHeight, null);
 		this.mType = type;
 	}
 	
 	public StatBar(Context context, double x, double y, double mCanvasWidth, double mCanvasHeight, int maxValue, int currentValue, int type){
-		super(context, x, y, mCanvasWidth, mCanvasHeight);
+		super(context, x, y, mCanvasWidth, mCanvasHeight, null);
 		this.maxValue = maxValue;
 		this.currentValue = currentValue;
 		

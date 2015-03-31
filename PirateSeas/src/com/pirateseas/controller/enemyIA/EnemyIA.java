@@ -7,18 +7,29 @@ public class EnemyIA {
 	
 	private int mStatus;
 	
-	private static Ship playerShip;
+	private Ship playerShip;
 	private Ship enemyShip;
 	
 	public EnemyIA(Ship pShip, Ship eShip){
 		this.playerShip = pShip;
 		this.enemyShip = eShip;
 		
-		mStatus = IAStatuses.IDLE.ordinal();
+		setStatus(IAStatuses.IDLE.ordinal());
 	}
 	
 	public Ship getNextMove(){
 		// TODO
+		if(imHealthier() && playerWithinReach() && playerIsAligned()){
+			//SHOOT target
+		} else if (imHealthier() && playerWithinReach() && !playerIsAligned()){
+			//TURN to align with target
+		} else if (imHealthier() && !playerWithinReach() && playerIsAligned()){
+			//MOVE closer to target
+		} else if (imHealthier() && !playerWithinReach() && !playerIsAligned()){
+			//IDLE let him come
+		} else if (!imHealthier() && playerWithinReach()){
+			//RETREAT asap
+		}
 		
 		return null;
 	}
@@ -64,6 +75,15 @@ public class EnemyIA {
 	}
 	
 	
+	public int getStatus() {
+		return mStatus;
+	}
+
+	public void setStatus(int mStatus) {
+		this.mStatus = mStatus;
+	}
+
+
 	private enum IAStatuses{
 		IDLE, MOVE, TURN, ATTACKF, ATTACKSR, ATTACKSL, RETREAT
 	}

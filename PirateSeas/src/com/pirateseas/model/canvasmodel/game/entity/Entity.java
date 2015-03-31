@@ -2,12 +2,10 @@ package com.pirateseas.model.canvasmodel.game.entity;
 
 import com.pirateseas.global.Constants;
 import com.pirateseas.model.canvasmodel.game.BasicModel;
-import com.pirateseas.utils.Geometry;
+import com.pirateseas.utils.approach2d.Geometry;
 
 import android.content.Context;
-import android.graphics.Canvas;
 import android.graphics.Point;
-import android.graphics.drawable.Drawable;
 
 public class Entity extends BasicModel{
 		
@@ -27,7 +25,7 @@ public class Entity extends BasicModel{
 	protected int mSpeed = 0;	
 		
 	public Entity(Context context, double x, double y, double canvasWidth, double canvasHeight, Point eCoords, int eWidth, int eHeight, int eLength){
-		super(context, x, y, canvasWidth, canvasHeight);
+		super(context, x, y, canvasWidth, canvasHeight, null);
 		
 		this.entityWidth = eWidth;
 		this.entityHeight = eHeight;

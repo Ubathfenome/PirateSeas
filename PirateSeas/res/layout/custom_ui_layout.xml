@@ -13,33 +13,34 @@
         android:layout_height="wrap_content">
 		
 		<Space
-			android:id="@+id/enemyHBarSpace"
-			android:layout_gravity="fill" />
-		
-		<ImageButton
-			android:id="@+id/btnVolume"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:src="@drawable/ico_volume_on"
-			android:background="@drawable/xml_btn_style" />
+		    android:id="@+id/enemyHBarSpace"
+		    android:layout_width="0dp"
+		    android:layout_height="wrap_content"
+		    android:layout_gravity="fill"
+		    android:layout_weight="1" />
 			
 		<ImageButton
 			android:id="@+id/btnPause"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:contentDescription="@string/btn_pause"
 			android:src="@drawable/ico_pause"
 			android:background="@drawable/xml_btn_style" />
 	</LinearLayout>
 	
-	<Space 
-		android:id="@+id/gameSpace"
-		android:layout_gravity="fill" />
+	<Space
+	    android:id="@+id/gameSpace"
+	    android:layout_width="wrap_content"
+	    android:layout_height="0dp"
+	    android:layout_gravity="fill"
+	    android:layout_weight="1" />
 	
 	<LinearLayout
-		android:id="@+id/bottomFrame"
-		android:orientation="horizontal"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content" >
+	    android:id="@+id/bottomFrame"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="horizontal"
+	    android:gravity="center" >
 		
 		<com.pirateseas.model.canvasmodel.ui.Throttle
 			android:id="@+id/controlThrottle"
@@ -47,12 +48,18 @@
 			android:layout_height="wrap_content" />
 		
 		<Space
-			android:id="@+id/playerBarsSpace"
-			android:layout_gravity="fill" />
+		    android:id="@+id/playerBarsSpace"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_gravity="fill"
+		    android:layout_weight="1" />
 		
 		<Space
-			android:id="@+id/playerSpace"
-			android:layout_gravity="fill" />
+		    android:id="@+id/playerSpace"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_gravity="fill"
+		    android:layout_weight="1" />
 		
 		<com.pirateseas.model.canvasmodel.ui.UIDisplayElement
 			android:id="@+id/playerGold"

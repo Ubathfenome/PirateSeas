@@ -2,7 +2,6 @@ package com.pirateseas.model.canvasmodel.game.entity;
 
 import com.pirateseas.R;
 import com.pirateseas.global.Constants;
-import com.pirateseas.view.activities.GameActivity;
 
 import android.app.Activity;
 import android.content.Context;
@@ -31,7 +30,6 @@ public class Shot extends Entity{
 	private int mStatus;
 	
 	protected Paint mBrush = null;
-	private Bitmap mDrawnBitmap;
 	protected Board board = null;
 	
 	public Shot(Context context, double x, double y, double mCanvasWidth, double mCanvasHeight, Point destiny){
@@ -42,7 +40,7 @@ public class Shot extends Entity{
 		startPoint = new Point((int)x, (int)y);
 		endPoint = destiny;
 		
-		pathLength = getLength(startPoint, endPoint);
+		setPathLength(getLength(startPoint, endPoint));
 		
 		mDamage = 10;
 		
@@ -81,6 +79,14 @@ public class Shot extends Entity{
 		this.mDamage = damage;
 	}
 	
+	public float getPathLength() {
+		return pathLength;
+	}
+
+	public void setPathLength(float pathLength) {
+		this.pathLength = pathLength;
+	}
+
 	public class Board extends View {
 		private Bitmap mBitmap = null;
 		private Canvas mCanvas = null;
@@ -92,6 +98,7 @@ public class Shot extends Entity{
 		 * Constructor of the Board class
 		 * @param context
 		 */
+		@SuppressWarnings("deprecation")
 		public Board(Context context) {
 			super(context);
 			

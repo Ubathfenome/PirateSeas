@@ -2,9 +2,9 @@ package com.pirateseas.exceptions;
 
 public class NoAmmoException extends Exception {
 	
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -7086092562775180996L;
 
-	public NoAmmoException(int mAmmunition) {
-		// TODO Auto-generated constructor stub
+	public NoAmmoException(String message) {
+		super(message);
 	}
 }

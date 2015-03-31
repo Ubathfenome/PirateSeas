@@ -4,8 +4,8 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 
-import com.pirateseas.utils.Geometry.Point3D;
-import com.pirateseas.utils.Geometry.Vector3D;
+import com.pirateseas.utils.approach2d.Geometry.Point3D;
+import com.pirateseas.utils.approach2d.Geometry.Vector3D;
 
 public class Entity {
 	
@@ -94,8 +94,6 @@ public class Entity {
 		boolean[] entityCompass = new boolean[4]; // North, East, South, West
 		
 		// Initialize
-		for(boolean c : entityCompass)
-			c = false;
 		
 		// TODO 
 		

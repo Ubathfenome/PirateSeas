@@ -6,10 +6,10 @@ import com.pirateseas.R;
 import com.pirateseas.exceptions.NoAmmoException;
 import com.pirateseas.global.Constants;
 import com.pirateseas.model.openglmodel.basicfigures.AdvancedPlane;
-import com.pirateseas.utils.Geometry.Point3D;
-import com.pirateseas.utils.Geometry.Vector3D;
-import com.pirateseas.utils.data.VertexArray;
-import com.pirateseas.utils.programs.TextureShaderProgram;
+import com.pirateseas.utils.approach2d.Geometry.Point3D;
+import com.pirateseas.utils.approach2d.Geometry.Vector3D;
+import com.pirateseas.utils.approach3d.data.VertexArray;
+import com.pirateseas.utils.approach3d.programs.TextureShaderProgram;
 
 public class Ship extends Entity {
 
@@ -47,9 +47,13 @@ public class Ship extends Entity {
 	private int mAmmunition = 0;
 	private int mStatus = Constants.STATE_ALIVE;
 	
+	Context context;
+	
 	public Ship(Context context, ShipType sType, Point3D coordinates, Vector3D direction, float width, float height, float depth, int health, int ammo){
 		super(context, coordinates,direction,width,height,depth);
 		mPlane = new AdvancedPlane(vArray);
+		
+		this.context = context;
 		
 		this.mAmmunition = ammo;
 		gainHealth(health);
@@ -106,7 +110,7 @@ public class Ship extends Entity {
 				break;
 			case 0:
 				mAmmunition += 3;
-				throw new NoAmmoException(mAmmunition);
+				throw new NoAmmoException(context.getResources().getString(R.string.exception_ammo));
 		default:
 				mAmmunition--;
 				cannonballVector = new Vector3D(mDirection);
@@ -136,7 +140,7 @@ public class Ship extends Entity {
 			case 2:
 				// mAmmunition += 3;
 				cannonballArray = null;
-				throw new NoAmmoException(mAmmunition);
+				throw new NoAmmoException(context.getResources().getString(R.string.exception_ammo));
 			default:
 				mAmmunition -= 3;
 				if(isRight){

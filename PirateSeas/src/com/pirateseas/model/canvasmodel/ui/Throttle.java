@@ -1,12 +1,13 @@
 package com.pirateseas.model.canvasmodel.ui;
 
 import com.pirateseas.R;
-
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,6 +25,30 @@ public class Throttle extends View {
 	
 	private static final int MODULE_MOVED = 5;
 	private static final String TAG = "Throttle";
+
+	public Throttle(Context context) {
+		super(context);
+		
+		mImageBase = context.getResources().getDrawable(R.drawable.ico_throttle_base);
+		mImageStick = context.getResources().getDrawable(R.drawable.ico_throttle_stick);
+		mImageHandle = context.getResources().getDrawable(R.drawable.ico_throttle_handle);
+	}
+
+	public Throttle(Context context, AttributeSet attrs) {
+		super(context, attrs);
+		
+		mImageBase = context.getResources().getDrawable(R.drawable.ico_throttle_base);
+		mImageStick = context.getResources().getDrawable(R.drawable.ico_throttle_stick);
+		mImageHandle = context.getResources().getDrawable(R.drawable.ico_throttle_handle);
+	}
+	
+	public Throttle(Context context, AttributeSet attrs, int defStyleAttr) {
+		super(context, attrs, defStyleAttr);
+		
+		mImageBase = context.getResources().getDrawable(R.drawable.ico_throttle_base);
+		mImageStick = context.getResources().getDrawable(R.drawable.ico_throttle_stick);
+		mImageHandle = context.getResources().getDrawable(R.drawable.ico_throttle_handle);
+	}	
 	
 	public Throttle(Context context, int maxLevels){
 		super(context);
@@ -36,6 +61,7 @@ public class Throttle extends View {
 		mImageHandle = context.getResources().getDrawable(R.drawable.ico_throttle_handle);
 	}
 	
+	@SuppressLint("ClickableViewAccessibility")
 	@Override
 	public boolean onTouchEvent(MotionEvent event){
 		switch(event.getAction()){

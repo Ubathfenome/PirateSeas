@@ -1,6 +1,5 @@
 package com.pirateseas.controller.sensors;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +15,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.AsyncTask;
@@ -27,7 +25,6 @@ import android.widget.TextView;
 
 public class SensorActivity extends Activity{
 	
-	private static final long serialVersionUID = 1L;
 	public static final String TAG = "com.pirateseas.view.activities.SensorActivity";
 	
 	private SharedPreferences mPreferences = null;
@@ -35,7 +32,6 @@ public class SensorActivity extends Activity{
 	
 	private SensorManager mSensorManager;
 	private List<Integer> mDeviceSensorTypes;
-	private Sensor mSensor;
 	
 	private TextView tv;
 	
@@ -115,7 +111,7 @@ public class SensorActivity extends Activity{
 		int[] extraIntArray = new int[tmpObjectArray.length];
 		
 		for(int i = 0; i < tmpObjectArray.length; i++){
-			extraIntArray[i] = (int) tmpObjectArray[i];
+			extraIntArray[i] = Integer.valueOf(tmpObjectArray[i].toString());
 		}
 		
 		sensorListIntent.putExtra(Constants.TAG_SENSOR_LIST, extraIntArray);
@@ -152,7 +148,7 @@ public class SensorActivity extends Activity{
 			int count = SensorType.values().length;
 			for(int i = 0; i < count; i++){
 				SensorType type = SensorType.values()[i];
-				if((mSensor = mSensorManager.getDefaultSensor(type.getCode())) != null && triggeredSensors.contains(type)){
+				if(mSensorManager.getDefaultSensor(type.getCode()) != null && triggeredSensors.contains(type)){
 					mDeviceSensorTypes.add(type.getCode());
 				} else {
 					// Sorry, there is no 'type' sensor on your device.

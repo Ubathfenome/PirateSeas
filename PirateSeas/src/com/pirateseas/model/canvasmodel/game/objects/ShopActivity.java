@@ -1,29 +1,36 @@
 package com.pirateseas.model.canvasmodel.game.objects;
 
-import java.util.List;
-
 import com.pirateseas.R;
 import com.pirateseas.global.Constants;
 
-import android.app.Activity;
+import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ListView;
 
-public class ShopActivity extends Activity{
+/**
+ * 
+ * @author p7166421
+ * @see: http://developer.android.com/guide/topics/ui/layout/listview.html
+ * @see: http://developer.android.com/reference/android/app/ListActivity.html
+ *
+ */
+public class ShopActivity extends ListActivity{
 	
-	private List<Item> itemList;
+	String mNature = "";
 	
 	public void onActivity(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		
-		//setContentView(R.layout.activity_shop);
+		setContentView(R.layout.activity_shop);
 		
 		Intent data = getIntent();
-		String shopNature = data.getExtras().getString(Constants.ITEMLIST_NATURE, Constants.EMPTY_STRING);
+		mNature = data.getExtras().getString(Constants.ITEMLIST_NATURE, Constants.EMPTY_STRING);
 		
-		if(shopNature.equals(Constants.SHOP_NATURE)){
+		if(mNature.equals(Constants.SHOP_NATURE)){
 			// TODO An ordered list
-		} else if (shopNature.equals(Constants.TREASURE_NATURE)){
+		} else if (mNature.equals(Constants.TREASURE_NATURE)){
 			// TODO A random list
 		}
 	}
@@ -31,6 +38,12 @@ public class ShopActivity extends Activity{
 	public void purchaseItem(Item itemPurchased){
 		// TODO Add item effects
 		// TODO Take item price from player's gold stash
+	}
+
+	@Override
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+		// TODO Auto-generated method stub
+		super.onListItemClick(l, v, position, id);
 	}
 	
 }

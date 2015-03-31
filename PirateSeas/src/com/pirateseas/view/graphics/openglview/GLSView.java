@@ -35,7 +35,7 @@ public class GLSView extends GLSurfaceView {
 	@Override
 	public boolean onTouchEvent(MotionEvent e) {
 		
-		int pointerCounter = e.getPointerCount(); // Number of pulsations
+		//int pointerCounter = e.getPointerCount(); // Number of pulsations
 		
 		
 		// MotionEvent reports input details from the touch screen

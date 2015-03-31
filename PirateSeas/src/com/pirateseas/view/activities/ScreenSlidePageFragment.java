@@ -23,7 +23,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -69,7 +68,6 @@ public class ScreenSlidePageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
 				
-		String message = "";
 		int imageReference = 0;
 				
         // Inflate the layout containing a title and body text.
@@ -82,24 +80,20 @@ public class ScreenSlidePageFragment extends Fragment {
 				
 		switch(mPageNumber){
 			case 0:
-				message = "Message for the " + (mPageNumber + 1) + "st step.";
 				imageReference = R.drawable.img_tutorial_1;
 				break;
 			case 1:
-				message = "Message for the " + (mPageNumber + 1) + "nd step.";
 				imageReference = R.drawable.img_tutorial_2;
 				break;
 			case 2:
-				message = "Message for the " + (mPageNumber + 1) + "rd step.";
 				imageReference = R.drawable.img_tutorial_3;
 				break;
 			default:
-				message = "Message for the " + (mPageNumber + 1) + "th step.";
 				imageReference = R.drawable.img_tutorial_4;
 				break;
 		}
 		
-		((TextView) rootView.findViewById(R.id.text2)).setText(message);
+		((TextView) rootView.findViewById(R.id.text2)).setText(getResources().getString(R.string.default_sample_text));
 		((ScrollView) rootView.findViewById(R.id.content)).setBackgroundResource(imageReference);
 
         return rootView;

@@ -8,8 +8,6 @@
 ***/
 package com.pirateseas.model.openglmodel.basicfigures;
 
-import static android.opengl.GLES20.glDrawArrays;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,13 +30,15 @@ class ObjectBuilder {
 
     private final float[] vertexData;
     private final List<DrawCommand> drawList = new ArrayList<DrawCommand>();
-    private int offset = 0;
+    @SuppressWarnings("unused")
+	private int offset = 0;
 
     private ObjectBuilder(int sizeInVertices) {
         vertexData = new float[sizeInVertices * FLOATS_PER_VERTEX];
     }
 
-    private GeneratedData build() {
+    @SuppressWarnings("unused")
+	private GeneratedData build() {
         return new GeneratedData(vertexData, drawList);
     }
 }

@@ -1,13 +1,14 @@
 package com.pirateseas.model.canvasmodel.ui;
 
 import com.pirateseas.R;
-import com.pirateseas.utils.Geometry;
-
+import com.pirateseas.utils.approach2d.Geometry;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -26,6 +27,25 @@ public class Wheel extends View {
 		mCenter = new Point(imageBounds.centerX(), imageBounds.centerY());
 	}
 	
+	public Wheel(Context context, AttributeSet attrs, int defStyleAttr) {
+		super(context, attrs, defStyleAttr);
+		
+		mDegrees = 0f;
+		mImage = context.getResources().getDrawable(R.drawable.ico_wheel);
+		Rect imageBounds = mImage.copyBounds();
+		mCenter = new Point(imageBounds.centerX(), imageBounds.centerY());
+	}
+
+	public Wheel(Context context, AttributeSet attrs) {
+		super(context, attrs);
+		
+		mDegrees = 0f;
+		mImage = context.getResources().getDrawable(R.drawable.ico_wheel);
+		Rect imageBounds = mImage.copyBounds();
+		mCenter = new Point(imageBounds.centerX(), imageBounds.centerY());
+	}
+
+	@SuppressLint("ClickableViewAccessibility")
 	@Override
 	public boolean onTouchEvent(MotionEvent event){
 		Point startPoint = null;
@@ -49,4 +69,9 @@ public class Wheel extends View {
 		canvas.rotate(mDegrees);
 		mImage.draw(canvas);
 	}
+
+	public float getDegrees() {
+		return mDegrees;
+	}
+		
 }

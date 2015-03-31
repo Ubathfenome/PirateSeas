@@ -3,9 +3,9 @@ package com.pirateseas.model.openglmodel.basicfigures;
 import static android.opengl.GLES20.GL_POINTS;
 import static android.opengl.GLES20.glDrawArrays;
 import static android.opengl.GLES20.glUniformMatrix4fv;
-
 import static android.opengl.Matrix.multiplyMM;
-import com.pirateseas.utils.programs.LightPointShaderProgram;
+
+import com.pirateseas.utils.approach3d.programs.LightPointShaderProgram;
 
 public class AdvancedPoint {
 	

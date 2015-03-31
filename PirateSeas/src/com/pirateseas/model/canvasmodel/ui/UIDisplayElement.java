@@ -50,11 +50,6 @@ public class UIDisplayElement extends View {
 	}
 	
 	@Override
-	public boolean onTouchEvent(MotionEvent event){
-		return false;
-	}
-	
-	@Override
 	public void onDraw(Canvas canvas){
 		mImage.draw(canvas);
 		canvas.drawText(String.valueOf(mValue),0f,0f,paint);

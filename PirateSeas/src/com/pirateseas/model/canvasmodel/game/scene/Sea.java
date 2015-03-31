@@ -13,25 +13,15 @@ public class Sea extends BasicModel{
 	
 	public Sea(Context context, double x, double y, double mCanvasWidth,
             double mCanvasHeight){
-		super(context, x, y, mCanvasWidth, mCanvasHeight);
+		super(context, x, y, mCanvasWidth, mCanvasHeight, null);
 		
 		setImage(context.getResources().getDrawable(R.drawable.blue_water_texture));
 		mImageAux = context.getResources().getDrawable(R.drawable.blue_water_texture);
 	}
 	
-	public void move(double length){
-		x = x + length * (-1);
-		if ( x > mCanvasWidth + mWidth / 2){
-			x = 0 - mWidth / 2;
-		} 
-		if ( x < 0 - mWidth / 2){
-			x = mCanvasWidth + mWidth / 2;
-		}
-	}
-	
 	@Override
 	public void drawOnScreen(Canvas canvas){
-		yUp = (int) ((2 * mCanvasHeight) / 3);
+		yUp = (int) (0.66 * mCanvasHeight);
 		xLeft = 0;
  
         mImage.setBounds(xLeft, yUp, (int)(xLeft + mCanvasWidth), (int)(yUp + mCanvasHeight));

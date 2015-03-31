@@ -1,8 +1,8 @@
 package com.pirateseas.model.canvasmodel.game.entity;
 
 import android.content.Context;
-import android.graphics.Canvas;
 import android.graphics.Point;
+import android.os.SystemClock;
 
 import com.pirateseas.R;
 import com.pirateseas.exceptions.NoAmmoException;
@@ -14,6 +14,7 @@ public class Ship extends Entity {
 	
 	private int mReloadTime;
 	private int mRange;
+	private long timestampLastShot;
 	
 	private ShipType sType;
 	
@@ -64,12 +65,13 @@ public class Ship extends Entity {
 		Shot cannonballVector = null;
 		
 		if(mAmmunition > 0 || mAmmunition == Constants.SHOT_AMMO_UNLIMITED){
+			timestampLastShot = SystemClock.uptimeMillis();
 			cannonballVector = new Shot(context, this.x, this.y, this.mCanvasWidth, this.mCanvasHeight, new Point(0, Constants.SHIP_BASIC_RANGE * sType.rangeMultiplier()));
 			cannonballVector.setDamage((int) (10 * sType.powerMultiplier()));
 			if(mAmmunition != Constants.SHOT_AMMO_UNLIMITED)
 				mAmmunition--;
 		} else {
-			throw new NoAmmoException(mAmmunition);
+			throw new NoAmmoException(context.getResources().getString(R.string.exception_ammo));
 		}
 
 		return cannonballVector;
@@ -80,7 +82,8 @@ public class Ship extends Entity {
 		Shot cannonballVector = null;
 		
 		if(mAmmunition > 3 || mAmmunition == Constants.SHOT_AMMO_UNLIMITED){
-			for(int i = 0; i < cannonballArray.length; i++){
+			timestampLastShot = SystemClock.uptimeMillis();
+			for(int i = 0, length = cannonballArray.length; i < length; i++){
 				if(isRight)
 					cannonballVector = new Shot(context, this.x, this.y, this.mCanvasWidth, this.mCanvasHeight, new Point(Constants.SHIP_BASIC_RANGE * sType.rangeMultiplier(), i - 1));
 				else
@@ -93,7 +96,7 @@ public class Ship extends Entity {
 			}
 		} else {
 			cannonballArray = null;
-			throw new NoAmmoException(mAmmunition);
+			throw new NoAmmoException(context.getResources().getString(R.string.exception_ammo));
 		}
 		
 		return cannonballArray;
@@ -156,31 +159,8 @@ public class Ship extends Entity {
 	}
 */
 	
-	/**
-     * Draws on the screen the image of the model
-     * 
-     * @param canvas
-     */
-    public void drawOnScreen(Canvas canvas) {
-        yUp = (int) y - mHeight / 2;
-        xLeft = (int) x - mWidth / 2;
- 
-        mImage.setBounds(xLeft, yUp, xLeft + mWidth, yUp + mHeight);
-        mImage.draw(canvas);
-    }
-
-	/**
-	 * @return the mReloadTime
-	 */
-	public int getReloadTime() {
-		return mReloadTime;
-	}
-
-	/**
-	 * @param mReloadTime the mReloadTime to set
-	 */
-	public void setReloadTime(int mReloadTime) {
-		this.mReloadTime = mReloadTime;
+	public boolean isReloaded(long timestamp){
+		return timestamp - timestampLastShot > mReloadTime ? true : false;
 	}
 
 	/**

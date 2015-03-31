@@ -2,13 +2,23 @@ package com.pirateseas.model.canvasmodel.game.scene;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 import com.pirateseas.R;
 import com.pirateseas.model.canvasmodel.game.BasicModel;
-import com.pirateseas.utils.DrawableHelper;
+import com.pirateseas.utils.approach2d.DrawableHelper;
 
+/**
+ *
+ * 
+ * @author p7166421
+ * 
+ * @see: https://softwyer.wordpress.com/2012/01/21/1009/
+ * @see: http://en.wikipedia.org/wiki/Alpha_compositing
+ *
+ */
 public class Sky extends BasicModel{
 	
 	private static final String TAG = "com.pirateseas.SKY";
@@ -17,20 +27,10 @@ public class Sky extends BasicModel{
 	
 	public Sky(Context context, double x, double y, double mCanvasWidth,
             double mCanvasHeight){
-		super(context, x, y, mCanvasWidth, mCanvasHeight);
+		super(context, x, y, mCanvasWidth, mCanvasHeight, null);
 		
 		setImage(context.getResources().getDrawable(R.drawable.txtr_sky_clear));
 		mImageAux = context.getResources().getDrawable(R.drawable.txtr_sky_clear);
-	}
-	
-	public void move(double length){
-		x = x + length * (-1);
-		if ( x > mCanvasWidth + mWidth / 2){
-			x = 0 - mWidth / 2;
-		} 
-		if ( x < 0 - mWidth / 2){
-			x = mCanvasWidth + mWidth / 2;
-		}
 	}
 	
 	@Override
@@ -39,6 +39,7 @@ public class Sky extends BasicModel{
 		xLeft = 0;
  
         mImage.setBounds(xLeft, yUp, (int) (xLeft + mCanvasWidth), (int) (yUp + mCanvasHeight));
+        mImage.setColorFilter(0xA9000000, PorterDuff.Mode.SRC_OVER);
         mImage.draw(canvas);
 		
 		// Si la xLeft no es cero 0 

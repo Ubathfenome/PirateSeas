@@ -16,8 +16,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.Space;
 
 /**
 * @source: http://developer.android.com/reference/android/view/ViewGroup.html
@@ -27,14 +25,13 @@ public class UILayer extends ViewGroup {
 	
 	private View uiLayerView;
 	
-	private ImageButton btnVolume;
 	private ImageButton btnPause;
 	
-	private Throttle mThrottleControl;
-	private Wheel mWheelControl;
+	public Throttle mThrottleControl;
+	public Wheel mWheelControl;
 	
-	private UIDisplayElement mGold;
-	private UIDisplayElement mAmmo;
+	public UIDisplayElement mGold;
+	public UIDisplayElement mAmmo;
 	
 	/** The amount of space used by children in the left gutter. */
     private int mLeftWidth;
@@ -50,15 +47,6 @@ public class UILayer extends ViewGroup {
 		super(context);
 		
 		uiLayerView = inflate(context, R.layout.custom_ui_layout, null);
-		btnVolume = (ImageButton) findViewById(R.id.btnVolume);
-		btnVolume.setOnClickListener(new OnClickListener(){
-			public void onClick(View v){
-				if(((ImageButton)v).getDrawable() == context.getResources().getDrawable(R.drawable.ico_volume_on))
-					((ImageButton)v).setImageResource(R.drawable.ico_volume_off);
-				else
-					((ImageButton)v).setImageResource(R.drawable.ico_volume_on);
-			}
-		});
 		
 		btnPause = (ImageButton) findViewById(R.id.btnPause);
 		btnPause.setOnClickListener(new OnClickListener(){

@@ -12,58 +12,75 @@
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
   limitations under the License.
-  -->
+-->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
-	<!-- Global strings -->
+    <!-- Global strings -->
     <string name="app_name">PirateSeas</string>
-	<string name="game_title">PIRATE SEAS</string>
-	<string name="activity_new_game">New Game</string>
-	<string name="activity_load_game">Load Game</string>
-	<string name="activity_settings">Settings</string>
-	<string name="activity_help">Help</string>
-	
-	<string name="btn_accept">Accept</string>
-	<string name="btn_cancel">Cancel</string>
-	
-	<!-- Game strings -->
-	<string name="game_resume">Resume</string>
-	<string name="label_pause">PAUSE</string>
-	<string name="label_settings">SETTINGS</string>
-	
-	<!-- Exit Game Dialog -->
-	<string name="exit_dialog_title">Exit Confirmation Dialog</string>
-	<string name="exit_dialog_message">Any unsaved progress will be lost!</string>
-	<string name="exit_dialog_positive">Exit</string>
-	<string name="exit_dialog_negative">Cancel</string>
-	
-	<!-- Exit Tutorial Dialog -->
-	<string name="exit_tutorial_dialog_title">Exit Tutorial Confirmation Dialog</string>
-	<string name="exit_tutorial_dialog_message">The game will begin!</string>
-	<string name="exit_tutorial_dialog_positive">Proceed</string>
-	
-	<!-- Screen Slide Content -->
-	<string name="title_screen_slide">Screen Slide</string>
-	<string name="action_finish">Finish</string>
-	<string name="action_previous">Previous</string>
+    <string name="game_title">PIRATE SEAS</string>
+    <string name="activity_new_game">New Game</string>
+    <string name="activity_load_game">Load Game</string>
+    <string name="activity_settings">Settings</string>
+    <string name="activity_help">Help</string>
+    <string name="btn_accept">Accept</string>
+    <string name="btn_cancel">Cancel</string>
+    
+    <!-- Exception's messages -->
+    <string name="exception_ammo">Not enough ammunition to shoot!</string>
+    <string name="exception_reloading">Cannot shoot yet!</string>
+    <string name="exception_save">Error while saving</string>
+
+    <!-- Game Menu strings -->
+    <string name="game_resume">Resume</string>
+    <string name="label_pause">PAUSE</string>
+    <string name="label_settings">SETTINGS</string>
+    <string name="btn_receive">Receive All</string>
+    <string name="btn_pause">Pause Button</string>
+    <string name="lbl_volume">Volume control</string>
+
+    <!-- Exit Game Dialog -->
+    <string name="exit_dialog_title">Exit Confirmation Dialog</string>
+    <string name="exit_dialog_message">Any unsaved progress will be lost!</string>
+    <string name="exit_dialog_positive">Exit</string>
+    <string name="exit_dialog_negative">Cancel</string>
+
+    <!-- Exit Tutorial Dialog -->
+    <string name="exit_tutorial_dialog_title">Exit Tutorial Confirmation Dialog</string>
+    <string name="exit_tutorial_dialog_message">The game will begin!</string>
+    <string name="exit_tutorial_dialog_positive">Proceed</string>
+
+    <!-- Screen Slide Content -->
+    <string name="title_screen_slide">Screen Slide</string>
+    <string name="action_finish">Finish</string>
+    <string name="action_previous">Previous</string>
     <string name="action_next">Next</string>
-	<string name="title_template_step">Tutorial: Step <xliff:g id="step_number">%1$d</xliff:g></string>
-	
-	<string name="code_sensor_list">Sensor List</string>
-	<string name="sensor_list_default">-1;</string>
-	
-	<!--  Loading messages -->
-	<string-array name="loading_messages">
-        <item>Loading Seas...</item>
-		<item>Loading Sky...</item>
-        <item>Loading Sounds...</item>
-        <item>Loading UI...</item>
-		<item>Loading Treasures...</item>
-		<item>Loading Ships...</item>
-		<item>Loading Cannons...</item>
-		<item>Loading Pirates...</item>
-        <item>Loading Yarrr...</item>
-		<item>Let\'s sail, mate!</item>
+    <string name="title_template_step">Tutorial: Step <xliff:g id="step_number">%1$d</xliff:g></string>
+    <string name="code_sensor_list">Sensor List</string>
+    <string name="sensor_list_default">-1;</string>
+
+    <!-- Loading messages -->
+    <string-array name="loading_messages">
+        <item>Loading Seas&#8230;</item>
+        <item>Loading Sky&#8230;</item>
+        <item>Loading Sounds&#8230;</item>
+        <item>Loading UI&#8230;</item>
+        <item>Loading Treasures&#8230;</item>
+        <item>Loading Ships&#8230;</item>
+        <item>Loading Cannons&#8230;</item>
+        <item>Loading Pirates&#8230;</item>
+        <item>Loading Yarrr&#8230;</item>
+        <item>Let\'s sail, mate!</item>
     </string-array>
+
+    <string name="default_sample_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut 
+        gravida, massa nec bibendum maximus, nunc ante viverra enim, sit amet viverra nisi nulla vitae 
+        massa. Sed tempor lectus porttitor, dapibus nibh sit amet, viverra nisi. Vivamus ex erat, 
+        iaculis ac augue ut, volutpat ornare dolor. Quisque dapibus ante ut laoreet pulvinar. Mauris 
+        metus nisi, fermentum a nulla a, condimentum malesuada ligula. Mauris id libero dolor. Sed 
+        sagittis ultricies tristique. Morbi efficitur eros in tellus tristique, vitae porta turpis 
+        molestie. Cras maximus sollicitudin lectus. Duis sit amet maximus nunc. Curabitur dapibus 
+        tristique auctor. Duis sit amet varius odio. Vestibulum eu dui justo. Phasellus tellus tortor, 
+        molestie sollicitudin porta ac, maximus vitae orci. Nulla nibh massa, convallis egestas orci 
+        quis, efficitur ultricies erat.</string>
 
 </resources>

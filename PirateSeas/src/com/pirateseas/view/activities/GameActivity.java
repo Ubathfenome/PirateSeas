@@ -19,7 +19,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -76,10 +75,10 @@ public class GameActivity extends Activity implements SensorEventListener{
 
     @Override
     protected void onResume() {
-		if (!mCanvasView.mainLogic.isAlive() && mCanvasView.mainLogic.getState() != Thread.State.NEW){
+		if (!CanvasView.mainLogic.isAlive() && CanvasView.mainLogic.getState() != Thread.State.NEW){
 			//Log.e(TAG, "MainLogic is DEAD. Re-starting...");
 			mCanvasView.launchMainLogic();
-			mCanvasView.mainLogic.start();
+			CanvasView.mainLogic.start();
 		}
 		CanvasView.pauseGame(false);
 		
@@ -116,8 +115,8 @@ public class GameActivity extends Activity implements SensorEventListener{
 						} catch (SaveGameException e) {
 							Log.e(TAG, e.getMessage());
 						}
-						   mCanvasView.mStatus = Constants.GAME_STATE_END;
-						   mCanvasView.mainLogic.setRunning(false);
+						   CanvasView.mStatus = Constants.GAME_STATE_END;
+						   CanvasView.mainLogic.setRunning(false);
 	                	   dummyActivity.finish();
 	                   }
 	               })

@@ -1,10 +1,11 @@
 package com.pirateseas.model.openglmodel.scene;
 
 import com.pirateseas.model.openglmodel.basicfigures.AdvancedPlane;
-import com.pirateseas.utils.data.VertexArray;
+import com.pirateseas.utils.approach3d.data.VertexArray;
 
 public class Sea extends AdvancedPlane{
 	
+	@SuppressWarnings("unused")
 	private static AdvancedPlane mPlane;
 	
 	private static final float[] VERTEX_DATA = {

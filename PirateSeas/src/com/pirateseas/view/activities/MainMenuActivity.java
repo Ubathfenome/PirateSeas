@@ -37,6 +37,7 @@ public class MainMenuActivity extends Activity {
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -79,6 +80,10 @@ public class MainMenuActivity extends Activity {
 				startActivityForResult(checkSensorListIntent, Constants.REQUEST_SENSOR_LIST);
 			}
 		});
+		
+		if(mPreferences.getInt(Constants.PREF_PLAYER_DAYS, 0) == 0){
+			btnLoadGame.setEnabled(false);
+		}
 		
 		btnSettings = (ImageButton) findViewById(R.id.btn_settings);
 		btnSettings.setOnClickListener(new OnClickListener(){

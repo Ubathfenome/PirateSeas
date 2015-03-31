@@ -6,6 +6,7 @@ import com.pirateseas.R;
 import com.pirateseas.controller.androidGameAPI.Player;
 import com.pirateseas.controller.sensors.events.EventDayNightCycle;
 import com.pirateseas.controller.timer.GameTimer;
+import com.pirateseas.exceptions.CannonReloadingException;
 import com.pirateseas.exceptions.NoAmmoException;
 import com.pirateseas.exceptions.SaveGameException;
 import com.pirateseas.global.Constants;
@@ -15,20 +16,23 @@ import com.pirateseas.model.canvasmodel.game.entity.Shot;
 import com.pirateseas.model.canvasmodel.game.scene.Sea;
 import com.pirateseas.model.canvasmodel.game.scene.Sky;
 import com.pirateseas.model.canvasmodel.ui.UILayer;
-import com.pirateseas.utils.GameHelper;
+import com.pirateseas.utils.approach2d.GameHelper;
 import com.pirateseas.view.activities.GameActivity;
 import com.pirateseas.view.activities.PauseActivity;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Point;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.Toast;
 
 public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	private static final String TAG = "CanvasView";
@@ -49,7 +53,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	private Ship playerShip;
 	private Ship enemyShip;
 	private List<Shot> shotList;
-	// private UILayer ui;
+	private UILayer ui;
 	
 	private boolean mInitialized = false;
 
@@ -78,6 +82,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 		mStatus = Constants.GAME_STATE_NORMAL;
 		
 		gameTimer = new GameTimer();
+		player = new Player();
 		
 		// Initialize components
 		// Scene
@@ -89,8 +94,10 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 			screenHeight / 8, screenWidth, screenHeight, new Point(0, 0), 2,
 			3, 5, 20);
 		
+		loadGame();
+		
 		// UI Layer
-		//ui = new UILayer(context);
+		ui = new UILayer(context, player, playerShip);
 		
 		mInitialized = true;
 	}
@@ -109,7 +116,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 		if(GameHelper.saveGame(context, player, playerShip))
 			Log.v(TAG, "Game saved");
 		else
-			throw new SaveGameException();
+			throw new SaveGameException(context.getResources().getString(R.string.exception_save));
 	}
 
 	/**
@@ -123,11 +130,10 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 		
 		playerShip.drawOnScreen(canvas);
 		
-		/*
-		for(Ship enemy : enemyShips){
-			enemy.drawOnScreen(canvas);
-		}
-		*/
+		// Prueba con un solo enemigo
+		enemyShip.drawOnScreen(canvas);
+		
+		
 		//ui.drawOnScreen(canvas);
 	}
 
@@ -153,9 +159,10 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	}
 	*/
 
+	@SuppressLint("ClickableViewAccessibility")
 	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		int pointerCounter = event.getPointerCount(); // Number of pulsations
+	public boolean onTouchEvent(MotionEvent event){
+		//int pointerCounter = event.getPointerCount(); // Number of pulsations
 		
 		float x = event.getX();
 		float y = event.getY();
@@ -167,33 +174,46 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 				context.startActivity(pauseActivityIntent);
 			} else {
 				switch(event.getAction()){
-					case MotionEvent.ACTION_DOWN:
-						break;
-					case MotionEvent.ACTION_MOVE:
-						break;
-					case MotionEvent.ACTION_UP:						
-						if (motionUp(event).equals(Constants.FRONT)){
+					case MotionEvent.ACTION_UP:
+						if(playerShip.isReloaded(SystemClock.uptimeMillis())){
+							if (motionUp(event).equals(Constants.FRONT)){
+								
+								try {
+									shotList.add(playerShip.shootFront());
+								} catch (NoAmmoException e) {
+									Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+								}
+								
+							} else if(motionSide(event).equals(Constants.RIGHT)){
+								Shot[] shotArray = null;
+								
+								try {
+									shotArray = playerShip.shootSide(true);
+								} catch (NoAmmoException e) {
+									Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+								}
+								
+								for(int i = 0, length = shotArray.length; i < length; i++){
+									shotList.add(shotArray[i]);
+								}
+							} else if(motionSide(event).equals(Constants.LEFT)){
+								Shot[] shotArray = null;
+								
+								try {
+									shotArray = playerShip.shootSide(false);
+								} catch (NoAmmoException e) {
+									Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+								}
+								
+								for(int i = 0, length = shotArray.length; i < length; i++){
+									shotList.add(shotArray[i]);
+								}
+							}
+						} else {
 							try {
-								shotList.add(playerShip.shootFront());
-							} catch (NoAmmoException e) {
-							}
-						} else if(motionSide(event).equals(Constants.RIGHT)){
-							Shot[] shotArray = null;
-							try {
-								shotArray = playerShip.shootSide(true);
-							} catch (NoAmmoException e) {
-							}
-							for(Shot shot : shotArray){
-								shotList.add(shot);
-							}
-						} else if(motionSide(event).equals(Constants.LEFT)){
-							Shot[] shotArray = null;
-							try {
-								shotArray = playerShip.shootSide(false);
-							} catch (NoAmmoException e) {
-							}
-							for(Shot shot : shotArray){
-								shotList.add(shot);
+								throw new CannonReloadingException(context.getResources().getString(R.string.exception_reloading));
+							} catch (CannonReloadingException e) {
+								Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
 							}
 						}
 
@@ -286,7 +306,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	}
 	
 	private void manageTime(){
-		gameTimer.setTime(1/((System.currentTimeMillis() % Constants.MILLIS_PER_HOUR)+1));
+		gameTimer.updateHour();
 	}
 	
 	private void manageUI() {
@@ -308,8 +328,8 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	private void manageShots() {
 		// TODO 
 		/*
-		for(Shot shot : shotList){
-			if(shot.intersectionWithEntity(enemyShip))
+		for(int i = 0, size = shotList.size(); i < size; i++){
+			if(shotList[i].intersectionWithEntity(enemyShip))
 				enemyShip.looseHealth(shot.getDamage());
 		}
 		*/
@@ -333,8 +353,11 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	*/
 	private void managePlayer() {
 		// TODO
-		// sky.move();
-		// sea.move();
+		float degrees = ui.mWheelControl.getDegrees();
+		int sceneDistanceX = (int) Math.sin(degrees);
+		
+		sky.move(sceneDistanceX);
+		sea.move(sceneDistanceX);
 		// clouds.move();
 		// sun.move();
 		// compass.move();

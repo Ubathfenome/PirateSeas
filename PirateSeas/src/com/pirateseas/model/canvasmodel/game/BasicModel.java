@@ -1,6 +1,6 @@
 package com.pirateseas.model.canvasmodel.game;
 
-import com.pirateseas.utils.ResolutionAdapter;
+import com.pirateseas.utils.approach2d.ResolutionAdapter;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -18,6 +18,7 @@ public class BasicModel{
     protected int mHeight;
     protected int mWidth;
     protected Drawable mImage;
+    protected Parallax mParallax;
 	
     protected ResolutionAdapter ra;
 	
@@ -26,7 +27,7 @@ public class BasicModel{
 
 
 	public BasicModel(Context context, double x, double y, double mCanvasWidth,
-            double mCanvasHeight){
+            double mCanvasHeight, Parallax parallax){
 				
 		ra = new ResolutionAdapter(context, (int) mCanvasWidth, (int) mCanvasHeight);
 		
@@ -37,6 +38,18 @@ public class BasicModel{
         this.mHeight = ra.height((int) mCanvasHeight);
         this.mCanvasHeight = mCanvasHeight;
         this.mCanvasWidth = mCanvasWidth;
+        
+        this.mParallax = parallax;
+	}
+	
+	public void move(double length){
+		x = x - length;
+		if ( x > mCanvasWidth){
+			x = 0;
+		} 
+		if ( x < 0){
+			x = mCanvasWidth;
+		}
 	}
 	
 	/**
@@ -45,11 +58,21 @@ public class BasicModel{
      * @param canvas
      */
     public void drawOnScreen(Canvas canvas) {
-        yUp = (int) y - mHeight / 2;
-        xLeft = (int) x - mWidth / 2;
+        yUp = (int) y;
+        xLeft = (int) x;
  
-        mImage.setBounds(xLeft, yUp, xLeft + mWidth, yUp + mHeight);
-        mImage.draw(canvas);
+        if (mParallax == null){
+        	mImage.setBounds(xLeft, yUp, xLeft + mWidth, yUp + mHeight);
+        	mImage.draw(canvas);
+        } else {
+        	Drawable[] parallaxLayers = mParallax.getLayers();
+        	for(int i = 0; i < 2; i++){
+        		if(parallaxLayers[i] != null){
+        			parallaxLayers[i].setBounds(xLeft, yUp, xLeft + mWidth, yUp + mHeight);
+        			parallaxLayers[i].draw(canvas);
+        		}
+        	}
+        }
     }
 	
 	public Drawable getImage() {

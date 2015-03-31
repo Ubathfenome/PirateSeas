@@ -11,7 +11,6 @@ import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView.Renderer;
 import android.os.SystemClock;
-import android.util.Log;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -22,13 +21,13 @@ import com.pirateseas.model.openglmodel.entity.ShipType;
 import com.pirateseas.model.openglmodel.scene.Sea;
 import com.pirateseas.model.openglmodel.scene.Sky;
 import com.pirateseas.model.openglmodel.scene.Sun;
-import com.pirateseas.utils.programs.ColorShaderProgram;
-import com.pirateseas.utils.programs.TextureShaderProgram;
-import com.pirateseas.utils.programs.LightPointShaderProgram;
-import com.pirateseas.utils.Geometry.Point3D;
-import com.pirateseas.utils.Geometry.Vector3D;
-import com.pirateseas.utils.MatrixHelper;
-import com.pirateseas.utils.TextureHelper;
+import com.pirateseas.utils.approach2d.Geometry.Point3D;
+import com.pirateseas.utils.approach2d.Geometry.Vector3D;
+import com.pirateseas.utils.approach3d.MatrixHelper;
+import com.pirateseas.utils.approach3d.TextureHelper;
+import com.pirateseas.utils.approach3d.programs.ColorShaderProgram;
+import com.pirateseas.utils.approach3d.programs.LightPointShaderProgram;
+import com.pirateseas.utils.approach3d.programs.TextureShaderProgram;
 
 /**
  * Provides drawing instructions for a GLSurfaceView object. This class
@@ -41,7 +40,8 @@ import com.pirateseas.utils.TextureHelper;
  */
 public class GLRenderer implements Renderer {
 
-    private static final String TAG = "GLRenderer";
+    @SuppressWarnings("unused")
+	private static final String TAG = "GLRenderer";
 	private static final int SECONDS_PER_REVOLUTION = 120;
     
     private final Context mActivityContext;
@@ -81,7 +81,8 @@ public class GLRenderer implements Renderer {
 	
 	// Shader programs definition area
 	private TextureShaderProgram textureProgram;
-    private ColorShaderProgram colorProgram;
+    @SuppressWarnings("unused")
+	private ColorShaderProgram colorProgram;
 	private LightPointShaderProgram lightPointProgram;
 
 	// Textures to be used

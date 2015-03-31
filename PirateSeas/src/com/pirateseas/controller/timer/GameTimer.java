@@ -1,5 +1,7 @@
 package com.pirateseas.controller.timer;
 
+import com.pirateseas.global.Constants;
+
 public class GameTimer {
 	
 	private int gameDay;
@@ -10,10 +12,9 @@ public class GameTimer {
 		gameHour = 0f;		
 	}
 	
-	public void setTime(float hour){
+	public void updateHour(){
 		float tmpHour = gameHour;
-		int tmpDay = 0;
-		tmpHour += hour;
+		tmpHour += 1/((System.currentTimeMillis() % Constants.MILLIS_PER_HOUR)+1);
 
 		if (tmpHour / 24 > 1)
 			gameDay++;
