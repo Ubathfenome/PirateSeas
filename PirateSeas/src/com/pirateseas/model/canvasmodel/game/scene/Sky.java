@@ -24,6 +24,7 @@ public class Sky extends BasicModel{
 	private static final String TAG = "com.pirateseas.SKY";
 	
 	private Drawable mImageAux;
+	private int filterValue = 2^(2 * 8 + 8);
 	
 	public Sky(Context context, double x, double y, double mCanvasWidth,
             double mCanvasHeight){
@@ -35,11 +36,11 @@ public class Sky extends BasicModel{
 	
 	@Override
 	public void drawOnScreen(Canvas canvas){
-		yUp = 0;
-		xLeft = 0;
+		yUp = (int) y;
+		xLeft = (int) x;
  
         mImage.setBounds(xLeft, yUp, (int) (xLeft + mCanvasWidth), (int) (yUp + mCanvasHeight));
-        mImage.setColorFilter(0xA9000000, PorterDuff.Mode.SRC_OVER);
+        mImage.setColorFilter(filterValue, PorterDuff.Mode.SRC_OVER);
         mImage.draw(canvas);
 		
 		// Si la xLeft no es cero 0 

@@ -22,16 +22,12 @@ public class PauseActivity extends Activity {
 	private ImageButton btnSettings;
 	private ImageButton btnHelp;
 	private Button btnResume;
-	private Button btnExit;
 	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_pause);
-		// TODO
-		// UNDO
-		// requestWindowFeature(Window.FEATURE_NO_TITLE);
 		
 		context = this;
 		
@@ -62,13 +58,5 @@ public class PauseActivity extends Activity {
 			}
 		});
 		
-		btnExit = (Button) findViewById(R.id.btnPauseExit);
-		btnExit.setOnClickListener(new OnClickListener(){
-			public void onClick(View v){
-				// TODO Check this...
-				((GameActivity) context).onBackPressed();
-				finish();
-			}
-		});
 	}
 }

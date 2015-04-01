@@ -32,8 +32,8 @@ public class ResolutionAdapter {
 		this.screenHeight = screenHeight;
 		
 		mPreferences = context.getSharedPreferences(Constants.TAG_PREF_NAME, Context.MODE_PRIVATE);
-		this.resolutionWidth = mPreferences.getInt(Constants.DEVICE_WIDTH_RES, 1024);
-		this.resolutionHeight = mPreferences.getInt(Constants.DEVICE_HEIGHT_RES, 768);
+		this.resolutionWidth = mPreferences.getInt(Constants.PREF_DEVICE_WIDTH_RES, 1024);
+		this.resolutionHeight = mPreferences.getInt(Constants.PREF_DEVICE_HEIGHT_RES, 768);
 		instanceFactor();
 	}
 

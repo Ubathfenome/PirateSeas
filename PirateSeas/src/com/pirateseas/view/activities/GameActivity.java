@@ -3,24 +3,35 @@ package com.pirateseas.view.activities;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.pirateseas.R;
-import com.pirateseas.controller.sensors.events.EventDayNightCycle;
-import com.pirateseas.exceptions.SaveGameException;
-import com.pirateseas.global.Constants;
-import com.pirateseas.view.graphics.canvasview.CanvasView;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Point;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
+import android.widget.ImageButton;
+
+import com.pirateseas.R;
+import com.pirateseas.controller.androidGameAPI.Player;
+import com.pirateseas.controller.sensors.events.EventDayNightCycle;
+import com.pirateseas.global.Constants;
+import com.pirateseas.model.canvasmodel.game.entity.Ship;
+import com.pirateseas.model.canvasmodel.ui.UIDisplayElement;
+import com.pirateseas.model.canvasmodel.ui.Wheel;
+import com.pirateseas.utils.approach2d.GameHelper;
+import com.pirateseas.utils.approach2d.Geometry;
+import com.pirateseas.view.graphics.canvasview.CanvasView;
 
 public class GameActivity extends Activity implements SensorEventListener{
 	
@@ -38,8 +49,16 @@ public class GameActivity extends Activity implements SensorEventListener{
 	protected SensorManager mSensorManager;
 	protected List<Sensor> triggeringSensors;
 	
+	public ImageButton btnPause;
+	public UIDisplayElement mGold, mAmmo;
+	public Wheel ctrlWheel;
 
-    @Override
+	Point startPoint;
+	Point centerPoint;
+	Point endPoint;
+	float degrees;
+
+	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 		
@@ -60,14 +79,63 @@ public class GameActivity extends Activity implements SensorEventListener{
 				triggeringSensors.add(mSensorManager.getDefaultSensor(sensorTypes[i]));
 		}
 		
-		
 		// Launch the game!!
-		setContentView(mCanvasView);
+		setContentView(R.layout.activity_game);
+		
+		btnPause = (ImageButton) findViewById(R.id.btnPause);
+		btnPause.setOnClickListener(new OnClickListener(){
+			public void onClick(View v){
+				Intent pauseIntent = new Intent(context, PauseActivity.class);
+				context.startActivity(pauseIntent);
+			}
+		});
+		
+		ctrlWheel = (Wheel) findViewById(R.id.controlWheel);
+		centerPoint = ctrlWheel.getCenterPoint();
+		ctrlWheel.setOnTouchListener(new OnTouchListener() {
+			
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				
+				switch(event.getAction()){
+					case MotionEvent.ACTION_DOWN:
+						startPoint = new Point((int)event.getX(),(int)event.getY());
+						// Toast.makeText(context, "DOWN touch registered (" + startPoint.x + ", " + startPoint.y + ")", Toast.LENGTH_SHORT).show();
+						break;
+					case MotionEvent.ACTION_CANCEL:
+					case MotionEvent.ACTION_UP:
+						endPoint = new Point((int)event.getX(),(int)event.getY());
+						degrees = Geometry.getRotationAngle(startPoint, centerPoint, endPoint);
+						((Wheel) v).setDegrees(degrees);
+						v.postInvalidate();
+						// Toast.makeText(context, "UP touch registered (" + endPoint.x + ", " + endPoint.y + ") [" + degrees + " degrees]", Toast.LENGTH_SHORT).show();
+						break;
+				}
+				
+				return true;
+			}			
+		});
+		
+		ctrlWheel.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				((Wheel) v).setDegrees(degrees = 0);
+				v.postInvalidate();
+			}
+		});
+		
+		mGold = (UIDisplayElement) findViewById(R.id.playerGold);
+		GameHelper.loadGame(this, new Player(), new Ship());
+		int gGold = GameHelper.helperPlayer.getGold();
+		mGold.setElementValue(gGold);
+		mAmmo = (UIDisplayElement) findViewById(R.id.playerAmmunition);
+		mAmmo.setElementValue(0);
     }
 
     @Override
     protected void onPause() {
-		CanvasView.pauseGame(true);
+		//CanvasView.pauseGame(true);
 		mSensorManager.unregisterListener(this);
 		
         super.onPause();
@@ -75,14 +143,15 @@ public class GameActivity extends Activity implements SensorEventListener{
 
     @Override
     protected void onResume() {
-		if (!CanvasView.mainLogic.isAlive() && CanvasView.mainLogic.getState() != Thread.State.NEW){
+    	
+		if (!CanvasView.nUpdateThread.isAlive() && CanvasView.nUpdateThread.getState() != Thread.State.NEW){
 			//Log.e(TAG, "MainLogic is DEAD. Re-starting...");
 			mCanvasView.launchMainLogic();
-			CanvasView.mainLogic.start();
-		}
-		CanvasView.pauseGame(false);
+			CanvasView.nUpdateThread.start();
+		}		
 		
-		for(Sensor s : triggeringSensors){
+		for(int i = 0, size = triggeringSensors.size(); i < size; i++){
+			Sensor s = triggeringSensors.get(i);
 			mSensorManager.registerListener(this, s, SensorManager.SENSOR_DELAY_GAME);
 		}
 		
@@ -109,14 +178,18 @@ public class GameActivity extends Activity implements SensorEventListener{
 				   .setMessage(R.string.exit_dialog_message)
 	               .setPositiveButton(R.string.exit_dialog_positive, new DialogInterface.OnClickListener() {
 	                   public void onClick(DialogInterface dialog, int id) {
-	                       // Exit
+	                	   // Exit
+	                	   /*
 	                	   try {
-							mCanvasView.saveGame();
-						} catch (SaveGameException e) {
-							Log.e(TAG, e.getMessage());
-						}
-						   CanvasView.mStatus = Constants.GAME_STATE_END;
-						   CanvasView.mainLogic.setRunning(false);
+	                		   mCanvasView = (CanvasView) findViewById(R.id.gameLayer);
+	                		   mCanvasView.saveGame();
+	                	   } catch (SaveGameException e) {
+	                		   Log.e(TAG, e.getMessage());
+	                	   }
+	                	   */
+	                	   
+	                	   CanvasView.nStatus = Constants.GAME_STATE_END;
+	                	   CanvasView.nUpdateThread.setRunning(false);
 	                	   dummyActivity.finish();
 	                   }
 	               })
@@ -130,6 +203,7 @@ public class GameActivity extends Activity implements SensorEventListener{
 	    }
 	}
 
+	@SuppressWarnings("unused")
 	@Override
 	public void onSensorChanged(SensorEvent event) {
 		Sensor sensor = event.sensor;
@@ -177,9 +251,7 @@ public class GameActivity extends Activity implements SensorEventListener{
 	}
 
 	@Override
-	public void onAccuracyChanged(Sensor sensor, int accuracy) {
-		// TODO Auto-generated method stub
-		
+	public void onAccuracyChanged(Sensor sensor, int accuracy) {		
 	}
     
 }

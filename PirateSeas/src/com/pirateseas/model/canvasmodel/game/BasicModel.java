@@ -1,7 +1,5 @@
 package com.pirateseas.model.canvasmodel.game;
 
-import com.pirateseas.utils.approach2d.ResolutionAdapter;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
@@ -20,7 +18,7 @@ public class BasicModel{
     protected Drawable mImage;
     protected Parallax mParallax;
 	
-    protected ResolutionAdapter ra;
+    //protected ResolutionAdapter ra;
 	
     protected int yUp;
     protected int xLeft;
@@ -29,13 +27,11 @@ public class BasicModel{
 	public BasicModel(Context context, double x, double y, double mCanvasWidth,
             double mCanvasHeight, Parallax parallax){
 				
-		ra = new ResolutionAdapter(context, (int) mCanvasWidth, (int) mCanvasHeight);
+		//ra = new ResolutionAdapter(context, (int) mCanvasWidth, (int) mCanvasHeight);
 		
 		this.context = context;
-        this.x = ra.x(x); 
-        this.y = ra.y(y);
-        this.mWidth = ra.width((int) mCanvasWidth);
-        this.mHeight = ra.height((int) mCanvasHeight);
+        this.x = x; 
+        this.y = y;
         this.mCanvasHeight = mCanvasHeight;
         this.mCanvasWidth = mCanvasWidth;
         
@@ -81,6 +77,8 @@ public class BasicModel{
  
     public void setImage(Drawable image) {
         this.mImage = image;
+        this.mWidth = image.getIntrinsicWidth();
+        this.mHeight = image.getIntrinsicHeight();
     }
  
     public Rect getBounds() {

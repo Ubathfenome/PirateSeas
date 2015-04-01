@@ -55,7 +55,7 @@ public class GameHelper {
 		helperPlayer = player;
 		
 		Point p = new Point(mPreferences.getInt(Constants.PREF_SHIP_COORDINATES_X, 0), mPreferences.getInt(Constants.PREF_SHIP_COORDINATES_Y, 0));
-		int ammo = mPreferences.getInt(Constants.PREF_SHIP_AMMUNITION, 0);
+		int ammo = mPreferences.getInt(Constants.PREF_SHIP_AMMUNITION, 20);
 		int hp = mPreferences.getInt(Constants.PREF_SHIP_HEALTH, 1);
 		ShipType st = ShipType.values()[mPreferences.getInt(Constants.PREF_SHIP_TYPE, 0)];
 		ship = new Ship(context, ship, st, p, 2, 3, 5, hp, ammo);

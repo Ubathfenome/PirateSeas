@@ -14,7 +14,6 @@
 	<declare-styleable name="UIDisplayElement">
 	    <attr name="android_layout_gravity" format="integer" />
 	    <attr name="android_layout_position" format="integer" />
-        <attr name="drawableResource" format="reference" />
         <attr name="defaultValue" format="integer" />
     </declare-styleable>
 </resources>

@@ -21,6 +21,7 @@ public class MainLogic extends Thread {
 	private CanvasView mCanvasView;
 
 	private static boolean running;
+	private static boolean initialized;
 
 	/**
 	 * Constructor
@@ -46,8 +47,9 @@ public class MainLogic extends Thread {
 	public void run() {
 		Canvas canvas;
 
-		if(!this.mCanvasView.isInitialized()){
+		if(!(initialized = this.mCanvasView.isInitialized())){
 			this.mCanvasView.initialize();
+			initialized = this.mCanvasView.isInitialized();
 		}
 
 		long initTime; // Loop initial time
@@ -57,7 +59,7 @@ public class MainLogic extends Thread {
 
 		waitTime = 0;
 
-		while (running) {
+		while (running && initialized) {
 			canvas = null;
 			try {
 				canvas = this.surface.lockCanvas();

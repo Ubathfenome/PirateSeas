@@ -36,11 +36,5 @@
 			android:layout_height="wrap_content"
 			android:text="@string/game_resume"
 			android:background="@drawable/xml_btn_style" />
-			
-		<Button android:id="@+id/btnPauseExit"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="@string/exit_dialog_positive"
-			android:background="@drawable/xml_btn_style" />
 		
 </LinearLayout>

@@ -3,29 +3,24 @@ package com.pirateseas.model.canvasmodel.ui;
 import com.pirateseas.R;
 import com.pirateseas.controller.androidGameAPI.Player;
 import com.pirateseas.model.canvasmodel.game.entity.Ship;
-import com.pirateseas.view.activities.PauseActivity;
-import com.pirateseas.view.activities.GameActivity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 
 /**
 * @source: http://developer.android.com/reference/android/view/ViewGroup.html
 * @see: http://stackoverflow.com/questions/4328838/create-a-custom-view-by-inflating-a-layout
 */
 public class UILayer extends ViewGroup {
-	
+
 	private View uiLayerView;
-	
-	private ImageButton btnPause;
 	
 	public Throttle mThrottleControl;
 	public Wheel mWheelControl;
@@ -42,30 +37,39 @@ public class UILayer extends ViewGroup {
     /** These are used for computing child frames based on their gravity. */
     private final Rect mTmpContainerRect = new Rect();
     private final Rect mTmpChildRect = new Rect();
-	
-	public UILayer(final Context context, Player player, Ship ship){
-		super(context);
-		
-		uiLayerView = inflate(context, R.layout.custom_ui_layout, null);
-		
-		btnPause = (ImageButton) findViewById(R.id.btnPause);
-		btnPause.setOnClickListener(new OnClickListener(){
-			public void onClick(View v){
-				Intent pauseIntent = new Intent(context, PauseActivity.class);
-				((GameActivity)context).startActivity(pauseIntent);
-			}
-		});
-		
-		mThrottleControl = (Throttle) findViewById(R.id.controlThrottle);
-		
-		mWheelControl = (Wheel) findViewById(R.id.controlWheel);
-		
-		mGold = (UIDisplayElement) findViewById(R.id.playerGold);
-		mGold.setElementValue(player.getGold());
-		
-		mAmmo = (UIDisplayElement) findViewById(R.id.playerAmmunition);
-		mAmmo.setElementValue(ship.getAmmunition());
+    
+    public UILayer(Context context) {
+		this(context, null);
 	}
+    
+    public UILayer(Context context, AttributeSet attrs) {
+		this(context, attrs, 0);
+	}
+    
+    public UILayer(Context context, AttributeSet attrs, int defStyle) {
+		super(context, attrs, defStyle);
+		
+		// Inflate layer view
+		LayoutInflater inflater = LayoutInflater.from(context);
+		uiLayerView = inflater.inflate(R.layout.custom_ui_layout,this, true);
+		//uiLayerView = inflate(getContext(), R.layout.custom_ui_layout, null);
+		
+		init(0, 0);
+	}
+	
+	public UILayer(Context context, Player player, Ship ship){
+		this(context);
+		
+		init(player.getGold(), ship.getAmmunition());
+	}
+	
+	private void init(int gold, int ammo){				
+		mGold = (UIDisplayElement) findViewById(R.id.playerGold);
+		mAmmo = (UIDisplayElement) findViewById(R.id.playerAmmunition);
+		
+		mGold.setElementValue(gold);
+		mAmmo.setElementValue(ammo);
+    }
 	
 	/**
      * Ask all children to measure themselves and compute the measurement of this

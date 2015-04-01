@@ -54,8 +54,9 @@ public class Constants{
 	public static final String PREF_SHIP_HEALTH = "shipHealthPref";
 	public static final String PREF_SHIP_TYPE = "shipTypePref";
 	
-	public static final String DEVICE_HEIGHT_RES = "deviceHeightPref";
-	public static final String DEVICE_WIDTH_RES = "deviceWidthPref";
+	public static final String PREF_DEVICE_VOLUME = "deviceVolumePref";
+	public static final String PREF_DEVICE_HEIGHT_RES = "deviceHeightPref";
+	public static final String PREF_DEVICE_WIDTH_RES = "deviceWidthPref";
 	
 	public static final String FONT_NAME = "TooneyNoodleNF";
 	
@@ -67,6 +68,7 @@ public class Constants{
 	public static final String ITEMLIST_NATURE = "Nature";
 	public static final Object SHOP_NATURE = "Shop";
 	public static final Object TREASURE_NATURE = "Treasure";
+	
 
 	
 	

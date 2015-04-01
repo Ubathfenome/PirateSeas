@@ -1,0 +1,17 @@
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+	<com.pirateseas.view.graphics.canvasview.CanvasView 
+	    xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/gameLayer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+	
+	<include 
+	    android:id="@+id/guiLayer"
+	    layout="@layout/custom_ui_layout" />
+
+</FrameLayout>
