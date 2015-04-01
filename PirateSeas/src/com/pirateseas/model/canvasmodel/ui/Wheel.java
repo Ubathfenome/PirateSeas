@@ -1,6 +1,5 @@
 package com.pirateseas.model.canvasmodel.ui;
 
-import com.pirateseas.R;
 import com.pirateseas.utils.approach2d.Geometry;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -19,28 +18,23 @@ public class Wheel extends View {
 	private Drawable mImage;
 	
 	public Wheel(Context context){
-		super(context);
-		
-		mDegrees = 0f;
-		mImage = context.getResources().getDrawable(R.drawable.ico_wheel);
-		Rect imageBounds = mImage.copyBounds();
-		mCenter = new Point(imageBounds.centerX(), imageBounds.centerY());
+		this(context, null);
+	}
+
+	public Wheel(Context context, AttributeSet attrs) {
+		this(context, attrs, 0);
 	}
 	
 	public Wheel(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
 		
-		mDegrees = 0f;
-		mImage = context.getResources().getDrawable(R.drawable.ico_wheel);
-		Rect imageBounds = mImage.copyBounds();
-		mCenter = new Point(imageBounds.centerX(), imageBounds.centerY());
-	}
-
-	public Wheel(Context context, AttributeSet attrs) {
-		super(context, attrs);
+		init();
 		
+	}
+	
+	private void init(){
 		mDegrees = 0f;
-		mImage = context.getResources().getDrawable(R.drawable.ico_wheel);
+		mImage = getBackground();
 		Rect imageBounds = mImage.copyBounds();
 		mCenter = new Point(imageBounds.centerX(), imageBounds.centerY());
 	}

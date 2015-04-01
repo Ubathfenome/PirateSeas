@@ -4,7 +4,6 @@ import com.pirateseas.R;
 import com.pirateseas.controller.androidGameAPI.Player;
 import com.pirateseas.model.canvasmodel.game.entity.Ship;
 import com.pirateseas.view.activities.PauseActivity;
-import com.pirateseas.view.activities.GameActivity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +12,7 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -22,7 +22,7 @@ import android.widget.ImageButton;
 * @see: http://stackoverflow.com/questions/4328838/create-a-custom-view-by-inflating-a-layout
 */
 public class UILayer extends ViewGroup {
-	
+
 	private View uiLayerView;
 	
 	private ImageButton btnPause;
@@ -42,30 +42,57 @@ public class UILayer extends ViewGroup {
     /** These are used for computing child frames based on their gravity. */
     private final Rect mTmpContainerRect = new Rect();
     private final Rect mTmpChildRect = new Rect();
+    
+    public UILayer(Context context) {
+		this(context, null);
+	}
+    
+    public UILayer(Context context, AttributeSet attrs) {
+		this(context, attrs, 0);
+	}
+    
+    public UILayer(Context context, AttributeSet attrs, int defStyle) {
+		super(context, attrs, defStyle);
+		
+		// Inflate layer view
+		LayoutInflater inflater = LayoutInflater.from(context);
+		uiLayerView = inflater.inflate(R.layout.custom_ui_layout,this, true);
+		//uiLayerView = inflate(getContext(), R.layout.custom_ui_layout, null);
+		
+		init(0, 0);
+	}
 	
-	public UILayer(final Context context, Player player, Ship ship){
-		super(context);
+	public UILayer(Context context, Player player, Ship ship){
+		this(context);
 		
-		uiLayerView = inflate(context, R.layout.custom_ui_layout, null);
-		
+		init(player.getGold(), ship.getAmmunition());
+	}
+	
+	private void init(int gold, int ammo){		
+		// Get all children views
 		btnPause = (ImageButton) findViewById(R.id.btnPause);
+		mThrottleControl = (Throttle) findViewById(R.id.controlThrottle);		
+		mWheelControl = (Wheel) findViewById(R.id.controlWheel);		
+		mGold = (UIDisplayElement) findViewById(R.id.playerGold);
+		mAmmo = (UIDisplayElement) findViewById(R.id.playerAmmunition);
+		
+		// Check not null
+		if(btnPause == null) throw new NullPointerException();
+		if(mThrottleControl == null) throw new NullPointerException();
+		if(mWheelControl == null) throw new NullPointerException();
+		if(mGold == null) throw new NullPointerException();
+		if(mAmmo == null) throw new NullPointerException();
+		
 		btnPause.setOnClickListener(new OnClickListener(){
 			public void onClick(View v){
-				Intent pauseIntent = new Intent(context, PauseActivity.class);
-				((GameActivity)context).startActivity(pauseIntent);
+				Intent pauseIntent = new Intent(getContext(), PauseActivity.class);
+				getContext().startActivity(pauseIntent);
 			}
-		});
+		});		
 		
-		mThrottleControl = (Throttle) findViewById(R.id.controlThrottle);
-		
-		mWheelControl = (Wheel) findViewById(R.id.controlWheel);
-		
-		mGold = (UIDisplayElement) findViewById(R.id.playerGold);
-		mGold.setElementValue(player.getGold());
-		
-		mAmmo = (UIDisplayElement) findViewById(R.id.playerAmmunition);
-		mAmmo.setElementValue(ship.getAmmunition());
-	}
+		mGold.setElementValue(gold);
+		mAmmo.setElementValue(ammo);
+    }
 	
 	/**
      * Ask all children to measure themselves and compute the measurement of this

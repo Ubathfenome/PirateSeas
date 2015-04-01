@@ -35,11 +35,11 @@ public class Sky extends BasicModel{
 	
 	@Override
 	public void drawOnScreen(Canvas canvas){
-		yUp = 0;
-		xLeft = 0;
+		yUp = (int) y;
+		xLeft = (int) x;
  
         mImage.setBounds(xLeft, yUp, (int) (xLeft + mCanvasWidth), (int) (yUp + mCanvasHeight));
-        mImage.setColorFilter(0xA9000000, PorterDuff.Mode.SRC_OVER);
+        mImage.setColorFilter(0x00000000, PorterDuff.Mode.SRC_OVER);
         mImage.draw(canvas);
 		
 		// Si la xLeft no es cero 0 

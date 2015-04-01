@@ -1,6 +1,7 @@
 package com.pirateseas.model.canvasmodel.ui;
 
 import com.pirateseas.R;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -16,7 +17,9 @@ public class Throttle extends View {
 	
 	private int maxLevels;
 	private int mLevel;
-	private Drawable mImageBase, mImageStick, mImageHandle;
+	private Drawable mImageBase = null;
+	private Drawable mImageStick = null;
+	private Drawable mImageHandle = null;
 	
 	private Point mStartPoint;
 	private Point mLastPoint;
@@ -27,38 +30,32 @@ public class Throttle extends View {
 	private static final String TAG = "Throttle";
 
 	public Throttle(Context context) {
-		super(context);
-		
-		mImageBase = context.getResources().getDrawable(R.drawable.ico_throttle_base);
-		mImageStick = context.getResources().getDrawable(R.drawable.ico_throttle_stick);
-		mImageHandle = context.getResources().getDrawable(R.drawable.ico_throttle_handle);
+		this(context, null);
 	}
 
 	public Throttle(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		
-		mImageBase = context.getResources().getDrawable(R.drawable.ico_throttle_base);
-		mImageStick = context.getResources().getDrawable(R.drawable.ico_throttle_stick);
-		mImageHandle = context.getResources().getDrawable(R.drawable.ico_throttle_handle);
+		this(context, attrs, 0);
 	}
 	
 	public Throttle(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
 		
-		mImageBase = context.getResources().getDrawable(R.drawable.ico_throttle_base);
-		mImageStick = context.getResources().getDrawable(R.drawable.ico_throttle_stick);
-		mImageHandle = context.getResources().getDrawable(R.drawable.ico_throttle_handle);
-	}	
-	
-	public Throttle(Context context, int maxLevels){
-		super(context);
-		
+		init();
+	}
+
+	private void init() {
 		this.mLevel = 0;
-		this.maxLevels = maxLevels;
-		
-		mImageBase = context.getResources().getDrawable(R.drawable.ico_throttle_base);
-		mImageStick = context.getResources().getDrawable(R.drawable.ico_throttle_stick);
-		mImageHandle = context.getResources().getDrawable(R.drawable.ico_throttle_handle);
+		this.maxLevels = Y_COORDS.length;
+			
+		if(!isInEditMode()){
+			mImageBase = getResources().getDrawable(R.drawable.ico_throttle_base);
+			mImageStick = getResources().getDrawable(R.drawable.ico_throttle_stick);
+			mImageHandle = getResources().getDrawable(R.drawable.ico_throttle_handle);
+		} else {
+			mImageBase = getBackground();
+			mImageStick = getBackground();
+			mImageHandle = getBackground();
+		}
 	}
 	
 	@SuppressLint("ClickableViewAccessibility")
@@ -115,6 +112,8 @@ public class Throttle extends View {
 	
 	@Override
 	public void onDraw(Canvas canvas){
+		super.onDraw(canvas);
+		
 		mImageBase.draw(canvas);
 		
 		int yCoord = Y_COORDS[mLevel];
@@ -138,7 +137,9 @@ public class Throttle extends View {
 				break;
 		}
 		mImageStick.draw(canvas);
-		mImageHandle.draw(canvas);		
+		mImageHandle.draw(canvas);
+		
+		invalidate();
 	}
 	
 	private void moveDrawable(int y, Drawable image) {

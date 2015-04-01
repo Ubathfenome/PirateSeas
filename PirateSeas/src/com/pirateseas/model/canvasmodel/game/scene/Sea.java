@@ -21,8 +21,8 @@ public class Sea extends BasicModel{
 	
 	@Override
 	public void drawOnScreen(Canvas canvas){
-		yUp = (int) (0.66 * mCanvasHeight);
-		xLeft = 0;
+		yUp = (int) y;
+		xLeft = (int) x;
  
         mImage.setBounds(xLeft, yUp, (int)(xLeft + mCanvasWidth), (int)(yUp + mCanvasHeight));
         mImage.draw(canvas);

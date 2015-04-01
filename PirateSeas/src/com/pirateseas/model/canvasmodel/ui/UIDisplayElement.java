@@ -9,7 +9,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.view.View;
 
 public class UIDisplayElement extends View {
@@ -17,28 +16,41 @@ public class UIDisplayElement extends View {
 	private int mValue;
 	private Paint paint;
 	private Drawable mImage;
+	private TypedArray mArray;
 	
 	public UIDisplayElement(Context context, int drawableResource, int value){
 		super(context);
 		
 		paint = new Paint();
-		paint.setColor(Color.BLACK);
+		paint.setColor(Color.WHITE);
 		this.mValue = value;
 		mImage = context.getResources().getDrawable(drawableResource);
+	}
+	
+	public UIDisplayElement(Context context) {
+		this(context, null);
+	}
+	
+	public UIDisplayElement(Context context, AttributeSet attrs) {
+		this(context, attrs, 0);
 	}
 	
 	public UIDisplayElement(Context context, AttributeSet attrs, int defStyle){
 		super(context, attrs, defStyle);
 		
+		mArray = context.obtainStyledAttributes(attrs, R.styleable.UIDisplayElement, defStyle, 0);
+		
+		init();
+		
+		mArray.recycle();
+	}
+	
+	private void init(){
 		paint = new Paint();
-		paint.setColor(Color.BLACK);
+		paint.setColor(Color.WHITE);
 		
-		TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.UIDisplayElement, defStyle, 0);
-		
-		this.mValue = a.getInteger(R.styleable.UIDisplayElement_defaultValue, 0);
-		this.mImage = a.getDrawable(R.styleable.UIDisplayElement_drawableResource);
-		
-		a.recycle();
+		this.mValue = mArray.getInteger(R.styleable.UIDisplayElement_defaultValue, 0);
+		this.mImage = getBackground();
 	}
 	
 	public int getElementValue(){

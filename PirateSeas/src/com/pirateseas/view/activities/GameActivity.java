@@ -67,7 +67,7 @@ public class GameActivity extends Activity implements SensorEventListener{
 
     @Override
     protected void onPause() {
-		CanvasView.pauseGame(true);
+		//CanvasView.pauseGame(true);
 		mSensorManager.unregisterListener(this);
 		
         super.onPause();
@@ -75,14 +75,17 @@ public class GameActivity extends Activity implements SensorEventListener{
 
     @Override
     protected void onResume() {
+    	/*
 		if (!CanvasView.mainLogic.isAlive() && CanvasView.mainLogic.getState() != Thread.State.NEW){
 			//Log.e(TAG, "MainLogic is DEAD. Re-starting...");
 			mCanvasView.launchMainLogic();
 			CanvasView.mainLogic.start();
 		}
 		CanvasView.pauseGame(false);
+		*/
 		
-		for(Sensor s : triggeringSensors){
+		for(int i = 0, size = triggeringSensors.size(); i < size; i++){
+			Sensor s = triggeringSensors.get(i);
 			mSensorManager.registerListener(this, s, SensorManager.SENSOR_DELAY_GAME);
 		}
 		
@@ -115,8 +118,8 @@ public class GameActivity extends Activity implements SensorEventListener{
 						} catch (SaveGameException e) {
 							Log.e(TAG, e.getMessage());
 						}
-						   CanvasView.mStatus = Constants.GAME_STATE_END;
-						   CanvasView.mainLogic.setRunning(false);
+						   CanvasView.nStatus = Constants.GAME_STATE_END;
+						   CanvasView.nUpdateThread.setRunning(false);
 	                	   dummyActivity.finish();
 	                   }
 	               })
