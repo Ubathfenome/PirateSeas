@@ -50,11 +50,6 @@
 			android:screenOrientation="landscape"
 			android:theme="@style/NoTitleDialog">
 		</activity>
-		<activity
-			android:name=".view.activities.BrightnessUpdateActivity"
-			android:screenOrientation="landscape"
-			android:theme="@android:style/Theme.Translucent.NoTitleBar">
-		</activity>
     </application>
 
 </manifest>

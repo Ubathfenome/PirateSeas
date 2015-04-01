@@ -20,6 +20,12 @@ public class Ship extends Entity {
 	
 	private Context context;
 	
+	public Ship(){
+		super(null, 0, 0, 0, 0, new Point(0, 0), 0, 0, 0);
+		this.mAmmunition = 0;
+		this.sType = ShipType.LIGHT;
+	}
+	
 	public Ship(Context context, ShipType sType, double x, double y, double canvasWidth, 
 				double canvasHeight, Point coordinates, int width, int height, int length, int ammo){
 		super(context, x, y, canvasWidth, canvasHeight, coordinates, width, height, length);

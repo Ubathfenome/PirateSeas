@@ -28,7 +28,7 @@ public class EnemyIA {
 		} else if (imHealthier() && !playerWithinReach() && !playerIsAligned()){
 			//IDLE let him come
 		} else if (!imHealthier() && playerWithinReach()){
-			//RETREAT asap
+			//RETREAT asap (MOVE further from player)
 		}
 		
 		return null;

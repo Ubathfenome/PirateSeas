@@ -9,6 +9,7 @@
 		android:id="@+id/img_load_animation"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:contentDescription="Loading animation icon"
 		android:background="@drawable/ico_loading_animation" />
 				
 	<TextView

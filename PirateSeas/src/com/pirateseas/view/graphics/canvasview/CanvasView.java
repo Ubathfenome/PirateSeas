@@ -1,5 +1,6 @@
 package com.pirateseas.view.graphics.canvasview;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.pirateseas.R;
@@ -13,21 +14,20 @@ import com.pirateseas.global.Constants;
 import com.pirateseas.model.canvasmodel.game.entity.Ship;
 import com.pirateseas.model.canvasmodel.game.entity.ShipType;
 import com.pirateseas.model.canvasmodel.game.entity.Shot;
+import com.pirateseas.model.canvasmodel.game.scene.Compass;
 import com.pirateseas.model.canvasmodel.game.scene.Sea;
 import com.pirateseas.model.canvasmodel.game.scene.Sky;
-import com.pirateseas.model.canvasmodel.ui.UILayer;
 import com.pirateseas.utils.approach2d.GameHelper;
 import com.pirateseas.view.activities.GameActivity;
 import com.pirateseas.view.activities.PauseActivity;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.os.SystemClock;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -36,26 +36,33 @@ import android.widget.Toast;
 
 public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	private static final String TAG = "CanvasView";
-	private Context context;
-	public static MainLogic mainLogic;
+	private static final int WHEEL_DECREMENT_RATIO = 3;	
 	
-	private int screenWidth;
-	private int screenHeight;
-	public static int mStatus;
+	private Context nContext;
+	public static MainLogic nUpdateThread;
 	
-	private GameTimer gameTimer;
-	private Player player;
+	private int nScreenWidth;
+	private int nScreenHeight;
+	public static int nStatus;
 	
-	private Sky sky;
-	private Sea sea;
-	// private Clouds clouds;
-	// private Sun sun;
-	private Ship playerShip;
-	private Ship enemyShip;
-	private List<Shot> shotList;
-	private UILayer ui;
+	private GameTimer nGameTimer;
+	public Player nPlayer;
 	
-	private boolean mInitialized = false;
+	private int nWheelResetValue;
+	
+	private Sky nSky;
+	private Compass nCompass;
+	private Sea nSea;
+	// private Clouds nClouds;
+	// private Sun nSun;
+	
+	public Ship nPlayerShip;
+	//private Ship nEnemyShip;
+	private List<Shot> nShotList;
+	
+	private long nGameTimestamp;
+	
+	private boolean nInitialized = false;
 
 	/**
 	 * Constructor
@@ -63,60 +70,74 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	 * @param context
 	 */
 	public CanvasView(Context context) {
-		super(context);
-		getHolder().addCallback(this);
-		setFocusable(true);
-		this.context = context;
-		launchMainLogic();
+		this(context, null);
+	}
+	
+	public CanvasView(Context context, AttributeSet attrs) {
+		this(context, attrs, 0);
 	}
 
+	public CanvasView(Context context, AttributeSet attrs, int defStyle) {
+		super(context, attrs, defStyle);
+		getHolder().addCallback(this);
+		setFocusable(true);
+		this.nContext = context;
+		launchMainLogic();
+	}
+	
 	/**
 	 * Launches the main thread
 	 */
 	public void launchMainLogic() {
-		mainLogic = null;
-		mainLogic = new MainLogic(getHolder(), this);
+		nUpdateThread = null;
+		nUpdateThread = new MainLogic(getHolder(), this);
 	}
 	
 	public void initialize() {
-		mStatus = Constants.GAME_STATE_NORMAL;
+		nStatus = Constants.GAME_STATE_NORMAL;
 		
-		gameTimer = new GameTimer();
-		player = new Player();
+		nGameTimer = new GameTimer();
+		nPlayer = new Player();
 		
 		// Initialize components
 		// Scene
-		sky = new Sky(context, 0, 0, screenWidth, screenHeight);
-		sea = new Sea(context, 0, 100, screenWidth, screenHeight);
+		nSky = new Sky(nContext, 0, 0, nScreenWidth, nScreenHeight);
+		nCompass = new Compass(nContext, nScreenWidth / 2, 125, nScreenWidth, nScreenHeight);
+		nSea = new Sea(nContext, 0, 170, nScreenWidth, nScreenHeight);
 		
 		// Entities
-		playerShip = new Ship(context, ShipType.LIGHT, screenWidth / 2,
-			screenHeight / 8, screenWidth, screenHeight, new Point(0, 0), 2,
-			3, 5, 20);
+		nPlayerShip = new Ship(nContext, ShipType.LIGHT, nScreenWidth / 2 - 100,
+			nScreenHeight - 170, nScreenWidth, nScreenHeight, new Point(0, 0), 2,
+			3, 5, 0);
+		
+		nShotList = new ArrayList<Shot>();
 		
 		loadGame();
 		
-		// UI Layer
-		ui = new UILayer(context, player, playerShip);
+		nWheelResetValue = 0;
+		nGameTimestamp = 0;
 		
-		mInitialized = true;
+		((GameActivity) nContext).mGold.setElementValue(nPlayer.getGold());
+		((GameActivity) nContext).mAmmo.setElementValue(nPlayerShip.getAmmunition());
+		
+		nInitialized = true;
 	}
 	
 	public boolean isInitialized() {
-		return mInitialized;
+		return nInitialized;
 	}
 	
 	public void loadGame(){
-		GameHelper.loadGame(context, player, playerShip);
-		player = GameHelper.helperPlayer;
-		playerShip = GameHelper.helperShip;
+		GameHelper.loadGame(nContext, nPlayer, nPlayerShip);
+		nPlayer = GameHelper.helperPlayer;
+		nPlayerShip = GameHelper.helperShip;
 	}
 	
 	public void saveGame() throws SaveGameException{
-		if(GameHelper.saveGame(context, player, playerShip))
+		if(GameHelper.saveGame(nContext, nPlayer, nPlayerShip))
 			Log.v(TAG, "Game saved");
 		else
-			throw new SaveGameException(context.getResources().getString(R.string.exception_save));
+			throw new SaveGameException(nContext.getResources().getString(R.string.exception_save));
 	}
 
 	/**
@@ -125,98 +146,85 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	 * @param canvas
 	 */
 	protected void drawOnScreen(Canvas canvas) {
-		sky.drawOnScreen(canvas);
-		sea.drawOnScreen(canvas);
+		nSky.drawOnScreen(canvas);
+		nCompass.drawOnScreen(canvas);
+		nSea.drawOnScreen(canvas);
 		
-		playerShip.drawOnScreen(canvas);
+		
+		nPlayerShip.drawOnScreen(canvas);
 		
 		// Prueba con un solo enemigo
-		enemyShip.drawOnScreen(canvas);
+		//enemyShip.drawOnScreen(canvas);
 		
+		for(int i = 0, size = nShotList.size(); i < size; i++){
+			Shot s = nShotList.get(i);
+			s.drawOnScreen(canvas);
+		}
 		
-		//ui.drawOnScreen(canvas);
 	}
-
-	
-	/**
-	 * Checks if a button have been pressed
-	 * 
-	 * @param event
-	 * @param pressed
-	 * @return true if pressed, false otherwise
-	 */
-	/*
-	private boolean inBounds(MotionEvent event, View pressed) {
-		if (pressed.isEnabled()) {
-			if (event.getX(0) > pressed.getX()
-					&& event.getX(0) < pressed.getX() + pressed.getWidth() - 1
-					&& event.getY(0) > pressed.getY()
-					&& event.getY(0) < pressed.getY() + pressed.getHeight() - 1)
-				return true;
-			return false;
-		} else
-			return false;
-	}
-	*/
 
 	@SuppressLint("ClickableViewAccessibility")
 	@Override
 	public boolean onTouchEvent(MotionEvent event){
 		//int pointerCounter = event.getPointerCount(); // Number of pulsations
 		
-		float x = event.getX();
-		float y = event.getY();
+		int x = (int) event.getX();
+		int y = (int) event.getY();
 		
-		if (mStatus == Constants.GAME_STATE_NORMAL) {
+		int downX = 0, downY = 0;
+		
+		if(event.getAction() == MotionEvent.ACTION_DOWN){
+			downX = x;
+			downY = y;
+		}
+		
+		if (nStatus == Constants.GAME_STATE_NORMAL) {
 			if((x > (getWidth() - (getWidth() / 6))) && (y < getHeight() / 6)){
-				mStatus = Constants.GAME_STATE_PAUSE;
-				Intent pauseActivityIntent = new Intent(context, PauseActivity.class);
-				context.startActivity(pauseActivityIntent);
+				nStatus = Constants.GAME_STATE_PAUSE;
+				Intent pauseActivityIntent = new Intent(nContext, PauseActivity.class);
+				nContext.startActivity(pauseActivityIntent);
 			} else {
 				switch(event.getAction()){
 					case MotionEvent.ACTION_UP:
-						if(playerShip.isReloaded(SystemClock.uptimeMillis())){
-							if (motionUp(event).equals(Constants.FRONT)){
-								
+						if(nPlayerShip.isReloaded(SystemClock.uptimeMillis())){
+							String direction = pressedMotion(new Point(downX, downY), new Point(x, y));
+							if (direction.equals(Constants.FRONT)){
 								try {
-									shotList.add(playerShip.shootFront());
+									nShotList.add(nPlayerShip.shootFront());
 								} catch (NoAmmoException e) {
-									Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+									Toast.makeText(nContext, e.getMessage(), Toast.LENGTH_SHORT).show();
 								}
 								
-							} else if(motionSide(event).equals(Constants.RIGHT)){
+							} else if(direction.equals(Constants.RIGHT)){
 								Shot[] shotArray = null;
 								
 								try {
-									shotArray = playerShip.shootSide(true);
+									shotArray = nPlayerShip.shootSide(true);
+									for(int i = 0, length = shotArray.length; i < length; i++){
+										nShotList.add(shotArray[i]);
+									}
 								} catch (NoAmmoException e) {
-									Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+									Toast.makeText(nContext, e.getMessage(), Toast.LENGTH_SHORT).show();
 								}
-								
-								for(int i = 0, length = shotArray.length; i < length; i++){
-									shotList.add(shotArray[i]);
-								}
-							} else if(motionSide(event).equals(Constants.LEFT)){
+							} else if(direction.equals(Constants.LEFT)){
 								Shot[] shotArray = null;
 								
 								try {
-									shotArray = playerShip.shootSide(false);
+									shotArray = nPlayerShip.shootSide(false);
+									for(int i = 0, length = shotArray.length; i < length; i++){
+										nShotList.add(shotArray[i]);
+									}
 								} catch (NoAmmoException e) {
-									Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
-								}
-								
-								for(int i = 0, length = shotArray.length; i < length; i++){
-									shotList.add(shotArray[i]);
+									Toast.makeText(nContext, e.getMessage(), Toast.LENGTH_SHORT).show();
 								}
 							}
 						} else {
 							try {
-								throw new CannonReloadingException(context.getResources().getString(R.string.exception_reloading));
+								throw new CannonReloadingException(nContext.getResources().getString(R.string.exception_reloading));
 							} catch (CannonReloadingException e) {
-								Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+								Toast.makeText(nContext, e.getMessage(), Toast.LENGTH_SHORT).show();
 							}
 						}
-
 						break;
 				}
 			}
@@ -224,73 +232,32 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 		return true;
 	}
 	
-	private String motionUp(MotionEvent event){
-		int numberOfPoints = event.getHistorySize();
-		float firstY = event.getHistoricalY(0);
-		float lastY = event.getHistoricalY(numberOfPoints - 1);
+	private String pressedMotion(Point start, Point end){
+		int deltaX = end.x - start.x;
+		int deltaY = end.y - start.y;
 		
-		if(firstY > lastY)
-			return Constants.FRONT;
-		else
-			return Constants.BACK;		
-	}
-	
-	private String motionSide(MotionEvent event){
-		int numberOfPoints = event.getHistorySize();
-		float firstX = event.getHistoricalX(0);
-		float lastX = event.getHistoricalX(numberOfPoints - 1);
-		
-		if(firstX < lastX)
-			return Constants.RIGHT;
-		else
-			return Constants.LEFT;		
+		if(deltaX > deltaY){ 	// Lateral movement
+			return deltaX > 0 ? Constants.RIGHT : Constants.LEFT;
+		} else {				// Vertical movement
+			return deltaY > 0 ? Constants.BACK : Constants.FRONT;
+		}
 	}
 	
 	public static void pauseGame(boolean hasToBePaused){
-		if(hasToBePaused && mStatus == Constants.GAME_STATE_NORMAL){
-			mStatus = Constants.GAME_STATE_PAUSE;
-			mainLogic.setRunning(false);
-		} else if (!hasToBePaused && mStatus == Constants.GAME_STATE_PAUSE){
-			mStatus = Constants.GAME_STATE_NORMAL;
-			mainLogic.setRunning(true);
+		if(hasToBePaused && nStatus == Constants.GAME_STATE_NORMAL){
+			nStatus = Constants.GAME_STATE_PAUSE;
+		} else if (!hasToBePaused && nStatus == Constants.GAME_STATE_PAUSE){
+			nStatus = Constants.GAME_STATE_NORMAL;
 		}
-	}
-
-	/**
-	 * Ask the user if he/she really wants to exit the activity
-	 */
-	public void exitView() {
-		mStatus = Constants.GAME_STATE_PAUSE;
-		AlertDialog.Builder builder = new AlertDialog.Builder(context);
-		builder.setTitle(getResources().getString(R.string.exit_dialog_title))
-				.setMessage(getResources().getString(R.string.exit_dialog_message))
-				.setPositiveButton(getResources().getString(R.string.exit_dialog_positive),
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int which) {
-								// Yes button clicked, do something
-								mStatus = Constants.GAME_STATE_END;
-							}
-						})
-				.setNegativeButton(getResources().getString(R.string.exit_dialog_negative),
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int which) {
-								// No button clicked, go back to normal mode
-								mStatus = Constants.GAME_STATE_NORMAL;
-							}
-						});
-		AlertDialog aD = builder.create();
-		aD.setCanceledOnTouchOutside(false);
-		aD.show();
 	}
 
 	/**
 	 * Updates the view mStatus
 	 */
 	public synchronized void updateLogic() {
+		checkLogicThread();
 		manageTime();
-		switch (mStatus) {
+		switch (nStatus) {
 			case Constants.GAME_STATE_NORMAL:
 				manageEvents();
 				manageEntities();
@@ -299,14 +266,25 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 			case Constants.GAME_STATE_PAUSE:
 				break;
 			case Constants.GAME_STATE_END:
-				mainLogic.setRunning(false);
-				((GameActivity)context).finish();
+				nUpdateThread.setRunning(false);
+				((GameActivity)nContext).finish();
 				break;
 		}
 	}
 	
+	private void checkLogicThread() {
+		if(!nUpdateThread.isAlive() && nUpdateThread.getState() != Thread.State.NEW){
+			launchMainLogic();
+		}
+	}
+
 	private void manageTime(){
-		gameTimer.updateHour();
+		long ts = SystemClock.uptimeMillis();
+		if(nGameTimestamp == 0)
+			nGameTimestamp = ts;
+		else if(ts - nGameTimestamp >= 1000){
+			nGameTimer.updateHour();
+		}
 	}
 	
 	private void manageUI() {
@@ -315,7 +293,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	private void manageEvents() {
-		sky.rotate(EventDayNightCycle.getAngleOfDay(gameTimer.getHour()));
+		nSky.setFilterValue(EventDayNightCycle.getSkyFilter(nGameTimer.getHour()));
 		// TODO Add more events
 	}
 
@@ -329,8 +307,10 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 		// TODO 
 		/*
 		for(int i = 0, size = shotList.size(); i < size; i++){
-			if(shotList[i].intersectionWithEntity(enemyShip))
+			if(shotList[i].intersectionWithEntity(enemyShip)){
 				enemyShip.looseHealth(shot.getDamage());
+				
+			}
 		}
 		*/
 	}
@@ -352,15 +332,21 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	*	Rotate the world around the player whenever he/she moves
 	*/
 	private void managePlayer() {
-		// TODO
-		float degrees = ui.mWheelControl.getDegrees();
-		int sceneDistanceX = (int) Math.sin(degrees);
+		float degrees = ((GameActivity) nContext).ctrlWheel.getDegrees();
+		int sceneDistanceX = (int) ((degrees * 180) / Math.PI);
 		
-		sky.move(sceneDistanceX);
-		sea.move(sceneDistanceX);
+		if(nWheelResetValue == 0){
+			nWheelResetValue = sceneDistanceX > 90  && sceneDistanceX < 270 ? -sceneDistanceX : sceneDistanceX;
+		} else {
+			nWheelResetValue /= WHEEL_DECREMENT_RATIO;
+			((GameActivity) nContext).ctrlWheel.setDegrees(nWheelResetValue);
+		}
+		
+		nSky.move(nWheelResetValue);
+		nCompass.move(nWheelResetValue);
+		nSea.move(nWheelResetValue);
 		// clouds.move();
 		// sun.move();
-		// compass.move();
 		// enemy.move();
 		
 	}
@@ -370,16 +356,16 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 		String logTag = TAG + ": surfaceChanged";
 		Log.d(logTag, "Ajuste de medidas: [" + width + ", " + height + "]");
 
-		screenWidth = width;
-		screenHeight = height;
+		nScreenWidth = width;
+		nScreenHeight = height;
 	}
 
 	public void surfaceCreated(SurfaceHolder holder) {
 		String logTag = TAG + ": surfaceCreated";
 		Log.d(logTag, "Superficie creada");
 
-		mainLogic.setRunning(true);
-		mainLogic.start();
+		nUpdateThread.setRunning(true);
+		nUpdateThread.start();
 	}
 
 	public void surfaceDestroyed(SurfaceHolder holder) {
@@ -389,7 +375,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 		boolean tryAgain = true;
 		while (tryAgain) {
 			try {
-				mainLogic.join();
+				nUpdateThread.join();
 
 				tryAgain = false;
 			} catch (InterruptedException e) {

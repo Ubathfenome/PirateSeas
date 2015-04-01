@@ -31,7 +31,7 @@
 	<Space
 	    android:id="@+id/gameSpace"
 	    android:layout_width="wrap_content"
-	    android:layout_height="0dp"
+	    android:layout_height="150dp"
 	    android:layout_gravity="fill"
 	    android:layout_weight="1" />
 	
@@ -39,13 +39,16 @@
 	    android:id="@+id/bottomFrame"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:orientation="horizontal"
-	    android:gravity="center" >
+	    android:layout_gravity="center"
+	    android:layout_weight="50"
+	    android:orientation="horizontal" >
 		
 		<com.pirateseas.model.canvasmodel.ui.Throttle
-			android:id="@+id/controlThrottle"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content" />
+		    android:id="@+id/controlThrottle"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_weight="1"
+		    android:background="@drawable/ico_throttle_base" />
 		
 		<Space
 		    android:id="@+id/playerBarsSpace"
@@ -62,23 +65,27 @@
 		    android:layout_weight="1" />
 		
 		<com.pirateseas.model.canvasmodel.ui.UIDisplayElement
-			android:id="@+id/playerGold"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			custom:drawableResource="@drawable/ico_gold"
-			custom:defaultValue="0" />
+		    android:id="@+id/playerGold"
+		    android:layout_width="48dp"
+		    android:layout_height="48dp"
+		    android:layout_gravity="bottom"
+		    android:background="@drawable/ico_gold"
+		    custom:defaultValue="0" />
 			
 		<com.pirateseas.model.canvasmodel.ui.UIDisplayElement
-			android:id="@+id/playerAmmunition"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content" 
-			custom:drawableResource="@drawable/ico_ammo"
-			custom:defaultValue="0" />
+		    android:id="@+id/playerAmmunition"
+		    android:layout_width="48dp"
+		    android:layout_height="48dp"
+		    android:layout_gravity="bottom"
+		    android:background="@drawable/ico_ammo"
+		    custom:defaultValue="0" />
 			
 		<com.pirateseas.model.canvasmodel.ui.Wheel
-			android:id="@+id/controlWheel"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content" />
+		    android:id="@+id/controlWheel"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_weight="1"
+		    android:background="@drawable/ico_wheel" />
 		
 	</LinearLayout>
 </LinearLayout>

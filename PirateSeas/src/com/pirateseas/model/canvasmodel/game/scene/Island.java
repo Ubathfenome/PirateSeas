@@ -8,10 +8,7 @@ import com.pirateseas.R;
 import com.pirateseas.model.canvasmodel.game.BasicModel;
 import com.pirateseas.model.canvasmodel.game.Parallax;
 
-public class Island extends BasicModel{
-	
-	private Context context; 
-	
+public class Island extends BasicModel{	
 	private Random rand;
 	private boolean hasShop;
 	

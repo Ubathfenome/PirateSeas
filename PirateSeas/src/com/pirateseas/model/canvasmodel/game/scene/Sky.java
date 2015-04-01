@@ -23,7 +23,10 @@ public class Sky extends BasicModel{
 	
 	private static final String TAG = "com.pirateseas.SKY";
 	
+	private static final int FILTER_MASK = 2^(2 * 8 + 8);
+	
 	private Drawable mImageAux;
+	private int filterValue = 1;
 	
 	public Sky(Context context, double x, double y, double mCanvasWidth,
             double mCanvasHeight){
@@ -35,11 +38,12 @@ public class Sky extends BasicModel{
 	
 	@Override
 	public void drawOnScreen(Canvas canvas){
-		yUp = 0;
-		xLeft = 0;
+		yUp = (int) y;
+		xLeft = (int) x;
  
         mImage.setBounds(xLeft, yUp, (int) (xLeft + mCanvasWidth), (int) (yUp + mCanvasHeight));
-        mImage.setColorFilter(0xA9000000, PorterDuff.Mode.SRC_OVER);
+        mImage.setColorFilter(filterValue * FILTER_MASK, PorterDuff.Mode.SRC_OVER);
+        mImageAux.setColorFilter(filterValue * FILTER_MASK, PorterDuff.Mode.SRC_OVER);
         mImage.draw(canvas);
 		
 		// Si la xLeft no es cero 0 
@@ -51,6 +55,10 @@ public class Sky extends BasicModel{
 			mImageAux.setBounds((int) (xLeft - mCanvasWidth), yUp, (int) (xLeft - mCanvasWidth) + mWidth, yUp + mHeight);
 			mImageAux.draw(canvas);
 		}
+	}
+	
+	public void setFilterValue(int value){
+		this.filterValue = value;
 	}
 	
 	public void rotate(float angle){

@@ -8,10 +8,10 @@ public class Geometry{
 		double angleRad = 0;
 		//float angle = 0f;
 		
-		Point u = new Point(center.x - start.x, center.y - start.y);
-		Point v = new Point(center.x - end.x, center.y - end.y);
-		double modU = Math.sqrt(Math.pow(u.x, 2)+Math.pow(u.y, 2));
-		double modV = Math.sqrt(Math.pow(v.x, 2)+Math.pow(v.y, 2));
+		Point u = new Point(start.x - center.x, start.y - center.y);
+		Point v = new Point(end.x - center.x, end.y - center.y);
+		double modU = Math.sqrt(u.x * u.x + u.y * u.y);
+		double modV = Math.sqrt(v.x * v.x + v.y * v.y);
 		
 		// u* v = mod(u) * mod(v) * cos(alpha)
 		// cos(alpha) = (u * v) / (mod(u) * mod(v))

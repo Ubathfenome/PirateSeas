@@ -59,8 +59,8 @@ public class MainMenuActivity extends Activity {
 		
 		SharedPreferences mPreferences = context.getSharedPreferences(Constants.TAG_PREF_NAME, Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = mPreferences.edit();
-		editor.putInt(Constants.DEVICE_WIDTH_RES, screenResolutionWidth);
-		editor.putInt(Constants.DEVICE_HEIGHT_RES, screenResolutionHeight);
+		editor.putInt(Constants.PREF_DEVICE_WIDTH_RES, screenResolutionWidth);
+		editor.putInt(Constants.PREF_DEVICE_HEIGHT_RES, screenResolutionHeight);
 		editor.commit();
 		
 		btnNewGame = (Button) findViewById(R.id.btn_newgame);

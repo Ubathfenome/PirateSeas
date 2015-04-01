@@ -12,6 +12,7 @@ public class Constants{
 	public static final float TOUCH_SCALE_FACTOR = 180.0f / 320;
 	
 	public static final int SECONDS_TO_NANOS = 1000000000;
+	public static final double NANOS_TO_SECONDS = Math.pow(10, -9);
 	public static final int MILLIS_PER_HOUR = 3600000;
 	public static final int BYTES_PER_FLOAT = 4;
 	
@@ -54,8 +55,9 @@ public class Constants{
 	public static final String PREF_SHIP_HEALTH = "shipHealthPref";
 	public static final String PREF_SHIP_TYPE = "shipTypePref";
 	
-	public static final String DEVICE_HEIGHT_RES = "deviceHeightPref";
-	public static final String DEVICE_WIDTH_RES = "deviceWidthPref";
+	public static final String PREF_DEVICE_VOLUME = "deviceVolumePref";
+	public static final String PREF_DEVICE_HEIGHT_RES = "deviceHeightPref";
+	public static final String PREF_DEVICE_WIDTH_RES = "deviceWidthPref";
 	
 	public static final String FONT_NAME = "TooneyNoodleNF";
 	
@@ -67,6 +69,7 @@ public class Constants{
 	public static final String ITEMLIST_NATURE = "Nature";
 	public static final Object SHOP_NATURE = "Shop";
 	public static final Object TREASURE_NATURE = "Treasure";
+	
 
 	
 	

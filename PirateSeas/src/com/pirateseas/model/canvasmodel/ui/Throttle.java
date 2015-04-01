@@ -1,6 +1,7 @@
 package com.pirateseas.model.canvasmodel.ui;
 
 import com.pirateseas.R;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -16,7 +17,9 @@ public class Throttle extends View {
 	
 	private int maxLevels;
 	private int mLevel;
-	private Drawable mImageBase, mImageStick, mImageHandle;
+	private Drawable mImageBase = null;
+	private Drawable mImageStick = null;
+	private Drawable mImageHandle = null;
 	
 	private Point mStartPoint;
 	private Point mLastPoint;
@@ -27,38 +30,32 @@ public class Throttle extends View {
 	private static final String TAG = "Throttle";
 
 	public Throttle(Context context) {
-		super(context);
-		
-		mImageBase = context.getResources().getDrawable(R.drawable.ico_throttle_base);
-		mImageStick = context.getResources().getDrawable(R.drawable.ico_throttle_stick);
-		mImageHandle = context.getResources().getDrawable(R.drawable.ico_throttle_handle);
+		this(context, null);
 	}
 
 	public Throttle(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		
-		mImageBase = context.getResources().getDrawable(R.drawable.ico_throttle_base);
-		mImageStick = context.getResources().getDrawable(R.drawable.ico_throttle_stick);
-		mImageHandle = context.getResources().getDrawable(R.drawable.ico_throttle_handle);
+		this(context, attrs, 0);
 	}
 	
 	public Throttle(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
 		
-		mImageBase = context.getResources().getDrawable(R.drawable.ico_throttle_base);
-		mImageStick = context.getResources().getDrawable(R.drawable.ico_throttle_stick);
-		mImageHandle = context.getResources().getDrawable(R.drawable.ico_throttle_handle);
-	}	
-	
-	public Throttle(Context context, int maxLevels){
-		super(context);
-		
+		init();
+	}
+
+	private void init() {
 		this.mLevel = 0;
-		this.maxLevels = maxLevels;
-		
-		mImageBase = context.getResources().getDrawable(R.drawable.ico_throttle_base);
-		mImageStick = context.getResources().getDrawable(R.drawable.ico_throttle_stick);
-		mImageHandle = context.getResources().getDrawable(R.drawable.ico_throttle_handle);
+		this.maxLevels = Y_COORDS.length;
+			
+		if(!isInEditMode()){
+			mImageBase = getResources().getDrawable(R.drawable.ico_throttle_base);
+			mImageStick = getResources().getDrawable(R.drawable.ico_throttle_stick);
+			mImageHandle = getResources().getDrawable(R.drawable.ico_throttle_handle);
+		} else {
+			mImageBase = getBackground();
+			mImageStick = getBackground();
+			mImageHandle = getBackground();
+		}
 	}
 	
 	@SuppressLint("ClickableViewAccessibility")
@@ -115,38 +112,42 @@ public class Throttle extends View {
 	
 	@Override
 	public void onDraw(Canvas canvas){
+		super.onDraw(canvas);
+		
 		mImageBase.draw(canvas);
 		
 		int yCoord = Y_COORDS[mLevel];
 		
 		switch(mLevel){
 			case 0:
-				moveDrawable(yCoord, mImageStick);
-				moveDrawable(yCoord, mImageHandle);
+				mImageStick = moveDrawable(yCoord, mImageStick);
+				mImageHandle = moveDrawable(yCoord, mImageHandle);
 				break;
 			case 1:
-				moveDrawable(yCoord + 5, mImageStick);
-				moveDrawable(yCoord + 7, mImageHandle);
+				mImageStick = moveDrawable(yCoord + 5, mImageStick);
+				mImageHandle = moveDrawable(yCoord + 7, mImageHandle);
 				break;
 			case 2:
-				moveDrawable(yCoord + 7, mImageStick);
-				moveDrawable(yCoord + 10, mImageHandle);
+				mImageStick = moveDrawable(yCoord + 7, mImageStick);
+				mImageHandle = moveDrawable(yCoord + 10, mImageHandle);
 				break;
 			case 3:
-				moveDrawable(yCoord + 10 , mImageStick);
-				moveDrawable(yCoord + 15, mImageHandle);
+				mImageStick = moveDrawable(yCoord + 10 , mImageStick);
+				mImageHandle = moveDrawable(yCoord + 15, mImageHandle);
 				break;
 		}
 		mImageStick.draw(canvas);
-		mImageHandle.draw(canvas);		
+		mImageHandle.draw(canvas);
+		
+		invalidate();
 	}
 	
-	private void moveDrawable(int y, Drawable image) {
+	private Drawable moveDrawable(int y, Drawable image) {
 		Rect bounds = image.copyBounds();
 		bounds.top += y;
 		bounds.bottom += y;
 		image.setBounds(bounds);
-		invalidate();
+		return image;
 	}
 	
 	private enum Position {
