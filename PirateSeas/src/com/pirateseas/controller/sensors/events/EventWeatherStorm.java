@@ -8,6 +8,8 @@ public class EventWeatherStorm {
 		return SensorType.TYPE_RELATIVE_HUMIDITY;
 	}
 	
-	
+	public static boolean setCloudyDay(float humidityPercent){
+		return humidityPercent > 0.75;
+	}
 	
 }

@@ -8,12 +8,8 @@ public class Constants{
 	public static final String TAG_PREF_NAME = "com.pirateseas.PREFERENCES";
 	public static final String TAG_BRIGHTNESS_LEVEL = "com.pirateseas.BRIGHTNESS";
 	
-	// Math factors
-	public static final float TOUCH_SCALE_FACTOR = 180.0f / 320;
-	
-	public static final int SECONDS_TO_NANOS = 1000000000;
+	// Math factors	
 	public static final double NANOS_TO_SECONDS = Math.pow(10, -9);
-	public static final int MILLIS_PER_HOUR = 3600000;
 	public static final int BYTES_PER_FLOAT = 4;
 	
 	// Requests

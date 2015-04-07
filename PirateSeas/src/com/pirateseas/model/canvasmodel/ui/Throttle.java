@@ -1,6 +1,7 @@
 package com.pirateseas.model.canvasmodel.ui;
 
 import com.pirateseas.R;
+import com.pirateseas.global.Constants;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -70,9 +71,9 @@ public class Throttle extends View {
 				String movement = getMovementPosition();
 				
 				Log.d(TAG, "Registered Throttle movement: " + movement);
-				if (mLevel < maxLevels && movement.equals(Position.UP))
+				if (mLevel < maxLevels && movement.equals(Constants.FRONT))
 					mLevel++;
-				else if (mLevel > 0 && movement.equals(Position.DOWN))
+				else if (mLevel > 0 && movement.equals(Constants.BACK))
 					mLevel--;
 				break;
 			case MotionEvent.ACTION_UP:
@@ -82,25 +83,25 @@ public class Throttle extends View {
 	}
 	
 	private String getMovementPosition(){
-		Position direction = null;
+		String direction = null;
 		boolean changed  = false;
 		
 		if((mStartPoint.x - mLastPoint.x) > MODULE_MOVED)
 		{
-			direction = Position.LEFT;
+			direction = Constants.LEFT;
 			changed = true;
 		}else if((mStartPoint.x - mLastPoint.x) > -MODULE_MOVED)
 		{
 			changed = true;
-			direction = Position.RIGHT;
+			direction = Constants.RIGHT;
 		}else if((mStartPoint.y - mLastPoint.y) > MODULE_MOVED)
 		{
 			changed = true;
-			direction = Position.DOWN;
+			direction = Constants.BACK;
 		}else if((mStartPoint.y - mLastPoint.y) > -MODULE_MOVED)
 		{
 			changed = true;
-			direction = Position.UP;
+			direction = Constants.FRONT;
 		}
 		
 		if(changed)
@@ -149,8 +150,13 @@ public class Throttle extends View {
 		image.setBounds(bounds);
 		return image;
 	}
-	
-	private enum Position {
-		UP, DOWN, RIGHT, LEFT
+
+	@Override
+	public String toString() {
+		return "Throttle [maxLevels=" + maxLevels + ", mLevel=" + mLevel
+				+ ", mStartPoint=" + mStartPoint + ", mLastPoint=" + mLastPoint
+				+ "]";
 	}
+	
+	
 }

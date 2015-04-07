@@ -16,6 +16,8 @@ public class Ship extends Entity {
 	private int mRange;
 	private long timestampLastShot;
 	
+	private boolean isPlayable;
+	
 	private ShipType sType;
 	
 	private Context context;
@@ -24,6 +26,7 @@ public class Ship extends Entity {
 		super(null, 0, 0, 0, 0, new Point(0, 0), 0, 0, 0);
 		this.mAmmunition = 0;
 		this.sType = ShipType.LIGHT;
+		this.isPlayable = false;
 	}
 	
 	public Ship(Context context, ShipType sType, double x, double y, double canvasWidth, 
@@ -39,6 +42,8 @@ public class Ship extends Entity {
 		this.mReloadTime = (int) sType.powerMultiplier() * Constants.SHIP_RELOAD;
 		gainHealth(sType.defaultHealthPoints());
 		setImage(context.getResources().getDrawable(sType.drawableValue()));
+		
+		this.isPlayable = (ammo == Constants.SHOT_AMMO_UNLIMITED) ? false : true;
 		
 		if(mHealthPoints > 0)
 			setStatus(Constants.STATE_ALIVE);
@@ -196,4 +201,15 @@ public class Ship extends Entity {
 	public int getAmmunition() {
 		return mAmmunition;
 	}
+	
+	
+
+	@Override
+	public String toString() {
+		return "Ship [sType=" + sType + ", mAmmunition=" + mAmmunition + ", mReloadTime="
+				+ mReloadTime + ", mRange=" + mRange + ", timestampLastShot="
+				+ timestampLastShot + ", entityDirection=" + entityDirection
+				+ ", entityCoordinates=" + entityCoordinates + "]";
+	}	
+	
 }

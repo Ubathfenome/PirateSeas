@@ -109,4 +109,13 @@ public class Item implements Comparable<Item> {
 	public int getRecommendedLevel() {
 		return recommendedLevel;
 	}
+
+	@Override
+	public String toString() {
+		return "Item [id=" + id + ", name=" + name + ", description="
+				+ description + ", recommendedLevel=" + recommendedLevel
+				+ ", level=" + level + ", price=" + price + "]";
+	}
+	
+	
 }

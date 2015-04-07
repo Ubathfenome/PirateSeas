@@ -13,5 +13,4 @@ public class EventDayNightCycle {
 	public static int getSkyFilter(float hour){		
 		return (int) (hour * HOUR_VALUE_RATIO);
 	}
-	
 }

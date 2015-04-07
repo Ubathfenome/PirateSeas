@@ -79,6 +79,10 @@ public class Player{
 	public void setPassedDays(int passedDays) {
 		this.passedDays = passedDays;
 	}
-	
-	
+
+	@Override
+	public String toString() {
+		return "Player [level=" + level + ", gold=" + gold + ", experience="
+				+ experience + ", passedDays=" + passedDays + "]";
+	}
 }

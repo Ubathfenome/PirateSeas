@@ -48,7 +48,7 @@ public class UIDisplayElement extends View {
 	
 	private void init(){
 		paint = new Paint();
-		paint.setColor(Color.WHITE);
+		paint.setColor(Color.RED);
 		paint.setTextSize(40f);
 		paint.setStyle(Style.STROKE);
 		
@@ -67,6 +67,13 @@ public class UIDisplayElement extends View {
 	@Override
 	public void onDraw(Canvas canvas){
 		mImage.draw(canvas);
-		canvas.drawText(String.valueOf(mValue), mImage.getIntrinsicWidth() / 2, mImage.getIntrinsicHeight() / 2,paint);
+		canvas.drawText(String.valueOf(mValue), mImage.getIntrinsicWidth() / 2 - 20, mImage.getIntrinsicHeight() / 2 + 10,paint);
 	}
+
+	@Override
+	public String toString() {
+		return "UIDisplayElement [name = " + this.getClass().getName() + ", mValue=" + mValue + "]";
+	}
+	
+	
 }

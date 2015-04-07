@@ -30,4 +30,9 @@ public class Island extends BasicModel{
 	public boolean hasShop(){
 		return hasShop;
 	}
+
+	@Override
+	public String toString() {
+		return "Island [rand=" + rand + ", hasShop=" + hasShop + "]";
+	}
 }

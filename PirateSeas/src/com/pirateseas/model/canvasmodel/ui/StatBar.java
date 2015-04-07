@@ -53,5 +53,13 @@ public class StatBar extends BasicModel {
 		mPaintLine.setStrokeWidth(10);
 		canvas.drawLine((int) x + 5, (int) y - 10, (int) ((x + 5) + (( mCanvasWidth - 2) / (maxValue + 1)) * currentValue + 1), (int) y - 10, mPaintLine);
 	}
+
+	@Override
+	public String toString() {
+		return "StatBar [name=" + this.getClass().getName() + ", mType=" + mType + ", maxValue=" + maxValue
+				+ ", currentValue=" + currentValue + "]";
+	}
+	
+	
 	
 }

@@ -65,5 +65,10 @@ public class Sky extends BasicModel{
 		Log.d(TAG, "Rotating sky by " + angle + " degrees");
 		this.mImage = DrawableHelper.rotateDrawable(mImage, context, angle);
 	}
+
+	@Override
+	public String toString() {
+		return "Sky [filterValue=" + filterValue + "]";
+	}
 	
 }

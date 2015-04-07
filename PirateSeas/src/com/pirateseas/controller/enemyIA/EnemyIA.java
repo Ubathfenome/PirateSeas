@@ -83,8 +83,12 @@ public class EnemyIA {
 		this.mStatus = mStatus;
 	}
 
-
 	private enum IAStatuses{
 		IDLE, MOVE, TURN, ATTACKF, ATTACKSR, ATTACKSL, RETREAT
+	}
+
+	@Override
+	public String toString() {
+		return "EnemyIA [mStatus=" + mStatus + "]";
 	}
 }

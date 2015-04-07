@@ -60,4 +60,10 @@ public class Clouds extends BasicModel{
 			parallaxLayers[1].draw(canvas);
         }
     }
+
+	@Override
+	public String toString() {
+		return "Clouds [isCloudy=" + isCloudy + "]";
+	}
+    
 }

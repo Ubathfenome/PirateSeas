@@ -23,6 +23,7 @@
 			android:id="@+id/btnPause"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:paddingLeft="10dp"
 			android:contentDescription="@string/btn_pause"
 			android:src="@drawable/ico_pause"
 			android:background="@drawable/xml_btn_style" />
@@ -84,6 +85,7 @@
 		    android:id="@+id/controlWheel"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
+		    android:layout_marginLeft="16dp"
 		    android:layout_weight="1"
 		    android:background="@drawable/ico_wheel" />
 		

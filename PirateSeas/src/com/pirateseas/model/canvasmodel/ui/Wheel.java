@@ -1,18 +1,16 @@
 package com.pirateseas.model.canvasmodel.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Canvas;
 import android.graphics.Point;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
 
 public class Wheel extends View {	
-	private float mDegrees;
+	private double mDegrees;
 	private Point mCenter;
 	private Drawable mImage;
-	private int[] location = new int[2];
 	
 	public Wheel(Context context){
 		this(context, null);
@@ -28,33 +26,26 @@ public class Wheel extends View {
 		init();
 	}
 	
+	@SuppressLint("NewApi")
 	private void init(){
 		mDegrees = 0f;
 		setImage(getBackground());
-		Rect imageBounds = mImage.copyBounds();
-		int imgWdth = imageBounds.width();
-		int imgHght = imageBounds.height();
-		getLocationOnScreen(location);
-		mCenter = new Point(location[0] + (imgWdth / 2), location[1] + (imgHght / 2));
+		mCenter = new Point(0, 0);
 	}
 	
 	public Point getCenterPoint(){
 		return mCenter;
 	}
 	
-	@Override
-	public void draw(Canvas canvas){
-		canvas.save();
-		canvas.rotate(mDegrees, mCenter.x, mCenter.y);
-		super.draw(canvas);
-		canvas.restore();
+	public void setCenterPoint(Point point) {
+		this.mCenter = point;		
 	}
 	
-	public void setDegrees(float degrees){
+	public void setDegrees(double degrees){
 		this.mDegrees = degrees;
 	}
 
-	public float getDegrees() {
+	public double getDegrees() {
 		return mDegrees;
 	}
 
@@ -64,6 +55,11 @@ public class Wheel extends View {
 
 	public void setImage(Drawable mImage) {
 		this.mImage = mImage;
+	}
+
+	@Override
+	public String toString() {
+		return "Wheel [mDegrees=" + mDegrees + ", mCenter=" + mCenter + "]";
 	}
 		
 }

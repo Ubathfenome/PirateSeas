@@ -47,7 +47,6 @@ public class Shot extends Entity{
 		board = new Board(context);
 		board.requestFocus();
 		
-		// TODO
 		// CanvasView.addView(board);
 		
 		setBrushProperties();
@@ -90,7 +89,7 @@ public class Shot extends Entity{
 	public class Board extends View {
 		private Bitmap mBitmap = null;
 		private Canvas mCanvas = null;
-		private Path mPath = null;
+		public Path mPath = null;
 		private float mX, mY;
 		private static final float TOLERANCE = 8;
 
@@ -165,31 +164,42 @@ public class Shot extends Entity{
 			invalidate();
 		}
 
-		@Override
-		protected void onDraw(Canvas canvas) {
-			
-			switch(mStatus){
-				case Constants.SHOT_FIRED:
-					setImage(mContext.getResources().getDrawable(R.drawable.txtr_shot_smoke));
-					pathStart(startPoint.x, startPoint.y);
-					break;
-				case Constants.SHOT_FLYING:
-					setImage(mContext.getResources().getDrawable(R.drawable.txtr_shot_cannonball));
-					pathMove(1 / endPoint.x, 1 / endPoint.y);
-					break;
-				case Constants.SHOT_HIT:
-					setImage(mContext.getResources().getDrawable(R.drawable.txtr_shot_hit));
-					pathUp();
-					break;
-				case Constants.SHOT_MISSED:
-					setImage(mContext.getResources().getDrawable(R.drawable.txtr_shot_miss));
-					pathUp();
-					break;
-			}
-			
-			// el trazo actual
-			canvas.drawPath(mPath, mBrush);
-		}
 	}
+	
+	@Override
+	public void drawOnScreen(Canvas canvas) {
+		
+		switch(mStatus){
+			case Constants.SHOT_FIRED:
+				setImage(mContext.getResources().getDrawable(R.drawable.txtr_shot_smoke));
+				board.pathStart(startPoint.x, startPoint.y);
+				break;
+			case Constants.SHOT_FLYING:
+				setImage(mContext.getResources().getDrawable(R.drawable.txtr_shot_cannonball));
+				board.pathMove(1 / endPoint.x, 1 / endPoint.y);
+				break;
+			case Constants.SHOT_HIT:
+				setImage(mContext.getResources().getDrawable(R.drawable.txtr_shot_hit));
+				board.pathUp();
+				break;
+			case Constants.SHOT_MISSED:
+				setImage(mContext.getResources().getDrawable(R.drawable.txtr_shot_miss));
+				board.pathUp();
+				break;
+		}
+		
+		// el trazo actual
+		canvas.drawPath(board.mPath, mBrush);
+	}
+
+	@Override
+	public String toString() {
+		return "Shot [startPoint=" + startPoint + ", endPoint=" + endPoint
+				+ ", pathLength=" + pathLength + ", mDamage=" + mDamage
+				+ ", mStatus=" + mStatus +  ", entityDirection=" + entityDirection
+				+ ", entityCoordinates=" + entityCoordinates + "]";
+	}
+	
+	
 	
 }

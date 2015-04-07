@@ -10,8 +10,8 @@ public class Geometry{
 		
 		Point u = new Point(start.x - center.x, start.y - center.y);
 		Point v = new Point(end.x - center.x, end.y - center.y);
-		double modU = Math.sqrt(u.x * u.x + u.y * u.y);
-		double modV = Math.sqrt(v.x * v.x + v.y * v.y);
+		double modU = Math.hypot(u.x, u.y);
+		double modV = Math.hypot(v.x, v.y);
 		
 		// u* v = mod(u) * mod(v) * cos(alpha)
 		// cos(alpha) = (u * v) / (mod(u) * mod(v))
@@ -21,7 +21,7 @@ public class Geometry{
 		angleRad = Math.acos((u.x * v.x + u.y * v.y) / (modU * modV));
 		//angle = (angleRad * 180) / Math.PI;
 		
-		return (float)angleRad;
+		return (float)Math.toDegrees(angleRad);
 	}
 	
 	

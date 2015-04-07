@@ -13,4 +13,8 @@ public class Sun extends BasicModel{
 		
 		setImage(context.getResources().getDrawable(R.drawable.txtr_orb_sun));
 	}
+	
+	public void move(){
+		
+	}
 }
