@@ -113,6 +113,8 @@ public class ItemLoader{
 				break;
 		}
 		
+		item.setPrice(0);
+		
 		return item;
 	}
 }

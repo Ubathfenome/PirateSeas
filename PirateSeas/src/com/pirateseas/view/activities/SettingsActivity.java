@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,11 +19,13 @@ import android.widget.TextView;
 public class SettingsActivity extends Activity {
 	
 	private TextView txtTitleLabel;
+	private TextView txtVolumeLabel;
 	private SeekBar skbVolume;
 	private Button btnSettingsAccept;
 	private Button btnSettingsCancel;
 	
-	private int volumeValue;
+	private float volumeValue = 0f;
+	private String labelValue;
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +38,16 @@ public class SettingsActivity extends Activity {
 		Typeface customFont = Typeface.createFromAsset(getAssets(), "fonts/" + Constants.FONT_NAME + ".ttf");
 		txtTitleLabel.setTypeface(customFont);
 		
+		AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+		SharedPreferences.Editor editor = mPreferences.edit();
+		editor.putFloat(Constants.PREF_DEVICE_VOLUME, am.getStreamVolume(AudioManager.STREAM_MUSIC) / am.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+		editor.commit();
+		
+		txtVolumeLabel = (TextView) findViewById (R.id.txtVolumeLabel);
+		labelValue = (String) txtVolumeLabel.getText();
+		
 		skbVolume = (SeekBar) findViewById(R.id.sbVolume);
-		skbVolume.setProgress(mPreferences.getInt(Constants.PREF_DEVICE_VOLUME, 0));
+		skbVolume.setProgress((int) mPreferences.getFloat(Constants.PREF_DEVICE_VOLUME, 0));
 		skbVolume.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			
 			@Override
@@ -52,6 +63,7 @@ public class SettingsActivity extends Activity {
 					boolean fromUser) {
 				if(fromUser)
 					volumeValue = progress;
+				txtVolumeLabel.setText(labelValue + " " + volumeValue);
 			}
 		});
 		
@@ -62,7 +74,7 @@ public class SettingsActivity extends Activity {
 			public void onClick(View arg0) {
 				// Save changes in preferences
 				SharedPreferences.Editor editor = mPreferences.edit();
-				editor.putInt(Constants.PREF_DEVICE_VOLUME, volumeValue);
+				editor.putFloat(Constants.PREF_DEVICE_VOLUME, volumeValue);
 				
 				editor.commit();
 				

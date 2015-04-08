@@ -1,5 +1,7 @@
 package com.pirateseas.model.canvasmodel.game.objects;
 
+import java.util.List;
+
 import com.pirateseas.R;
 import com.pirateseas.global.Constants;
 
@@ -7,6 +9,8 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
 /**
@@ -20,6 +24,8 @@ public class ShopActivity extends ListActivity{
 	
 	String mNature = "";
 	
+	List<Item> itemList;
+	
 	public void onActivity(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		
@@ -28,11 +34,27 @@ public class ShopActivity extends ListActivity{
 		Intent data = getIntent();
 		mNature = data.getExtras().getString(Constants.ITEMLIST_NATURE, Constants.EMPTY_STRING);
 		
-		if(mNature.equals(Constants.SHOP_NATURE)){
-			// TODO An ordered list
-		} else if (mNature.equals(Constants.TREASURE_NATURE)){
-			// TODO A random list
+		ItemLoader loader = new ItemLoader();
+		
+		// TODO Display items depending on their recommended level over the player level
+		if(mNature.equals(Constants.NATURE_SHOP)){
+			// An ordered list of items with their price
+			itemList = loader.loadDefault();
+		} else if (mNature.equals(Constants.NATURE_TREASURE)){
+			// A random list of free items
+			itemList = loader.loadRandom();
 		}
+		
+		this.getListView().setLongClickable(true);
+		this.getListView().setOnItemLongClickListener(new OnItemLongClickListener() {
+			@Override
+		    public boolean onItemLongClick(AdapterView<?> parent, View v, int position, long id) {
+				// TODO Are you sure you want to buy this?
+				// Affirmative: purchaseItem()
+				// Negative: Nothing
+		        return true;
+		    }
+		});
 	}
 	
 	public void purchaseItem(Item itemPurchased){
@@ -42,8 +64,7 @@ public class ShopActivity extends ListActivity{
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		// TODO Auto-generated method stub
-		super.onListItemClick(l, v, position, id);
+		// TODO Update item description on TextView
 	}
 	
 }

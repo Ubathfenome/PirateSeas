@@ -28,9 +28,13 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import com.pirateseas.R;
+import com.pirateseas.controller.sensors.events.EventDayNightCycle;
+import com.pirateseas.controller.sensors.events.EventEnemyTimer;
 import com.pirateseas.controller.sensors.events.EventWeatherFog;
 import com.pirateseas.controller.sensors.events.EventWeatherStorm;
 import com.pirateseas.global.Constants;
+import com.pirateseas.model.canvasmodel.game.objects.ShopActivity;
+import com.pirateseas.model.canvasmodel.game.scene.Island;
 import com.pirateseas.model.canvasmodel.ui.Throttle;
 import com.pirateseas.model.canvasmodel.ui.UIDisplayElement;
 import com.pirateseas.model.canvasmodel.ui.Wheel;
@@ -57,6 +61,8 @@ public class GameActivity extends Activity implements SensorEventListener {
 	public UIDisplayElement mGold, mAmmo;
 	public Throttle ctrlThrottle;
 	public Wheel ctrlWheel;
+	
+	public EventEnemyTimer eventEnemy;
 
 	Point startPoint;
 	Point centerPoint;
@@ -281,7 +287,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 					float millibar = event.values[0];
 
 					// Event
-
+					EventDayNightCycle.pressure = millibar;
 					sensorLastTimestamp = event.timestamp;
 				}
 				break;
@@ -292,9 +298,12 @@ public class GameActivity extends Activity implements SensorEventListener {
 			case Sensor.TYPE_LINEAR_ACCELERATION:
 				if (deltaSeconds >= SECONDS) { // Hold sensor updates
 					// Parameters
+					float linearAccelerationX = event.values[0];
+					float linearAccelerationY = event.values[1];
+					float linearAccelerationZ = event.values[2];
 
 					// Event
-
+					eventEnemy = new EventEnemyTimer(linearAccelerationX, linearAccelerationY, linearAccelerationZ);
 					sensorLastTimestamp = event.timestamp;
 				}
 				break;
@@ -328,5 +337,25 @@ public class GameActivity extends Activity implements SensorEventListener {
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
 	}
+
+	public void startShopActivity(Island nIsland) {
+		Intent shopIntent = new Intent(this, ShopActivity.class);
+		shopIntent.putExtra(Constants.ITEMLIST_NATURE, nIsland.hasShop() ? Constants.NATURE_SHOP : Constants.NATURE_TREASURE);
+		startActivityForResult(shopIntent, Constants.REQUEST_SHOP);
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch(requestCode){
+			case Constants.REQUEST_SHOP:
+				if(resultCode == Activity.RESULT_OK){
+					
+				}
+				break;
+		
+		}
+	}
+	
+	
 
 }

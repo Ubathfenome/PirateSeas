@@ -9,19 +9,22 @@ public class Player{
 	private int gold = 0;
 	private int experience = 0;
 	private int passedDays = 0;
+	private int mapPieces = 0;
 	
 	public Player(){
 		this.level = 0;
 		this.gold = 0;
 		this.experience = 0;
 		this.passedDays = 0;
+		this.mapPieces = 0;
 	}
 	
-	public Player(int level, int gold, int xp, int days){
+	public Player(int level, int gold, int xp, int days, int mapPieces){
 		this.level = level;
 		this.gold = gold;
 		this.experience = xp;
 		this.passedDays = days;
+		this.mapPieces = mapPieces;
 	}
 
 	/**
@@ -51,6 +54,10 @@ public class Player{
 	public void setGold(int gold) {
 		this.gold = gold;
 	}
+	
+	public void addGold(int gold) {
+		this.gold += gold > 0 ? gold : 0;
+	}
 
 	/**
 	 * @return the experience
@@ -65,6 +72,10 @@ public class Player{
 	public void setExperience(int experience) {
 		this.experience = experience;
 	}
+	
+	public void addExperience(int experience) {
+		this.experience += experience > 0 ? experience : 0;
+	}
 
 	/**
 	 * @return the passedDays
@@ -78,11 +89,24 @@ public class Player{
 	 */
 	public void setPassedDays(int passedDays) {
 		this.passedDays = passedDays;
+	}	
+
+	public int getMapPieces() {
+		return mapPieces;
+	}
+
+	public void setMapPieces(int mapPieces) {
+		this.mapPieces = mapPieces;
+	}
+	
+	public void addMapPiece(){
+		this.mapPieces++;
 	}
 
 	@Override
 	public String toString() {
 		return "Player [level=" + level + ", gold=" + gold + ", experience="
-				+ experience + ", passedDays=" + passedDays + "]";
+				+ experience + ", passedDays=" + passedDays + ", mapPieces="
+				+ mapPieces + "]";
 	}
 }

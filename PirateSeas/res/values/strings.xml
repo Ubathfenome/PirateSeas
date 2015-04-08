@@ -36,7 +36,7 @@
     <string name="label_settings">SETTINGS</string>
     <string name="btn_receive">Receive All</string>
     <string name="btn_pause">Pause Button</string>
-    <string name="lbl_volume">Volume control</string>
+    <string name="lbl_volume">Volume</string>
 
     <!-- Exit Game Dialog -->
     <string name="exit_dialog_title">Exit Confirmation Dialog</string>

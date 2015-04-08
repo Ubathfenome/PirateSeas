@@ -141,10 +141,7 @@ public class MainMenuActivity extends Activity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch(requestCode){
 			case Constants.REQUEST_SENSOR_LIST:
-				if (resultCode == RESULT_OK){
-					
-					// TODO
-					
+				if (resultCode == RESULT_OK){					
 					int[] sensorTypes = data.getIntArrayExtra(Constants.TAG_SENSOR_LIST);
 					
 					launchGame(newGame, sensorTypes);

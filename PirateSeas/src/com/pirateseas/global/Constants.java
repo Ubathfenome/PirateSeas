@@ -14,6 +14,7 @@ public class Constants{
 	
 	// Requests
 	public static final int REQUEST_SENSOR_LIST = 0x00;
+	public static final int REQUEST_SHOP = 0x01;
 	
 	// Entity states
 	public static final int STATE_ALIVE = 0;
@@ -45,6 +46,7 @@ public class Constants{
 	public static final String PREF_PLAYER_LEVEL = "playerLevelPref";
 	public static final String PREF_PLAYER_GOLD = "playerGoldPref";
 	public static final String PREF_PLAYER_XP = "playerExperiencePref";
+	public static final String PREF_PLAYER_MAP_PIECES = "playerMapPiecesPref";
 	public static final String PREF_SHIP_COORDINATES_X = "shipCoordinatesXPref";
 	public static final String PREF_SHIP_COORDINATES_Y = "shipCoordinatesYPref";
 	public static final String PREF_SHIP_AMMUNITION = "shipAmmunitionPref";
@@ -63,12 +65,7 @@ public class Constants{
 	public static final String LEFT = "Left";
 	
 	public static final String ITEMLIST_NATURE = "Nature";
-	public static final Object SHOP_NATURE = "Shop";
-	public static final Object TREASURE_NATURE = "Treasure";
-	
-
-	
-	
-	
-	
+	public static final String NATURE_SHOP = "Shop";
+	public static final String NATURE_TREASURE = "Treasure";
+		
 }

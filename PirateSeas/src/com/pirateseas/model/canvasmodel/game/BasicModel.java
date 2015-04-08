@@ -18,16 +18,12 @@ public class BasicModel{
     protected Drawable mImage;
     protected Parallax mParallax;
 	
-    //protected ResolutionAdapter ra;
-	
     protected int yUp;
     protected int xLeft;
 
 
 	public BasicModel(Context context, double x, double y, double mCanvasWidth,
             double mCanvasHeight, Parallax parallax){
-				
-		//ra = new ResolutionAdapter(context, (int) mCanvasWidth, (int) mCanvasHeight);
 		
 		this.context = context;
         this.x = x; 

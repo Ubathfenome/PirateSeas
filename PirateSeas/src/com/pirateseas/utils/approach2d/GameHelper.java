@@ -32,6 +32,7 @@ public class GameHelper {
 		editor.putInt(Constants.PREF_PLAYER_LEVEL, player.getLevel());
 		editor.putInt(Constants.PREF_PLAYER_GOLD, player.getGold());
 		editor.putInt(Constants.PREF_PLAYER_XP, player.getExperience());
+		editor.putInt(Constants.PREF_PLAYER_MAP_PIECES, player.getMapPieces());
 		editor.putInt(Constants.PREF_SHIP_COORDINATES_X, ship.getCoordinates().x);
 		editor.putInt(Constants.PREF_SHIP_COORDINATES_Y, ship.getCoordinates().y);
 		editor.putInt(Constants.PREF_SHIP_AMMUNITION, ship.getAmmunition());
@@ -51,6 +52,7 @@ public class GameHelper {
 		player.setLevel(mPreferences.getInt(Constants.PREF_PLAYER_LEVEL, 0));
 		player.setGold(mPreferences.getInt(Constants.PREF_PLAYER_GOLD, 0));
 		player.setExperience(mPreferences.getInt(Constants.PREF_PLAYER_XP, 0));
+		player.setMapPieces(mPreferences.getInt(Constants.PREF_PLAYER_MAP_PIECES, 0));
 		
 		helperPlayer = player;
 		

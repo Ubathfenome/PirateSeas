@@ -50,6 +50,10 @@ public class Shot extends Entity{
 		// CanvasView.addView(board);
 		
 		setBrushProperties();
+		
+		mHealthPoints = 1;
+		if(mHealthPoints > 0)
+			setStatus(Constants.STATE_ALIVE);
 	}
 	
 	private float getLength(Point origin, Point destiny){

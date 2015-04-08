@@ -17,13 +17,16 @@ public class Clouds extends BasicModel{
 	private boolean isCloudy;
 	private double xTop;
 	
+	private static Parallax mParallaxAux;
+	private Drawable mImageAux;
+	
 	public Clouds(Context context, double x, double y, double mCanvasWidth,
             double mCanvasHeight, boolean cloudy){
-		super(context, x, y, mCanvasHeight, mCanvasHeight, new Parallax(context, R.drawable.txtr_clouds_light, R.drawable.txtr_clouds_almost_none));
+		super(context, x, y, mCanvasHeight, mCanvasHeight, mParallaxAux = new Parallax(context, R.drawable.txtr_clouds_light, R.drawable.txtr_clouds_almost_none));
 		
 		this.xTop = x;
 		this.isCloudy = cloudy;
-		setImage(context.getResources().getDrawable(R.drawable.txtr_clouds_almost_none));
+		setImage(mImageAux = mParallaxAux.getLayers()[1]);
 	}
 	
 	public boolean isCloudy() {
@@ -52,12 +55,34 @@ public class Clouds extends BasicModel{
         if (!isCloudy){
         	mImage.setBounds(xLeft, yUp, xLeft + mWidth, yUp + mHeight);
         	mImage.draw(canvas);
+        	
+        	if(xLeft < 0){
+        		mImageAux.setBounds((int) (xLeft + mCanvasWidth), yUp, (int) (xLeft + mCanvasWidth) + mWidth, yUp + mHeight);
+    			mImageAux.draw(canvas);
+        	} else if(xLeft > 0){
+        		mImageAux.setBounds((int) (xLeft - mCanvasWidth), yUp, (int) (xLeft - mCanvasWidth) + mWidth, yUp + mHeight);
+    			mImageAux.draw(canvas);
+        	}
         } else {
         	Drawable[] parallaxLayers = mParallax.getLayers();
         	parallaxLayers[0].setBounds(xLeft, yUp, xLeft + mWidth, yUp + mHeight);
         	parallaxLayers[1].setBounds((int) xTop, yUp, (int) xTop + mWidth, yUp + mHeight);
 			parallaxLayers[0].draw(canvas);
 			parallaxLayers[1].draw(canvas);
+			
+			if(xLeft < 0){
+				Drawable[] auxParallaxLayers = mParallaxAux.getLayers();
+				auxParallaxLayers[0].setBounds(xLeft + mWidth, yUp, xLeft + mWidth, yUp + mHeight);
+				auxParallaxLayers[1].setBounds((int) xTop + mWidth, yUp, (int) xTop + mWidth, yUp + mHeight);
+				auxParallaxLayers[0].draw(canvas);
+				auxParallaxLayers[1].draw(canvas);
+        	} else if(xLeft > 0){
+        		Drawable[] auxParallaxLayers = mParallaxAux.getLayers();
+				auxParallaxLayers[0].setBounds(xLeft - mWidth, yUp, xLeft - mWidth, yUp + mHeight);
+				auxParallaxLayers[1].setBounds((int) xTop - mWidth, yUp, (int) xTop - mWidth, yUp + mHeight);
+				auxParallaxLayers[0].draw(canvas);
+				auxParallaxLayers[1].draw(canvas);
+        	}
         }
     }
 

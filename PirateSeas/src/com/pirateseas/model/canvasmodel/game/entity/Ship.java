@@ -7,6 +7,7 @@ import android.os.SystemClock;
 import com.pirateseas.R;
 import com.pirateseas.exceptions.NoAmmoException;
 import com.pirateseas.global.Constants;
+import com.pirateseas.model.canvasmodel.game.scene.Island;
 
 public class Ship extends Entity {
 
@@ -41,9 +42,23 @@ public class Ship extends Entity {
 		this.mRange = sType.rangeMultiplier();
 		this.mReloadTime = (int) sType.powerMultiplier() * Constants.SHIP_RELOAD;
 		gainHealth(sType.defaultHealthPoints());
-		setImage(context.getResources().getDrawable(sType.drawableValue()));
 		
 		this.isPlayable = (ammo == Constants.SHOT_AMMO_UNLIMITED) ? false : true;
+		
+		if(isPlayable)
+			setImage(context.getResources().getDrawable(sType.drawableValue()));
+		else{
+			switch(sType.ordinal()){
+				case 0:
+					break;
+				case 1:
+					setImage(context.getResources().getDrawable(R.drawable.enemy_front_medium));
+					break;
+				case 2:
+					setImage(context.getResources().getDrawable(R.drawable.enemy_front_heavy));
+					break;
+			}
+		}
 		
 		if(mHealthPoints > 0)
 			setStatus(Constants.STATE_ALIVE);
@@ -111,6 +126,19 @@ public class Ship extends Entity {
 		}
 		
 		return cannonballArray;
+	}
+	
+	public boolean arriveIsland(Island island){
+		double islandRightBorder = island.getX() + island.getWidth();
+		double islandBottomBorder = island.getY() + island.getHeight();
+		
+		if(this.y < islandBottomBorder){
+			if(this.x < (islandRightBorder) && this.x > island.getX())
+				return true;
+			if((this.x + this.mWidth) > (island.getX()) && (this.x + this.mWidth) < islandRightBorder)
+				return true;
+		}
+		return false;		
 	}
 	
 /*
@@ -201,8 +229,10 @@ public class Ship extends Entity {
 	public int getAmmunition() {
 		return mAmmunition;
 	}
-	
-	
+
+	public boolean isPlayable() {
+		return isPlayable;
+	}
 
 	@Override
 	public String toString() {

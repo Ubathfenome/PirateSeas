@@ -5,7 +5,9 @@ import java.util.List;
 
 import com.pirateseas.R;
 import com.pirateseas.controller.androidGameAPI.Player;
+import com.pirateseas.controller.enemyIA.EnemyIA;
 import com.pirateseas.controller.sensors.events.EventDayNightCycle;
+import com.pirateseas.controller.sensors.events.EventEnemyTimer;
 import com.pirateseas.controller.timer.GameTimer;
 import com.pirateseas.exceptions.CannonReloadingException;
 import com.pirateseas.exceptions.NoAmmoException;
@@ -16,6 +18,7 @@ import com.pirateseas.model.canvasmodel.game.entity.ShipType;
 import com.pirateseas.model.canvasmodel.game.entity.Shot;
 import com.pirateseas.model.canvasmodel.game.scene.Clouds;
 import com.pirateseas.model.canvasmodel.game.scene.Compass;
+import com.pirateseas.model.canvasmodel.game.scene.Island;
 import com.pirateseas.model.canvasmodel.game.scene.Sea;
 import com.pirateseas.model.canvasmodel.game.scene.Sky;
 import com.pirateseas.utils.approach2d.GameHelper;
@@ -37,8 +40,10 @@ import android.widget.Toast;
 
 public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	private static final String TAG = "CanvasView";
-	private static final float DEGREE_DECREMENT_RATIO = 2.15f;
+	private static final float DEGREE_DECREMENT_RATIO = 3.15f;
 	private static final double DEGREE_MIN_THRESHOLD = Math.pow(10, -3);
+	
+	private static final int HORIZON_Y_VALUE = 170;
 
 	private Context nContext;
 	public static MainLogic nUpdateThread;
@@ -60,6 +65,8 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	private Ship nEnemyShip;
 	private List<Shot> nShotList;
 
+	private Island nIsland;
+	
 	private long nGameTimestamp;
 
 	private boolean nInitialized = false;
@@ -105,18 +112,14 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 		// Scene
 		nSky = new Sky(nContext, 0, 0, nScreenWidth, nScreenHeight);
 		nClouds = new Clouds(nContext, 0, 0, nScreenWidth, nScreenHeight, false);
-		nCompass = new Compass(nContext, nScreenWidth / 2, 125, nScreenWidth,
+		nCompass = new Compass(nContext, nScreenWidth / 2, HORIZON_Y_VALUE - 45, nScreenWidth,
 				nScreenHeight);
-		nSea = new Sea(nContext, 0, 170, nScreenWidth, nScreenHeight);
+		nSea = new Sea(nContext, 0, HORIZON_Y_VALUE, nScreenWidth, nScreenHeight);
 
 		// Entities
 		nPlayerShip = new Ship(nContext, ShipType.LIGHT,
-				nScreenWidth / 2 - 100, nScreenHeight - 170, nScreenWidth,
+				nScreenWidth / 2 - 100, nScreenHeight - HORIZON_Y_VALUE, nScreenWidth,
 				nScreenHeight, new Point(0, 0), 2, 3, 5, 0);
-
-		// nEnemyShip = new Ship(nContext, ShipType.HEAVY, nScreenWidth / 2 +
-		// 150, 170, nScreenWidth, nScreenHeight, new Point(15, 20), 3, 4, 7,
-		// -1);
 
 		nShotList = new ArrayList<Shot>();
 
@@ -310,6 +313,18 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	private void manageEvents() {
 		nSky.setFilterValue(EventDayNightCycle.getSkyFilter(nGameTimer
 				.getHour()));
+		
+		EventEnemyTimer timer = ((GameActivity) nContext).eventEnemy;
+		if(timer != null)
+			if(timer.challengerApproaches(nEnemyShip))
+				nEnemyShip = new Ship(nContext, ShipType.HEAVY, nScreenWidth / 2 +
+				150, 70, nScreenWidth, nScreenHeight, new Point(15, 20), 3, 4, 7,
+				-1);
+		
+		if(nEnemyShip == null){
+			nIsland = new Island(nContext, nScreenWidth - 150, HORIZON_Y_VALUE, nScreenWidth, nScreenHeight);
+		}
+		
 		// nSun.move();
 		nClouds.move();
 	}
@@ -317,7 +332,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	private void manageEntities() {
 		managePlayer();
 		manageEnemies();
-		// manageShots();
+		manageShots();
 	}
 
 	private void manageShots() {
@@ -326,9 +341,17 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 		for (int i = 0; i < size; i++) {
 			deadShots[i] = false;
 			Shot s = nShotList.get(i);
-			if (s.intersectionWithEntity(nEnemyShip)) {
-				nEnemyShip.looseHealth(s.getDamage());
-				// Mark shot to destroy object
+			if(nEnemyShip != null){
+				if (s.intersectionWithEntity(nEnemyShip)) {
+					nEnemyShip.looseHealth(s.getDamage());
+					s.looseHealth(s.getDamage());
+					// Mark shot to destroy object
+					deadShots[i] = true;
+				}
+			}
+			if (s.intersectionWithEntity(nPlayerShip)){
+				nPlayerShip.looseHealth(s.getDamage());
+				s.looseHealth(s.getDamage());
 				deadShots[i] = true;
 			}
 		}
@@ -339,13 +362,21 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	private void manageEnemies() {
-		// TODO
-		/*
-		 * if(!enemyShip.isAlive()) enemyShip.setStatus(Constants.STATE_DEAD);
-		 * else{ EnemyIA eIA = new EnemyIA(playerShip, enemyShip); enemyShip =
-		 * eIA.getNextMove(); }
-		 */
-
+		if (nEnemyShip != null){
+			if (!nEnemyShip.isAlive()){
+				nEnemyShip.setStatus(Constants.STATE_DEAD);
+				nPlayer.addGold(nEnemyShip.getType().defaultHealthPoints() / 5);
+				nPlayer.addExperience(nEnemyShip.getType().defaultHealthPoints() / 2);
+				try {
+					saveGame();
+				} catch (SaveGameException e) {
+					Toast.makeText(nContext, e.getMessage(), Toast.LENGTH_SHORT).show();
+				}
+			} else {
+				EnemyIA eIA = new EnemyIA(nPlayerShip, nEnemyShip);
+				nEnemyShip = eIA.getNextMove();
+			}
+		}
 	}
 
 	/**
@@ -365,12 +396,16 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 				degrees /= DEGREE_DECREMENT_RATIO;
 			((GameActivity) nContext).ctrlWheel.setDegrees(degrees);
 		}
-
+		
 		nSky.move(sceneMoveValue);
 		nCompass.move(sceneMoveValue);
 		nSea.move(sceneMoveValue);
 		
-		//nEnemyShip.move(sceneMoveValue);
+		if(nEnemyShip != null)
+			nEnemyShip.move(sceneMoveValue);
+		
+		if(nIsland != null && nPlayerShip.arriveIsland(nIsland))
+			((GameActivity) nContext).startShopActivity(nIsland);
 
 	}
 
@@ -404,6 +439,10 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 			} catch (InterruptedException e) {
 			}
 		}
+	}
+
+	public Island getIsland() {
+		return nIsland;
 	}
 
 }
