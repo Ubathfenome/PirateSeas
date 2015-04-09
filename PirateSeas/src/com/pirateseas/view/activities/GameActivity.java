@@ -16,6 +16,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -33,7 +34,6 @@ import com.pirateseas.controller.sensors.events.EventEnemyTimer;
 import com.pirateseas.controller.sensors.events.EventWeatherFog;
 import com.pirateseas.controller.sensors.events.EventWeatherStorm;
 import com.pirateseas.global.Constants;
-import com.pirateseas.model.canvasmodel.game.objects.ShopActivity;
 import com.pirateseas.model.canvasmodel.game.scene.Island;
 import com.pirateseas.model.canvasmodel.ui.Throttle;
 import com.pirateseas.model.canvasmodel.ui.UIDisplayElement;
@@ -43,11 +43,10 @@ import com.pirateseas.view.graphics.canvasview.CanvasView;
 
 public class GameActivity extends Activity implements SensorEventListener {
 
-	private static final String TAG = "com.pirateseas.GAME_ACTIVITY";
+	private static final String TAG = "GameActivity";
 
 	private Context context;
 
-	// private GLSurfaceView mGLView;
 	private CanvasView mCanvasView;
 
 	private static final int SECONDS = 30;
@@ -76,10 +75,6 @@ public class GameActivity extends Activity implements SensorEventListener {
 
 		context = this;
 
-		// Create a GLSurfaceView instance and set it
-		// as the ContentView for this Activity
-		// mGLView = new GLSView(this);
-
 		mCanvasView = new CanvasView(this);
 
 		// Receive the device event triggering sensor list
@@ -103,6 +98,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 			}
 		});
 
+		// TODO Check Object display
 		ctrlThrottle = (Throttle) findViewById(R.id.controlThrottle);
 		ctrlThrottle.setOnTouchListener(new OnTouchListener() {
 
@@ -159,9 +155,14 @@ public class GameActivity extends Activity implements SensorEventListener {
 		ViewTreeObserver vto = ctrlWheel.getViewTreeObserver();
 		vto.addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
 			@SuppressWarnings("deprecation")
+			@SuppressLint("NewApi")
 			@Override
 			public void onGlobalLayout() {
-				gUI.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+					gUI.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+				} else {
+					gUI.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+				}
 
 				ctrlWheel.setCenterPoint(new Point(ctrlWheel.getMeasuredWidth() / 2, ctrlWheel.getMeasuredHeight() / 2));
 				centerPoint = ctrlWheel.getCenterPoint();
@@ -176,7 +177,6 @@ public class GameActivity extends Activity implements SensorEventListener {
 
 	@Override
 	protected void onPause() {
-		// CanvasView.pauseGame(true);
 		mSensorManager.unregisterListener(this);
 
 		super.onPause();
@@ -222,14 +222,6 @@ public class GameActivity extends Activity implements SensorEventListener {
 								public void onClick(DialogInterface dialog,
 										int id) {
 									// Exit
-									/*
-									 * try { mCanvasView = (CanvasView)
-									 * findViewById(R.id.gameLayer);
-									 * mCanvasView.saveGame(); } catch
-									 * (SaveGameException e) { Log.e(TAG,
-									 * e.getMessage()); }
-									 */
-
 									CanvasView.nStatus = Constants.GAME_STATE_END;
 									CanvasView.nUpdateThread.setRunning(false);
 									dummyActivity.finish();
@@ -267,7 +259,8 @@ public class GameActivity extends Activity implements SensorEventListener {
 					float axisSpeedZ = event.values[2];
 
 					// Event
-
+					// TODO Event method call
+					
 					sensorLastTimestamp = event.timestamp;
 				}
 				break;
@@ -278,6 +271,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 
 					// Event
 					EventWeatherFog.adjustScreenBrightness(context, lux % 100);
+					
 					sensorLastTimestamp = event.timestamp;
 				}
 				break;
@@ -288,6 +282,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 
 					// Event
 					EventDayNightCycle.pressure = millibar;
+					
 					sensorLastTimestamp = event.timestamp;
 				}
 				break;
@@ -304,6 +299,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 
 					// Event
 					eventEnemy = new EventEnemyTimer(linearAccelerationX, linearAccelerationY, linearAccelerationZ);
+					
 					sensorLastTimestamp = event.timestamp;
 				}
 				break;
@@ -336,12 +332,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
-	}
-
-	public void startShopActivity(Island nIsland) {
-		Intent shopIntent = new Intent(this, ShopActivity.class);
-		shopIntent.putExtra(Constants.ITEMLIST_NATURE, nIsland.hasShop() ? Constants.NATURE_SHOP : Constants.NATURE_TREASURE);
-		startActivityForResult(shopIntent, Constants.REQUEST_SHOP);
+		// Nothing
 	}
 
 	@Override
@@ -349,7 +340,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 		switch(requestCode){
 			case Constants.REQUEST_SHOP:
 				if(resultCode == Activity.RESULT_OK){
-					
+					mCanvasView.destroyIsland();
 				}
 				break;
 		

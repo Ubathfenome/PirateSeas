@@ -17,6 +17,8 @@ public class Clouds extends BasicModel{
 	private boolean isCloudy;
 	private double xTop;
 	
+	private float speedBase, speedTop;
+	
 	private static Parallax mParallaxAux;
 	private Drawable mImageAux;
 	
@@ -26,6 +28,10 @@ public class Clouds extends BasicModel{
 		
 		this.xTop = x;
 		this.isCloudy = cloudy;
+		
+		speedBase = Parallax.speedBase;
+		speedTop = Parallax.speedTop;
+		
 		setImage(mImageAux = mParallaxAux.getLayers()[1]);
 	}
 	
@@ -38,9 +44,18 @@ public class Clouds extends BasicModel{
 	}
 	
 	public void move(){
+		if(x >= mCanvasWidth || x <= 0){
+			speedBase *= (-1);
+		}
+		
+		if(xTop >= mCanvasWidth || xTop <= 0){
+			speedTop *= (-1);
+		}
+		
+		
 		if(isCloudy)
-			xTop += Parallax.speedTop;
-		x += Parallax.speedBase;
+			xTop += speedTop;
+		x += speedBase;
 	}
 
 	/**

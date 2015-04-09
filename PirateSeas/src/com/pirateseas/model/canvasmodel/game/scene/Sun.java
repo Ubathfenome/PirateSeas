@@ -7,6 +7,9 @@ import com.pirateseas.model.canvasmodel.game.BasicModel;
 
 public class Sun extends BasicModel{
 	
+	// TODO Change sun speed value
+	private static final double SUN_SPEED = 0;
+
 	public Sun(Context context, double x, double y, double mCanvasWidth,
             double mCanvasHeight){
 		super(context, mCanvasHeight, mCanvasHeight, mCanvasHeight, mCanvasHeight, null);
@@ -15,6 +18,6 @@ public class Sun extends BasicModel{
 	}
 	
 	public void move(){
-		
+		x += SUN_SPEED;
 	}
 }

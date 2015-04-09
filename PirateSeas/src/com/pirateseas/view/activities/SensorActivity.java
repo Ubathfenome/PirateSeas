@@ -1,10 +1,11 @@
-package com.pirateseas.controller.sensors;
+package com.pirateseas.view.activities;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.pirateseas.R;
 import com.pirateseas.global.Constants;
+import com.pirateseas.controller.sensors.SensorType;
 import com.pirateseas.controller.sensors.events.EventDayNightCycle;
 import com.pirateseas.controller.sensors.events.EventEnemyTimer;
 import com.pirateseas.controller.sensors.events.EventWeatherFog;

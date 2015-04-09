@@ -26,8 +26,9 @@
     <string name="btn_cancel">Cancel</string>
     
     <!-- Exception's messages -->
+    <string name="exception_gold">Not enough gold to purchase that!</string>
     <string name="exception_ammo">Not enough ammunition to shoot!</string>
-    <string name="exception_reloading">Cannot shoot yet!</string>
+    <string name="exception_reloading">You can\'t shoot yet!</string>
     <string name="exception_save">Error while saving</string>
 
     <!-- Game Menu strings -->
@@ -37,6 +38,16 @@
     <string name="btn_receive">Receive All</string>
     <string name="btn_pause">Pause Button</string>
     <string name="lbl_volume">Volume</string>
+    
+    <!-- Shop strings -->
+    <string name="shop_purchase_tip">\n
+        (Select any item to display its description)\n
+        (Long press any item to purchase it)</string>
+    
+    <!-- Shop Purchase Dialog -->
+    <string name="shop_purchase_dialog_title">Purchase Confirmation Dialog</string>
+    <string name="shop_purchase_dialog_message">You will purchase this item!</string>
+    <string name="shop_purchase_dialog_positive">Confirm</string>
 
     <!-- Exit Game Dialog -->
     <string name="exit_dialog_title">Exit Confirmation Dialog</string>
@@ -48,6 +59,11 @@
     <string name="exit_tutorial_dialog_title">Exit Tutorial Confirmation Dialog</string>
     <string name="exit_tutorial_dialog_message">The game will begin!</string>
     <string name="exit_tutorial_dialog_positive">Proceed</string>
+    
+    <!-- Exit Shop Dialog -->
+    <string name="exit_shop_dialog_title">Exit Shop Confirmation Dialog</string>
+    <string name="exit_shop_dialog_message">The game will begin!</string>
+    <string name="exit_shop_dialog_positive">Proceed</string>
 
     <!-- Screen Slide Content -->
     <string name="title_screen_slide">Screen Slide</string>

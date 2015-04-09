@@ -10,7 +10,6 @@ import android.os.Bundle;
 
 import com.pirateseas.R;
 import com.pirateseas.global.Constants;
-import com.pirateseas.controller.sensors.SensorActivity;
 
 import android.view.Display;
 import android.view.View;
@@ -34,9 +33,6 @@ public class MainMenuActivity extends Activity {
 	private ImageButton btnHelp;
 	private Button btnExit;
 
-	/* (non-Javadoc)
-	 * @see android.app.Activity#onCreate(android.os.Bundle)
-	 */
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +41,7 @@ public class MainMenuActivity extends Activity {
 		
 		context = this;
 		
-		// Obtener pantalla
+		// Get Screen
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
 			Point size = new Point();
 			getWindowManager().getDefaultDisplay().getSize(size);
@@ -121,17 +117,11 @@ public class MainMenuActivity extends Activity {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see android.app.Activity#onPause()
-	 */
 	@Override
 	protected void onPause() {
 		super.onPause();
 	}
 
-	/* (non-Javadoc)
-	 * @see android.app.Activity#onResume()
-	 */
 	@Override
 	protected void onResume() {
 		super.onResume();

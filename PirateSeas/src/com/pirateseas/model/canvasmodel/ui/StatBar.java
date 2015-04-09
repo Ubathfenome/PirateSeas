@@ -15,6 +15,8 @@ public class StatBar extends BasicModel {
 	private int maxValue;
 	private int currentValue;
 	
+	private static final int BAR_LENGHT = 150;
+	
 	public StatBar(Context context, double x, double y, double mCanvasWidth, double mCanvasHeight, int type){
 		super(context, x, y, mCanvasWidth, mCanvasHeight, null);
 		this.mType = type;
@@ -35,7 +37,7 @@ public class StatBar extends BasicModel {
 		// Bar background
 		mPaintLine.setColor(Color.BLACK);
 		mPaintLine.setStrokeWidth(15);
-		canvas.drawLine((int)x, (int) y - 10, (int) mCanvasWidth, (int) y - 10, mPaintLine);
+		canvas.drawLine((int)x, (int) y - 10, BAR_LENGHT, (int) y - 10, mPaintLine);
 		
 		// Bar max value
 		if(mType == Constants.BAR_HEALTH)
@@ -43,7 +45,7 @@ public class StatBar extends BasicModel {
 		else if (mType == Constants.BAR_EXPERIENCE)
 			mPaintLine.setColor(0x0f00ff00);
 		mPaintLine.setStrokeWidth(10);
-		canvas.drawLine((int) x + 5, (int) y - 10, (int) mCanvasWidth - 2, (int) y - 10, mPaintLine);
+		canvas.drawLine((int) x + 5, (int) y - 10, BAR_LENGHT - 2, (int) y - 10, mPaintLine);
 		
 		// Bar current value
 		if(mType == Constants.BAR_HEALTH)
@@ -51,7 +53,23 @@ public class StatBar extends BasicModel {
 		else if (mType == Constants.BAR_EXPERIENCE)
 			mPaintLine.setColor(Color.GREEN);
 		mPaintLine.setStrokeWidth(10);
-		canvas.drawLine((int) x + 5, (int) y - 10, (int) ((x + 5) + (( mCanvasWidth - 2) / (maxValue + 1)) * currentValue + 1), (int) y - 10, mPaintLine);
+		canvas.drawLine((int) x + 5, (int) y - 10, (int) ((x + 5) + (( BAR_LENGHT - 2) / (maxValue + 1)) * currentValue + 1), (int) y - 10, mPaintLine);
+	}
+
+	public int getCurrentValue() {
+		return currentValue;
+	}
+
+	public void setCurrentValue(int currentValue) {
+		this.currentValue = currentValue;
+	}
+
+	public int getType() {
+		return mType;
+	}
+
+	public int getMaxValue() {
+		return maxValue;
 	}
 
 	@Override
@@ -59,7 +77,5 @@ public class StatBar extends BasicModel {
 		return "StatBar [name=" + this.getClass().getName() + ", mType=" + mType + ", maxValue=" + maxValue
 				+ ", currentValue=" + currentValue + "]";
 	}
-	
-	
 	
 }

@@ -14,7 +14,9 @@ public class Ship extends Entity {
 	private int mAmmunition = 0;
 	
 	private int mReloadTime;
-	private int mRange;
+	private float mPower;
+	private float mRange;
+	private int maxHealth;
 	private long timestampLastShot;
 	
 	private boolean isPlayable;
@@ -40,8 +42,9 @@ public class Ship extends Entity {
 		
 		this.sType = sType;
 		this.mRange = sType.rangeMultiplier();
+		this.mPower = sType.powerMultiplier();
 		this.mReloadTime = (int) sType.powerMultiplier() * Constants.SHIP_RELOAD;
-		gainHealth(sType.defaultHealthPoints());
+		gainHealth(this.maxHealth = sType.defaultHealthPoints());		
 		
 		this.isPlayable = (ammo == Constants.SHOT_AMMO_UNLIMITED) ? false : true;
 		
@@ -205,15 +208,31 @@ public class Ship extends Entity {
 	/**
 	 * @return the mRange
 	 */
-	public int getRange() {
+	public float getRange() {
 		return mRange;
 	}
 
 	/**
 	 * @param mRange the mRange to set
 	 */
-	public void setRange(int mRange) {
+	public void setRange(float mRange) {
 		this.mRange = mRange;
+	}
+	
+	public void addRange(float f) {
+		this.mRange += f;
+	}	
+
+	public float getPower() {
+		return mPower;
+	}
+
+	public void setPower(float mPower) {
+		this.mPower = mPower;
+	}
+	
+	public void addPower(float f) {
+		this.mPower += f;		
 	}
 
 	/**
@@ -221,6 +240,14 @@ public class Ship extends Entity {
 	 */
 	public ShipType getType() {
 		return sType;
+	}
+
+	public int getMaxHealth() {
+		return maxHealth;
+	}
+
+	public void setMaxHealth(int maxHealth) {
+		this.maxHealth = maxHealth;
 	}
 
 	/**
@@ -240,6 +267,6 @@ public class Ship extends Entity {
 				+ mReloadTime + ", mRange=" + mRange + ", timestampLastShot="
 				+ timestampLastShot + ", entityDirection=" + entityDirection
 				+ ", entityCoordinates=" + entityCoordinates + "]";
-	}	
+	}
 	
 }

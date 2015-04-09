@@ -22,6 +22,16 @@ public class ItemLoader{
 	Item blackPowder;
 	Item valuable;
 	
+	public static int CREW_ID;
+	public static int REPAIRMAN_ID;
+	public static int NEST_ID;
+	public static int MATERIALS_ID;
+	public static int MAPPIECE_ID;
+	public static int MAP_ID;
+	public static int BLACKPOWDER_ID;
+	public static int VALUABLE_ID;
+	
+	
 	private static final float ITEM_TIER1_PERCENT = 80;
 	private static final float ITEM_TIER2_PERCENT = 15;
 	private static final float ITEM_TIER3_PERCENT = 5;
@@ -30,12 +40,21 @@ public class ItemLoader{
 		itemList = new ArrayList<Item>();
 		
 		crew = new Item("Crew", "Restores 5 health points", 1, 5);
+		CREW_ID = crew.getId();
 		repairman = new Item("Repairman", "Restores 15 health points", 1, 15);
+		REPAIRMAN_ID = repairman.getId();
 		nest = new Item("Nest", "Increases the effective range by 1.15", 3, 35);
-		materials = new Item("Materials", "Increases the max health in 10 units", 2, 25);
-		mapPiece = new Item("Map Piece", "1/6 th section of a map", 2, 15);
-		map = new Item("Map", "Shows the closest treasure", 3, 40);
-		blackPowder = new Item("BlackPowder", "Increases the firepower by 0.5", 3, 35);
+		NEST_ID = nest.getId();
+		materials = new Item("Materials", "Increases the max health in 10 units", 2, 40);
+		MATERIALS_ID = materials.getId();
+		mapPiece = new Item("Map Piece", "1/6 th section of a map", 2, 65);
+		MAPPIECE_ID = mapPiece.getId();
+		map = new Item("Map", "Shows the closest treasure", 3, 140);
+		MAP_ID = map.getId();
+		blackPowder = new Item("BlackPowder", "Increases the firepower by 0.5", 3, 85);
+		BLACKPOWDER_ID = blackPowder.getId();
+		valuable = new Item("Valuable", "It grants you 100 gold coins", 3, 101);
+		VALUABLE_ID = valuable.getId();
 		
 		defaultList = loadAll();
 		
@@ -60,6 +79,7 @@ public class ItemLoader{
 		itemList.add(mapPiece);
 		itemList.add(map);
 		itemList.add(blackPowder);
+		itemList.add(valuable);
 		
 		Arrays.sort(itemList.toArray());
 		
@@ -71,9 +91,13 @@ public class ItemLoader{
 		return itemList;
 	}
 	
-	public List<Item> loadDefault(){
+	public List<Item> loadDefault(int level){
 		itemList.clear();
-		itemList.add(crew);
+		for(int i = 0, all = defaultList.size(); i < all; i++){
+			Item dummyItem = defaultList.get(i);
+			if(dummyItem.getRecommendedLevel()<=level)
+				itemList.add(dummyItem);
+		}
 		return itemList;
 	}
 	

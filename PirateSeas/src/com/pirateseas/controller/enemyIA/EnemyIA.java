@@ -39,7 +39,7 @@ public class EnemyIA {
 	}
 	
 	private boolean playerWithinReach(){
-		int enemyRange = Constants.SHIP_BASIC_RANGE * enemyShip.getRange();
+		float enemyRange = Constants.SHIP_BASIC_RANGE * enemyShip.getRange();
 		
 		if (Math.abs(enemyShip.getCoordinates().y - playerShip.getCoordinates().y) <= enemyRange)
 			return true;

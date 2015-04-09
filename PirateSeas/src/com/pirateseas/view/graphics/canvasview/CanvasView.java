@@ -21,9 +21,13 @@ import com.pirateseas.model.canvasmodel.game.scene.Compass;
 import com.pirateseas.model.canvasmodel.game.scene.Island;
 import com.pirateseas.model.canvasmodel.game.scene.Sea;
 import com.pirateseas.model.canvasmodel.game.scene.Sky;
+import com.pirateseas.model.canvasmodel.game.scene.Sun;
+import com.pirateseas.model.canvasmodel.ui.StatBar;
 import com.pirateseas.utils.approach2d.GameHelper;
 import com.pirateseas.view.activities.GameActivity;
+import com.pirateseas.view.activities.GameOverActivity;
 import com.pirateseas.view.activities.PauseActivity;
+import com.pirateseas.view.activities.ShopActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -42,8 +46,9 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	private static final String TAG = "CanvasView";
 	private static final float DEGREE_DECREMENT_RATIO = 3.15f;
 	private static final double DEGREE_MIN_THRESHOLD = Math.pow(10, -3);
-	
+
 	private static final int HORIZON_Y_VALUE = 170;
+	private static final int BAR_INITIAL_X_VALUE = 150;
 
 	private Context nContext;
 	public static MainLogic nUpdateThread;
@@ -59,14 +64,17 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	private Compass nCompass;
 	private Sea nSea;
 	public Clouds nClouds;
-	// private Sun nSun;
+	private Sun nSun;
+
+	private Island nIsland;
 
 	public Ship nPlayerShip;
 	private Ship nEnemyShip;
 	private List<Shot> nShotList;
 
-	private Island nIsland;
-	
+	private StatBar nPlayerHBar, nPlayerXPBar;
+	private StatBar nEnemyHBar;
+
 	private long nGameTimestamp;
 
 	private boolean nInitialized = false;
@@ -111,19 +119,31 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 		// Initialize components
 		// Scene
 		nSky = new Sky(nContext, 0, 0, nScreenWidth, nScreenHeight);
-		nClouds = new Clouds(nContext, 0, 0, nScreenWidth, nScreenHeight, false);
-		nCompass = new Compass(nContext, nScreenWidth / 2, HORIZON_Y_VALUE - 45, nScreenWidth,
+		nSun = new Sun(nContext, nScreenWidth / 2, 0, nScreenWidth,
 				nScreenHeight);
-		nSea = new Sea(nContext, 0, HORIZON_Y_VALUE, nScreenWidth, nScreenHeight);
+		nClouds = new Clouds(nContext, 0, 0, nScreenWidth, nScreenHeight, false);
+		nCompass = new Compass(nContext, nScreenWidth / 2,
+				HORIZON_Y_VALUE - 45, nScreenWidth, nScreenHeight);
+		nSea = new Sea(nContext, 0, HORIZON_Y_VALUE, nScreenWidth,
+				nScreenHeight);
 
 		// Entities
 		nPlayerShip = new Ship(nContext, ShipType.LIGHT,
-				nScreenWidth / 2 - 100, nScreenHeight - HORIZON_Y_VALUE, nScreenWidth,
-				nScreenHeight, new Point(0, 0), 2, 3, 5, 0);
+				nScreenWidth / 2 - 100, nScreenHeight - HORIZON_Y_VALUE,
+				nScreenWidth, nScreenHeight, new Point(0, 0), 2, 3, 5, 0);
 
 		nShotList = new ArrayList<Shot>();
 
 		loadGame();
+
+		// Game User Interface
+		nPlayerHBar = new StatBar(nContext, BAR_INITIAL_X_VALUE,
+				nScreenHeight - 45, nScreenWidth, nScreenHeight,
+				nPlayerShip.getHealth(), nPlayerShip.getType()
+						.defaultHealthPoints(), Constants.BAR_HEALTH);
+		nPlayerXPBar = new StatBar(nContext, BAR_INITIAL_X_VALUE,
+				nScreenHeight - 25, nScreenWidth, nScreenHeight,
+				nPlayer.getExperience(), 100, Constants.BAR_EXPERIENCE);
 
 		nGameTimestamp = 0;
 
@@ -155,19 +175,26 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	 */
 	protected void drawOnScreen(Canvas canvas) {
 		nSky.drawOnScreen(canvas);
+		nSun.drawOnScreen(canvas);
+		nClouds.drawOnScreen(canvas);
 		nCompass.drawOnScreen(canvas);
 		nSea.drawOnScreen(canvas);
 
 		nPlayerShip.drawOnScreen(canvas);
 
 		// Prueba con un solo enemigo
-		// nEnemyShip.drawOnScreen(canvas);
+		if (nEnemyShip != null) {
+			nEnemyShip.drawOnScreen(canvas);
+			nEnemyHBar.drawOnScreen(canvas);
+		}
 
 		for (int i = 0, size = nShotList.size(); i < size; i++) {
 			Shot s = nShotList.get(i);
 			s.drawOnScreen(canvas);
 		}
 
+		nPlayerHBar.drawOnScreen(canvas);
+		nPlayerXPBar.drawOnScreen(canvas);
 	}
 
 	@SuppressLint("ClickableViewAccessibility")
@@ -189,6 +216,11 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 				Intent pauseActivityIntent = new Intent(nContext,
 						PauseActivity.class);
 				nContext.startActivity(pauseActivityIntent);
+			} else if((x < (getWidth() / 6)) && (y < getHeight() / 6)){
+				// TODO Debug code only
+				Intent shopIntent = new Intent(nContext, ShopActivity.class);
+				shopIntent.putExtra(Constants.ITEMLIST_NATURE, Constants.NATURE_SHOP);
+				((GameActivity)nContext).startActivity(shopIntent);
 			} else {
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_UP:
@@ -199,6 +231,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 							try {
 								nShotList.add(nPlayerShip.shootFront());
 							} catch (NoAmmoException e) {
+								Log.e(TAG, e.getMessage());
 								Toast.makeText(nContext, e.getMessage(),
 										Toast.LENGTH_SHORT).show();
 							}
@@ -212,6 +245,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 									nShotList.add(shotArray[i]);
 								}
 							} catch (NoAmmoException e) {
+								Log.e(TAG, e.getMessage());
 								Toast.makeText(nContext, e.getMessage(),
 										Toast.LENGTH_SHORT).show();
 							}
@@ -224,6 +258,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 									nShotList.add(shotArray[i]);
 								}
 							} catch (NoAmmoException e) {
+								Log.e(TAG, e.getMessage());
 								Toast.makeText(nContext, e.getMessage(),
 										Toast.LENGTH_SHORT).show();
 							}
@@ -234,6 +269,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 									.getResources().getString(
 											R.string.exception_reloading));
 						} catch (CannonReloadingException e) {
+							Log.e(TAG, e.getMessage());
 							Toast.makeText(nContext, e.getMessage(),
 									Toast.LENGTH_SHORT).show();
 						}
@@ -269,9 +305,9 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	 */
 	public synchronized void updateLogic() {
 		checkLogicThread();
-		manageTime();
 		switch (nStatus) {
 		case Constants.GAME_STATE_NORMAL:
+			manageTime();
 			manageEvents();
 			manageEntities();
 			manageUI();
@@ -303,7 +339,12 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	private void manageUI() {
-		// TODO Manage StatBars
+		// Manage StatBars
+		if(nEnemyShip != null)
+			nEnemyHBar.setCurrentValue(nEnemyShip.getHealth());
+		nPlayerHBar.setCurrentValue(nPlayerShip.getHealth());
+		nPlayerXPBar.setCurrentValue(nPlayer.getExperience());
+		
 		// Manage UIDisplayElements
 		((GameActivity) nContext).mGold.setElementValue(nPlayer.getGold());
 		((GameActivity) nContext).mAmmo.setElementValue(nPlayerShip
@@ -313,19 +354,25 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	private void manageEvents() {
 		nSky.setFilterValue(EventDayNightCycle.getSkyFilter(nGameTimer
 				.getHour()));
-		
+
 		EventEnemyTimer timer = ((GameActivity) nContext).eventEnemy;
-		if(timer != null)
-			if(timer.challengerApproaches(nEnemyShip))
-				nEnemyShip = new Ship(nContext, ShipType.HEAVY, nScreenWidth / 2 +
-				150, 70, nScreenWidth, nScreenHeight, new Point(15, 20), 3, 4, 7,
-				-1);
-		
-		if(nEnemyShip == null){
-			nIsland = new Island(nContext, nScreenWidth - 150, HORIZON_Y_VALUE, nScreenWidth, nScreenHeight);
+		if (timer != null)
+			if (timer.challengerApproaches(nEnemyShip)) {
+				nEnemyShip = new Ship(nContext, ShipType.HEAVY,
+						nScreenWidth / 2 + 150, 70, nScreenWidth,
+						nScreenHeight, new Point(15, 20), 3, 4, 7, -1);
+				nEnemyHBar = new StatBar(nContext, BAR_INITIAL_X_VALUE, 0,
+						nScreenWidth, nScreenHeight, nEnemyShip.getHealth(),
+						nEnemyShip.getType().defaultHealthPoints(),
+						Constants.BAR_HEALTH);
+			}
+
+		if (nEnemyShip == null && nIsland == null) {
+			nIsland = new Island(nContext, nScreenWidth - 150, HORIZON_Y_VALUE,
+					nScreenWidth, nScreenHeight);
 		}
-		
-		// nSun.move();
+
+		nSun.move();
 		nClouds.move();
 	}
 
@@ -341,16 +388,18 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 		for (int i = 0; i < size; i++) {
 			deadShots[i] = false;
 			Shot s = nShotList.get(i);
-			if(nEnemyShip != null){
+			if (nEnemyShip != null) {
 				if (s.intersectionWithEntity(nEnemyShip)) {
 					nEnemyShip.looseHealth(s.getDamage());
 					s.looseHealth(s.getDamage());
+					
 					// Mark shot to destroy object
 					deadShots[i] = true;
 				}
 			}
-			if (s.intersectionWithEntity(nPlayerShip)){
-				nPlayerShip.looseHealth(s.getDamage());
+			if (s.intersectionWithEntity(nPlayerShip)) {
+				if(nPlayerShip.getHealth() >= s.getDamage())
+					nPlayerShip.looseHealth(s.getDamage());
 				s.looseHealth(s.getDamage());
 				deadShots[i] = true;
 			}
@@ -362,15 +411,18 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	private void manageEnemies() {
-		if (nEnemyShip != null){
-			if (!nEnemyShip.isAlive()){
+		if (nEnemyShip != null) {
+			if (!nEnemyShip.isAlive()) {
 				nEnemyShip.setStatus(Constants.STATE_DEAD);
 				nPlayer.addGold(nEnemyShip.getType().defaultHealthPoints() / 5);
-				nPlayer.addExperience(nEnemyShip.getType().defaultHealthPoints() / 2);
+				nPlayer.addExperience(nEnemyShip.getType()
+						.defaultHealthPoints() / 2);
 				try {
 					saveGame();
 				} catch (SaveGameException e) {
-					Toast.makeText(nContext, e.getMessage(), Toast.LENGTH_SHORT).show();
+					Log.e(TAG, e.getMessage());
+					Toast.makeText(nContext, e.getMessage(), Toast.LENGTH_SHORT)
+							.show();
 				}
 			} else {
 				EnemyIA eIA = new EnemyIA(nPlayerShip, nEnemyShip);
@@ -383,30 +435,50 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	 * Rotate the world around the player whenever he/she moves
 	 */
 	private void managePlayer() {
-		double degrees = ((GameActivity) nContext).ctrlWheel.getDegrees();
-		double sceneMoveValue = this.getHeight() * Math.tan(degrees);
-
-		if (degrees == 0) {
-			degrees = degrees > 90 && degrees < 270 ? -sceneMoveValue
-					: sceneMoveValue;
+		if(nPlayerShip.isAlive()){
+			double degrees = ((GameActivity) nContext).ctrlWheel.getDegrees();
+			double sceneMoveValue = this.getHeight() * Math.tan(degrees);
+	
+			if (degrees == 0) {
+				degrees = degrees > 90 && degrees < 270 ? -sceneMoveValue
+						: sceneMoveValue;
+			} else {
+				if (degrees < DEGREE_MIN_THRESHOLD)
+					degrees = 0;
+				else
+					degrees /= DEGREE_DECREMENT_RATIO;
+				((GameActivity) nContext).ctrlWheel.setDegrees(degrees);
+			}
+	
+			nSky.move(sceneMoveValue);
+			nCompass.move(sceneMoveValue);
+			nSea.move(sceneMoveValue);
+	
+			if (nEnemyShip != null)
+				nEnemyShip.move(sceneMoveValue);
+	
+			if (nIsland != null) {
+				nIsland.move(sceneMoveValue);
+				if (nPlayerShip.arriveIsland(nIsland)){
+					try {
+						saveGame();
+					} catch (SaveGameException e) {
+						Log.e(TAG, e.getMessage());
+						Toast.makeText(nContext, e.getMessage(), Toast.LENGTH_SHORT).show();
+					}
+					
+					Intent shopIntent = new Intent(nContext, ShopActivity.class);
+					shopIntent.putExtra(Constants.ITEMLIST_NATURE, nIsland.hasShop() ? Constants.NATURE_SHOP : Constants.NATURE_TREASURE);
+					((GameActivity)nContext).startActivityForResult(shopIntent, Constants.REQUEST_SHOP);
+				}
+			}
 		} else {
-			if (degrees < DEGREE_MIN_THRESHOLD)
-				degrees = 0;
-			else
-				degrees /= DEGREE_DECREMENT_RATIO;
-			((GameActivity) nContext).ctrlWheel.setDegrees(degrees);
+			// Display "Game Over" Screen with calculated score
+			Intent gameOverIntent = new Intent(nContext, GameOverActivity.class);
+			// Parcelable Extra with Player object content
+			gameOverIntent.putExtra(Constants.TAG_GAME_OVER, nPlayer);
+			nContext.startActivity(gameOverIntent);
 		}
-		
-		nSky.move(sceneMoveValue);
-		nCompass.move(sceneMoveValue);
-		nSea.move(sceneMoveValue);
-		
-		if(nEnemyShip != null)
-			nEnemyShip.move(sceneMoveValue);
-		
-		if(nIsland != null && nPlayerShip.arriveIsland(nIsland))
-			((GameActivity) nContext).startShopActivity(nIsland);
-
 	}
 
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
@@ -441,8 +513,8 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 		}
 	}
 
-	public Island getIsland() {
-		return nIsland;
+	public void destroyIsland() {
+		nIsland = null;
 	}
 
 }
