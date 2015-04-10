@@ -63,14 +63,6 @@ public class Player implements Parcelable {
 	}
 
 	/**
-	 * @param level
-	 *            the level to set
-	 */
-	public void setLevel(int level) {
-		this.level = level;
-	}
-
-	/**
 	 * @return the gold
 	 */
 	public int getGold() {
@@ -114,6 +106,7 @@ public class Player implements Parcelable {
 	}
 
 	public void addExperience(int experience) {
+		
 		this.experience += experience > 0 ? experience : 0;
 	}
 
@@ -137,6 +130,13 @@ public class Player implements Parcelable {
 	}
 
 	public void setMapPieces(int mapPieces) {
+		if (mapPieces > 11){
+			mapPieces = 11;
+		}
+		if (mapPieces % 6 == 0) {
+			hasCompleteMap = true;
+			mapPieces -= 6;
+		}
 		this.mapPieces = mapPieces;
 	}
 

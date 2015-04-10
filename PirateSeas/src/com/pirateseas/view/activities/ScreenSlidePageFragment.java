@@ -83,13 +83,13 @@ public class ScreenSlidePageFragment extends Fragment {
 				imageReference = R.drawable.img_tutorial_1;
 				break;
 			case 1:
-				imageReference = R.drawable.img_tutorial_2;
+				imageReference = R.drawable.img_tutorial_1;
 				break;
 			case 2:
-				imageReference = R.drawable.img_tutorial_3;
+				imageReference = R.drawable.img_tutorial_1;
 				break;
 			default:
-				imageReference = R.drawable.img_tutorial_4;
+				imageReference = R.drawable.img_tutorial_1;
 				break;
 		}
 		

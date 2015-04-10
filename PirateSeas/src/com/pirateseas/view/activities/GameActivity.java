@@ -29,6 +29,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import com.pirateseas.R;
+import com.pirateseas.controller.androidGameAPI.Player;
 import com.pirateseas.controller.sensors.events.EventDayNightCycle;
 import com.pirateseas.controller.sensors.events.EventEnemyTimer;
 import com.pirateseas.controller.sensors.events.EventWeatherFog;
@@ -334,6 +335,8 @@ public class GameActivity extends Activity implements SensorEventListener {
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
 		// Nothing
 	}
+	
+	
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -343,8 +346,20 @@ public class GameActivity extends Activity implements SensorEventListener {
 					mCanvasView.destroyIsland();
 				}
 				break;
-		
 		}
+	}
+
+	public void gameOver(Player nPlayer) {
+		Intent gameOverIntent = new Intent(this, GameOverActivity.class);
+		// Parcelable Extra with Player object content
+		gameOverIntent.putExtra(Constants.TAG_GAME_OVER, nPlayer);
+		this.startActivity(gameOverIntent);
+	}
+
+	public void shop(Island nIsland) {
+		Intent shopIntent = new Intent(this, ShopActivity.class);
+		shopIntent.putExtra(Constants.ITEMLIST_NATURE, nIsland.hasShop() ? Constants.NATURE_SHOP : Constants.NATURE_TREASURE);
+		this.startActivityForResult(shopIntent, Constants.REQUEST_SHOP);
 	}
 	
 	

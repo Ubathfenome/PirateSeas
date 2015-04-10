@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 
 import com.pirateseas.R;
+import com.pirateseas.controller.audio.MusicManager;
 import com.pirateseas.global.Constants;
 
 import android.view.Display;
@@ -103,6 +104,8 @@ public class MainMenuActivity extends Activity {
 				finish();
 			}
 		});
+		
+		MusicManager.getInstance(this, R.raw.msc_casimps1_zoo_music);
 	}
 	
 	private void launchGame(boolean display_tutorial, int[] sensorTypes){

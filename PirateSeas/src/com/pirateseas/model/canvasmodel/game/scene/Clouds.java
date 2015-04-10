@@ -44,11 +44,11 @@ public class Clouds extends BasicModel{
 	}
 	
 	public void move(){
-		if(x >= mCanvasWidth || x <= 0){
+		if(x >= mCanvasWidth || x < 0){
 			speedBase *= (-1);
 		}
 		
-		if(xTop >= mCanvasWidth || xTop <= 0){
+		if(xTop >= mCanvasWidth || xTop < 0){
 			speedTop *= (-1);
 		}
 		

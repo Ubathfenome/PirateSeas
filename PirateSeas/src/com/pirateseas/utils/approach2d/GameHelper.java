@@ -49,7 +49,7 @@ public class GameHelper {
 		SharedPreferences mPreferences = context.getSharedPreferences(Constants.TAG_PREF_NAME, Context.MODE_PRIVATE);
 		
 		player.setPassedDays(mPreferences.getInt(Constants.PREF_PLAYER_DAYS, 0));
-		player.setLevel(mPreferences.getInt(Constants.PREF_PLAYER_LEVEL, 0));
+		//player.setLevel(mPreferences.getInt(Constants.PREF_PLAYER_LEVEL, 0));
 		player.setGold(mPreferences.getInt(Constants.PREF_PLAYER_GOLD, 0));
 		player.setExperience(mPreferences.getInt(Constants.PREF_PLAYER_XP, 0));
 		player.setMapPieces(mPreferences.getInt(Constants.PREF_PLAYER_MAP_PIECES, 0));

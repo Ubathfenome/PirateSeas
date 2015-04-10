@@ -25,7 +25,6 @@ import com.pirateseas.model.canvasmodel.game.scene.Sun;
 import com.pirateseas.model.canvasmodel.ui.StatBar;
 import com.pirateseas.utils.approach2d.GameHelper;
 import com.pirateseas.view.activities.GameActivity;
-import com.pirateseas.view.activities.GameOverActivity;
 import com.pirateseas.view.activities.PauseActivity;
 import com.pirateseas.view.activities.ShopActivity;
 
@@ -78,6 +77,8 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	private long nGameTimestamp;
 
 	private boolean nInitialized = false;
+	
+	private int nCheatCounter;
 
 	int downX = 0, downY = 0;
 
@@ -146,6 +147,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 				nPlayer.getExperience(), 100, Constants.BAR_EXPERIENCE);
 
 		nGameTimestamp = 0;
+		nCheatCounter = 0;
 
 		nInitialized = true;
 	}
@@ -224,7 +226,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 			} else {
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_UP:
-					if (nPlayerShip.isReloaded(SystemClock.uptimeMillis())) {
+					if (nPlayerShip.isReloaded(nGameTimestamp)) {
 						String direction = pressedMotion(
 								new Point(downX, downY), new Point(x, y));
 						if (direction.equals(Constants.FRONT)) {
@@ -262,6 +264,11 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 								Toast.makeText(nContext, e.getMessage(),
 										Toast.LENGTH_SHORT).show();
 							}
+						} else if (direction.equals(Constants.BACK)){
+							nCheatCounter++;
+							if(nCheatCounter == 10){
+								grantCheat2Player();
+							}
 						}
 					} else {
 						try {
@@ -279,6 +286,12 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 			}
 		}
 		return true;
+	}
+
+	private void grantCheat2Player() {
+		nPlayer.addExperience(3500);
+		nPlayer.addGold(5000);
+		nPlayer.setMapPieces(5);
 	}
 
 	private String pressedMotion(Point start, Point end) {
@@ -329,7 +342,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	private void manageTime() {
-		long ts = SystemClock.uptimeMillis();
+		long ts = SystemClock.elapsedRealtime();
 		if (nGameTimestamp == 0)
 			nGameTimestamp = ts;
 		else if (ts - nGameTimestamp >= 1000) {
@@ -467,17 +480,14 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 						Toast.makeText(nContext, e.getMessage(), Toast.LENGTH_SHORT).show();
 					}
 					
-					Intent shopIntent = new Intent(nContext, ShopActivity.class);
-					shopIntent.putExtra(Constants.ITEMLIST_NATURE, nIsland.hasShop() ? Constants.NATURE_SHOP : Constants.NATURE_TREASURE);
-					((GameActivity)nContext).startActivityForResult(shopIntent, Constants.REQUEST_SHOP);
+					// Display "Shop" Screen
+					((GameActivity) nContext).shop(nIsland);
 				}
 			}
 		} else {
 			// Display "Game Over" Screen with calculated score
-			Intent gameOverIntent = new Intent(nContext, GameOverActivity.class);
-			// Parcelable Extra with Player object content
-			gameOverIntent.putExtra(Constants.TAG_GAME_OVER, nPlayer);
-			nContext.startActivity(gameOverIntent);
+			((GameActivity) nContext).gameOver(nPlayer);
+			nStatus = Constants.GAME_STATE_END;
 		}
 	}
 

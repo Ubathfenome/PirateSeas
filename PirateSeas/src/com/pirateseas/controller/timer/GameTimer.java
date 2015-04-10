@@ -15,11 +15,11 @@ public class GameTimer {
 	}
 	
 	public void updateHour(){
-		long ts = SystemClock.uptimeMillis();
+		long ts = SystemClock.elapsedRealtime();
 		double tmpHour = gameHour;
 		long deltaTs = ts - lastTimestamp;
 		long deltaSecs = deltaTs / 1000;	// Real-Life seconds
-		double deltaGHours = deltaSecs / 60;// In-Game hours
+		double deltaGHours = deltaSecs / 360;// In-Game hours; 1 Real-Life minutes = 1 In-Game hour
 		
 		lastTimestamp = lastTimestamp == 0 ? ts : deltaTs;
 		

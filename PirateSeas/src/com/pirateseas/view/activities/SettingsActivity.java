@@ -1,13 +1,13 @@
 package com.pirateseas.view.activities;
 
 import com.pirateseas.R;
+import com.pirateseas.controller.audio.MusicManager;
 import com.pirateseas.global.Constants;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
-import android.media.AudioManager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -38,9 +38,8 @@ public class SettingsActivity extends Activity {
 		Typeface customFont = Typeface.createFromAsset(getAssets(), "fonts/" + Constants.FONT_NAME + ".ttf");
 		txtTitleLabel.setTypeface(customFont);
 		
-		AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 		SharedPreferences.Editor editor = mPreferences.edit();
-		editor.putFloat(Constants.PREF_DEVICE_VOLUME, am.getStreamVolume(AudioManager.STREAM_MUSIC) / am.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+		editor.putFloat(Constants.PREF_DEVICE_VOLUME, MusicManager.getInstance().getDeviceVolume());
 		editor.commit();
 		
 		txtVolumeLabel = (TextView) findViewById (R.id.txtVolumeLabel);
@@ -63,7 +62,8 @@ public class SettingsActivity extends Activity {
 					boolean fromUser) {
 				if(fromUser)
 					volumeValue = progress;
-				txtVolumeLabel.setText(labelValue + " " + volumeValue);
+				MusicManager.getInstance().setDeviceVolume(progress);
+				txtVolumeLabel.setText(labelValue + " " + progress);
 			}
 		});
 		

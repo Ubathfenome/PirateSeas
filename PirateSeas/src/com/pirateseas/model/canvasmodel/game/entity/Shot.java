@@ -37,7 +37,7 @@ public class Shot extends Entity{
 		
 		mContext = context;
 		
-		startPoint = new Point((int)x, (int)y);
+		startPoint = new Point((int)x + entityWidth, (int)y + entityLength);
 		endPoint = destiny;
 		
 		setPathLength(getLength(startPoint, endPoint));

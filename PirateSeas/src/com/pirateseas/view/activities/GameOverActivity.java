@@ -12,9 +12,7 @@ import android.widget.TextView;
 
 public class GameOverActivity extends Activity {
 	
-	// GetIntent Extras
-	Intent intent = getIntent();
-	Player p = intent.getParcelableExtra(Constants.TAG_GAME_OVER);
+	Player  p = null;
 	
 	TextView txtDays, txtScore;
 
@@ -26,13 +24,17 @@ public class GameOverActivity extends Activity {
 		
 		setContentView(R.layout.activity_gameover);
 		
+		// GetIntent Extras
+		Intent intent = getIntent();
+		p = intent.getParcelableExtra(Constants.TAG_GAME_OVER);
+		
 		txtDays = (TextView) findViewById(R.id.txtDays);
 		txtScore = (TextView) findViewById(R.id.txtScore);
 		
-		int score = (p.getLevel() * p.getExperience() + p.getGold())/p.getPassedDays();
+		int score = p.getLevel() * p.getExperience() + p.getGold() * p.getPassedDays();
 		
-		txtDays.setText(p.getPassedDays());
-		txtScore.setText(score);
+		txtDays.setText("" + p.getPassedDays());
+		txtScore.setText("" + score);
 		
 		// TODO Upload score to the cloud? | Save score in the preferences?
 	}

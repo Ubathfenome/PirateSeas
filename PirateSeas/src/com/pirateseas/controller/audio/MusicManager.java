@@ -66,7 +66,8 @@ public class MusicManager{
 		
 		mBackgroundMusic = MediaPlayer.create(context, backgroundMusicId);
 		mBackgroundMusic.setLooping(true);
-		mBackgroundMusic.setVolume(1, 1);
+		float dv = getDeviceVolume();
+		mBackgroundMusic.setVolume(dv, dv);
 	}
 	
 	public void registerSound(int index, int soundId) {
@@ -118,12 +119,19 @@ public class MusicManager{
 		SharedPreferences mPreferences = mContext.getSharedPreferences(Constants.TAG_PREF_NAME, Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = mPreferences.edit();
 		
-		float mDeviceVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-		mDeviceVolume = mDeviceVolume / mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+		float mDeviceVolume = getDeviceVolume();
 		
 		editor.putFloat(Constants.PREF_DEVICE_VOLUME, mDeviceVolume);
 		editor.commit();
 		
 		mSoundPool.play((Integer) mSoundMap.get(index), mDeviceVolume, mDeviceVolume, 1, -1, 1f);
+	}
+	
+	public float getDeviceVolume(){
+		return mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC) / mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+	}
+	
+	public void setDeviceVolume(float volumeValue){
+		mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, (int) volumeValue, 0);
 	}
 }
