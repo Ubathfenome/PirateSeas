@@ -112,9 +112,12 @@ public class Item implements Comparable<Item> {
 
 	@Override
 	public String toString() {
+		/*
 		return "Item [id=" + id + ", name=" + name + ", description="
 				+ description + ", recommendedLevel=" + recommendedLevel
 				+ ", level=" + level + ", price=" + price + "]";
+		*/
+		return "Item [name=" + name + ", price=" + price + "]";
 	}
 	
 	

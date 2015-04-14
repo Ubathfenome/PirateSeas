@@ -2,6 +2,7 @@ package com.pirateseas.model.canvasmodel.game.objects;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class ItemLoader{
@@ -36,6 +37,7 @@ public class ItemLoader{
 	private static final float ITEM_TIER2_PERCENT = 15;
 	private static final float ITEM_TIER3_PERCENT = 5;
 	
+	@SuppressWarnings("unchecked")
 	public ItemLoader(){
 		itemList = new ArrayList<Item>();
 		
@@ -56,7 +58,7 @@ public class ItemLoader{
 		valuable = new Item("Valuable", "It grants you 100 gold coins", 3, 101);
 		VALUABLE_ID = valuable.getId();
 		
-		defaultList = loadAll();
+		defaultList = (ArrayList<Item>) ((ArrayList<Item>) loadAll()).clone();
 		
 		levelProbabilities = new int[100];
 		for(int i = 0; i < 100; i++){

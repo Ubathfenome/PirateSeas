@@ -75,7 +75,6 @@ public class SettingsActivity extends Activity {
 				// Save changes in preferences
 				SharedPreferences.Editor editor = mPreferences.edit();
 				editor.putFloat(Constants.PREF_DEVICE_VOLUME, volumeValue);
-				
 				editor.commit();
 				
 				finish();

@@ -20,8 +20,12 @@ import android.widget.Button;
 import android.widget.ImageButton;
 
 public class MainMenuActivity extends Activity {
+
+	private static final int DEBUG_MODE = 0x0;
+	private static final int RELEASE_MODE = 0x1;
 	
 	private boolean newGame = false;
+	private int mMode;
 	
 	protected Context context;
 	
@@ -93,8 +97,14 @@ public class MainMenuActivity extends Activity {
 		btnHelp = (ImageButton) findViewById(R.id.btn_help);
 		btnHelp.setOnClickListener(new OnClickListener(){
 			public void onClick(View v){
+				/*
 				Intent helpIntent = new Intent(context, HelpActivity.class);
 				startActivity(helpIntent);
+				*/
+				
+				Intent shopIntent = new Intent(context, ShopActivity.class);
+				shopIntent.putExtra(Constants.ITEMLIST_NATURE, Constants.NATURE_SHOP);
+				startActivity(shopIntent);
 			}
 		});
 		
@@ -105,9 +115,17 @@ public class MainMenuActivity extends Activity {
 			}
 		});
 		
+		mMode = DEBUG_MODE;
+		
 		MusicManager.getInstance(this, R.raw.msc_casimps1_zoo_music);
+		if(!isInDebugMode())
+			MusicManager.getInstance().playBackgroundMusic();
 	}
 	
+	private boolean isInDebugMode() {
+		return mMode == DEBUG_MODE ? true : false;
+	}
+
 	private void launchGame(boolean display_tutorial, int[] sensorTypes){
 		if(display_tutorial == false){
 			Intent newGameIntent = new Intent(context, GameActivity.class);

@@ -218,11 +218,6 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 				Intent pauseActivityIntent = new Intent(nContext,
 						PauseActivity.class);
 				nContext.startActivity(pauseActivityIntent);
-			} else if((x < (getWidth() / 6)) && (y < getHeight() / 6)){
-				// TODO Debug code only
-				Intent shopIntent = new Intent(nContext, ShopActivity.class);
-				shopIntent.putExtra(Constants.ITEMLIST_NATURE, Constants.NATURE_SHOP);
-				((GameActivity)nContext).startActivity(shopIntent);
 			} else {
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_UP:

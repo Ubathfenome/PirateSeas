@@ -17,6 +17,7 @@ import android.util.Log;
 public class MusicManager{
 	private static final String TAG = "MusicManager";
 	
+	// Sound Ids
 	public static final int SOUND_SHOT_FIRED = 0x0;
 	public static final int SOUND_SHOT_FLYING = 0x1;
 	public static final int SOUND_SHOT_HIT = 0x2;
@@ -128,7 +129,7 @@ public class MusicManager{
 	}
 	
 	public float getDeviceVolume(){
-		return mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC) / mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+		return (mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC) / mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)) * 100;
 	}
 	
 	public void setDeviceVolume(float volumeValue){

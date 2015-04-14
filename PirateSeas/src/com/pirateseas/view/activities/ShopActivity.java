@@ -17,17 +17,21 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources.NotFoundException;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -57,7 +61,7 @@ public class ShopActivity extends ListActivity{
 	Button btnAcceptAll;
 	Button btnCancel;
 	
-	public void onActivity(Bundle savedInstanceState){
+	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.activity_shop);
@@ -66,6 +70,9 @@ public class ShopActivity extends ListActivity{
 		mNature = data.getExtras().getString(Constants.ITEMLIST_NATURE, Constants.EMPTY_STRING);
 		
 		ItemLoader loader = new ItemLoader();
+		
+		dummyPlayer = new Player();
+		dummyShip = new Ship();
 		
 		GameHelper.loadGame(this, dummyPlayer, dummyShip);
 		dummyPlayer = GameHelper.helperPlayer;
@@ -79,7 +86,7 @@ public class ShopActivity extends ListActivity{
 			itemList = loader.loadRandom();
 		}
 		
-		listView = (ListView) findViewById(R.id.listItems);
+		listView = (ListView) findViewById(android.R.id.list);
 		
 		// Assign loaded itemList to ListView Adapter
 		mAdapter = new ArrayAdapter<Item>(this, R.layout.list_item_layout, itemList);
@@ -244,6 +251,57 @@ public class ShopActivity extends ListActivity{
 							});
 			// Create the AlertDialog object and return it
 			return builder.create();
+		}
+	}
+	
+	/**
+	 * 
+	 * @author p7166421
+	 * @see: http://stackoverflow.com/questions/2265661/how-to-use-arrayadaptermyclass
+	 *
+	 */
+	private class ItemAdapter extends ArrayAdapter<Item>{
+		
+		private class ViewHolder{
+			private ImageView itemIconView;
+			private TextView itemNameView;
+			private TextView itemPriceView;
+			private ImageView itemPriceIconView;
+		}
+		
+		ViewHolder vHolder;
+		
+		public ItemAdapter(Context context, int resource, List<Item> objects) {
+			super(context, resource, objects);
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			if(convertView == null){
+				convertView = LayoutInflater.from(this.getContext())
+						.inflate(R.layout.list_item_layout, parent, false);
+				
+				vHolder = new ViewHolder();
+				vHolder.itemIconView = (ImageView) findViewById(R.id.imgItemIcon);
+				vHolder.itemNameView = (TextView) findViewById(R.id.txtItemName);
+				vHolder.itemPriceView = (TextView) findViewById(R.id.txtItemPrice);
+				vHolder.itemPriceIconView = (ImageView) findViewById(R.id.imgGoldIcon);
+				
+				convertView.setTag(vHolder);
+				
+			} else {
+				vHolder = (ViewHolder) convertView.getTag();
+			}
+			
+			Item item = getItem(position);
+			if(item != null){
+				vHolder.itemIconView.setBackgroundResource(R.drawable.ic_launcher);
+				vHolder.itemNameView.setText(item.getName());
+				vHolder.itemPriceView.setText(item.getPrice());
+				vHolder.itemPriceIconView.setBackgroundResource(R.drawable.ico_gold);				
+			}
+
+			return convertView;
 		}
 	}
 	

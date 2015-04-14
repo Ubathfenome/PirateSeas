@@ -19,9 +19,8 @@ import com.pirateseas.exceptions.NotEnoughGoldException;
  * 
  */
 public class Player implements Parcelable {
-	
-	private static final int LOG_BASE = 1000;
-	private static final int[] LOG_RATIOS = {4, 15, 26, 37, 48, 59, 60};
+	private static final int INVALID_VALUE = -1;
+	private static final int[] LOG_BASES = {400, 1900, 4500, 8200, 13000, 18900, 24900};
 
 	private int level = 0;
 	private int gold = 0;
@@ -108,18 +107,15 @@ public class Player implements Parcelable {
 		this.experience = experience;
 	}
 
-	public void addExperience(int experience) {
-		this.level += getLevelFromXp(experience);
-		
+	public void addExperience(int experience) {		
 		this.experience += experience > 0 ? experience : 0;
-	}
-
-	private int getLevelFromXp(int experience) {
-		return (int) (Math.log(experience) / Math.log(LOG_BASE * getLogRatio()));
-	}
-
-	private int getLogRatio() {
-		return LOG_RATIOS[level] * 100;
+		this.level = INVALID_VALUE;
+		for(int i = 0, length = LOG_BASES.length; i < length; i++){
+			if(this.experience < LOG_BASES[i])
+				this.level = i;
+		}
+		if(this.level == INVALID_VALUE)
+			this.level = LOG_BASES.length - 1;
 	}
 
 	/**
