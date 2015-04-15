@@ -19,11 +19,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 
-public class MainMenuActivity extends Activity {
-
-	private static final int DEBUG_MODE = 0x0;
-	private static final int RELEASE_MODE = 0x1;
-	
+public class MainMenuActivity extends Activity {	
 	private boolean newGame = false;
 	private int mMode;
 	
@@ -97,14 +93,18 @@ public class MainMenuActivity extends Activity {
 		btnHelp = (ImageButton) findViewById(R.id.btn_help);
 		btnHelp.setOnClickListener(new OnClickListener(){
 			public void onClick(View v){
-				/*
-				Intent helpIntent = new Intent(context, HelpActivity.class);
-				startActivity(helpIntent);
-				*/
-				
-				Intent shopIntent = new Intent(context, ShopActivity.class);
-				shopIntent.putExtra(Constants.ITEMLIST_NATURE, Constants.NATURE_SHOP);
-				startActivity(shopIntent);
+				if(!isInDebugMode()){
+					Intent helpIntent = new Intent(context, HelpActivity.class);
+					startActivity(helpIntent);
+				} else {
+					/**
+					 * Activities test section
+					 */
+					Intent shopIntent = new Intent(context, ShopActivity.class);
+					shopIntent.putExtra(Constants.ITEMLIST_NATURE, Constants.NATURE_SHOP);
+					shopIntent.putExtra(Constants.TAG_EXE_MODE, true);
+					startActivity(shopIntent);
+				}
 			}
 		});
 		
@@ -115,7 +115,7 @@ public class MainMenuActivity extends Activity {
 			}
 		});
 		
-		mMode = DEBUG_MODE;
+		mMode = Constants.MODE_DEBUG;
 		
 		MusicManager.getInstance(this, R.raw.msc_casimps1_zoo_music);
 		if(!isInDebugMode())
@@ -123,7 +123,7 @@ public class MainMenuActivity extends Activity {
 	}
 	
 	private boolean isInDebugMode() {
-		return mMode == DEBUG_MODE ? true : false;
+		return mMode == Constants.MODE_DEBUG ? true : false;
 	}
 
 	private void launchGame(boolean display_tutorial, int[] sensorTypes){
@@ -140,11 +140,15 @@ public class MainMenuActivity extends Activity {
 
 	@Override
 	protected void onPause() {
+		if(!isInDebugMode())
+			MusicManager.getInstance().pauseBackgroundMusic();
 		super.onPause();
 	}
 
 	@Override
 	protected void onResume() {
+		if(!isInDebugMode())
+			MusicManager.getInstance().playBackgroundMusic();
 		super.onResume();
 	}
 	

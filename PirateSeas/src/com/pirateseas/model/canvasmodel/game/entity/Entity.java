@@ -22,6 +22,7 @@ public class Entity extends BasicModel{
 		
 	// Common attribs
 	protected int mHealthPoints = 0;
+	protected int mMaxHealth = 0;
 	protected int mSpeed = 0;	
 		
 	public Entity(Context context, double x, double y, double canvasWidth, double canvasHeight, Point eCoords, int eWidth, int eHeight, int eLength){
@@ -58,10 +59,13 @@ public class Entity extends BasicModel{
 	}
 	
 	public void gainHealth(int points){
-		if(points > 0)
-			mHealthPoints += points;
-		else
-			throw new IllegalArgumentException("Encontrado valor de puntos negativo al modificar HealthPoints");
+		if(points >= 0){
+			if(mHealthPoints + points <= mMaxHealth)
+				mHealthPoints += points;
+			else if (mHealthPoints + points > mMaxHealth)
+				mHealthPoints = mMaxHealth;
+		}else
+			throw new IllegalArgumentException("Encontrado valor de puntos invalido al modificar HealthPoints");
 	}
 	
 	public void looseHealth(int points){

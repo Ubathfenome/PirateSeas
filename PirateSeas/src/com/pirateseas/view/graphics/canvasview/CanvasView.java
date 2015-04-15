@@ -26,7 +26,6 @@ import com.pirateseas.model.canvasmodel.ui.StatBar;
 import com.pirateseas.utils.approach2d.GameHelper;
 import com.pirateseas.view.activities.GameActivity;
 import com.pirateseas.view.activities.PauseActivity;
-import com.pirateseas.view.activities.ShopActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

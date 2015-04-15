@@ -2,7 +2,6 @@ package com.pirateseas.model.canvasmodel.game.objects;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class ItemLoader{
@@ -103,7 +102,7 @@ public class ItemLoader{
 		return itemList;
 	}
 	
-	public List<Item> loadRandom(){		
+	public List<Item> loadRandom(){
 		for(Item item : defaultList){
 			if(item.getLevel() == 1)
 				levelOne.add(item);

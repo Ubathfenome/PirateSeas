@@ -38,6 +38,15 @@
 			android:layout_marginRight="8dp"/>
 	
 	</LinearLayout>
+	
+	<Button
+		android:id="@+id/btnSettingsRestore"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Restore preferences"
+		android:layout_marginLeft="8dp"
+		android:layout_marginRight="8dp"
+		android:background="@drawable/xml_btn_style" />
 		
 	<LinearLayout
 		android:layout_width="match_parent"

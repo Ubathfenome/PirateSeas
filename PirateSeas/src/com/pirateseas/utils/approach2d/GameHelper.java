@@ -48,21 +48,38 @@ public class GameHelper {
 		
 		SharedPreferences mPreferences = context.getSharedPreferences(Constants.TAG_PREF_NAME, Context.MODE_PRIVATE);
 		
-		player.setPassedDays(mPreferences.getInt(Constants.PREF_PLAYER_DAYS, 0));
-		//player.setLevel(mPreferences.getInt(Constants.PREF_PLAYER_LEVEL, 0));
-		player.setGold(mPreferences.getInt(Constants.PREF_PLAYER_GOLD, 0));
-		player.setExperience(mPreferences.getInt(Constants.PREF_PLAYER_XP, 0));
-		player.setMapPieces(mPreferences.getInt(Constants.PREF_PLAYER_MAP_PIECES, 0));
-		
-		helperPlayer = player;
-		
-		Point p = new Point(mPreferences.getInt(Constants.PREF_SHIP_COORDINATES_X, 0), mPreferences.getInt(Constants.PREF_SHIP_COORDINATES_Y, 0));
-		int ammo = mPreferences.getInt(Constants.PREF_SHIP_AMMUNITION, 20);
-		int hp = mPreferences.getInt(Constants.PREF_SHIP_HEALTH, 1);
-		ShipType st = ShipType.values()[mPreferences.getInt(Constants.PREF_SHIP_TYPE, 0)];
-		ship = new Ship(context, ship, st, p, 2, 3, 5, hp, ammo);
-		
-		helperShip = ship;
+		boolean isInDebugMode = mPreferences.getBoolean(Constants.TAG_EXE_MODE, false);
+		if(!isInDebugMode){
+			player.setPassedDays(mPreferences.getInt(Constants.PREF_PLAYER_DAYS, 0));
+			player.setGold(mPreferences.getInt(Constants.PREF_PLAYER_GOLD, 0));
+			player.setExperience(mPreferences.getInt(Constants.PREF_PLAYER_XP, 0));
+			player.setMapPieces(mPreferences.getInt(Constants.PREF_PLAYER_MAP_PIECES, 0));
+			
+			helperPlayer = player;
+			
+			Point p = new Point(mPreferences.getInt(Constants.PREF_SHIP_COORDINATES_X, 0), mPreferences.getInt(Constants.PREF_SHIP_COORDINATES_Y, 0));
+			int ammo = mPreferences.getInt(Constants.PREF_SHIP_AMMUNITION, 0);
+			int hp = mPreferences.getInt(Constants.PREF_SHIP_HEALTH, 1);
+			ShipType st = ShipType.values()[mPreferences.getInt(Constants.PREF_SHIP_TYPE, 0)];
+			ship = new Ship(context, ship, st, p, 2, 3, 5, hp, ammo);
+			
+			helperShip = ship;
+		} else {
+			player.setPassedDays(mPreferences.getInt(Constants.PREF_PLAYER_DAYS, 3));
+			player.setGold(mPreferences.getInt(Constants.PREF_PLAYER_GOLD, 237));
+			player.setExperience(mPreferences.getInt(Constants.PREF_PLAYER_XP, 2350));
+			player.setMapPieces(mPreferences.getInt(Constants.PREF_PLAYER_MAP_PIECES, 3));
+			
+			helperPlayer = player;
+			
+			Point p = new Point(mPreferences.getInt(Constants.PREF_SHIP_COORDINATES_X, 0), mPreferences.getInt(Constants.PREF_SHIP_COORDINATES_Y, 0));
+			int ammo = mPreferences.getInt(Constants.PREF_SHIP_AMMUNITION, 20);
+			int hp = mPreferences.getInt(Constants.PREF_SHIP_HEALTH, 81);
+			ShipType st = ShipType.values()[mPreferences.getInt(Constants.PREF_SHIP_TYPE, 0)];
+			ship = new Ship(context, ship, st, p, 2, 3, 5, hp, ammo);
+			
+			helperShip = ship;
+		}
 		
 		return true;
 	}

@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res/com.pirateseas"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/xml_border" >
+    android:background="@drawable/xml_border"
+    android:padding="8dp" >
 
     <ListView
         android:id="@android:id/list"
@@ -15,8 +18,11 @@
     <TextView 
         android:id="@+id/txtItemDescription"
         android:layout_width="match_parent"
-        android:layout_height="75sp"
-        android:layout_margin="8dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="4dp"
         android:text="@string/shop_purchase_tip"
         android:background="@drawable/xml_round_edges"/>
 
@@ -25,7 +31,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="8dp" >
-
+        
         <Button
             style="?android:attr/buttonBarButtonStyle"
             android:id="@+id/btnReceiveAll"
@@ -36,11 +42,20 @@
 
         <Button
             style="?android:attr/buttonBarButtonStyle"
-            android:id="@+id/btnCancel"
+            android:id="@+id/btnClose"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/btn_cancel"
+            android:text="@string/btn_close"
             android:background="@drawable/xml_btn_style" />
+        
+        <com.pirateseas.model.canvasmodel.ui.UIDisplayElement
+		    android:id="@+id/playerGold"
+		    android:layout_width="48dp"
+		    android:layout_height="48dp"
+		    android:layout_gravity="bottom"
+		    android:layout_marginLeft="48dp"
+		    android:background="@drawable/ico_gold"
+		    custom:defaultValue="0" />
 
     </LinearLayout>
 

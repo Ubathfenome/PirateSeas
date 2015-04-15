@@ -24,6 +24,7 @@
     <string name="activity_help">Help</string>
     <string name="btn_accept">Accept</string>
     <string name="btn_cancel">Cancel</string>
+    <string name="btn_close">Close</string>
     
     <!-- Exception's messages -->
     <string name="exception_gold">Not enough gold to purchase that!</string>
@@ -48,6 +49,11 @@
     <string name="shop_purchase_dialog_title">Purchase Confirmation Dialog</string>
     <string name="shop_purchase_dialog_message">You will purchase this item!</string>
     <string name="shop_purchase_dialog_positive">Confirm</string>
+    
+    <!-- Restore Preferences Dialog -->
+    <string name="settings_restore_dialog_title">Restore Preferences Confirmation Dialog</string>
+    <string name="settings_restore_dialog_message">You will wipe all saved data!</string>
+    <string name="settings_restore_dialog_positive">Confirm</string>
 
     <!-- Exit Game Dialog -->
     <string name="exit_dialog_title">Exit Confirmation Dialog</string>
@@ -62,7 +68,7 @@
     
     <!-- Exit Shop Dialog -->
     <string name="exit_shop_dialog_title">Exit Shop Confirmation Dialog</string>
-    <string name="exit_shop_dialog_message">The game will begin!</string>
+    <string name="exit_shop_dialog_message">The game will resume!</string>
     <string name="exit_shop_dialog_positive">Proceed</string>
 
     <!-- Screen Slide Content -->

@@ -16,7 +16,6 @@ public class Ship extends Entity {
 	private int mReloadTime;
 	private float mPower;
 	private float mRange;
-	private int maxHealth;
 	private long timestampLastShot;
 	
 	private boolean isPlayable;
@@ -44,7 +43,7 @@ public class Ship extends Entity {
 		this.mRange = sType.rangeMultiplier();
 		this.mPower = sType.powerMultiplier();
 		this.mReloadTime = (int) sType.powerMultiplier() * Constants.SHIP_RELOAD;
-		gainHealth(this.maxHealth = sType.defaultHealthPoints());		
+		gainHealth(this.mMaxHealth = sType.defaultHealthPoints());		
 		
 		this.isPlayable = (ammo == Constants.SHOT_AMMO_UNLIMITED) ? false : true;
 		
@@ -76,7 +75,7 @@ public class Ship extends Entity {
 		this.mAmmunition = ammo;
 		
 		this.sType = sType;
-		gainHealth(sType.defaultHealthPoints());
+		gainHealth(health);
 		setImage(context.getResources().getDrawable(sType.drawableValue()));
 		
 		if(mHealthPoints > 0)
@@ -243,11 +242,11 @@ public class Ship extends Entity {
 	}
 
 	public int getMaxHealth() {
-		return maxHealth;
+		return mMaxHealth;
 	}
 
 	public void setMaxHealth(int maxHealth) {
-		this.maxHealth = maxHealth;
+		this.mMaxHealth = maxHealth;
 	}
 
 	/**

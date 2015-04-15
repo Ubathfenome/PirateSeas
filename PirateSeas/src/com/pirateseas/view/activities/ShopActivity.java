@@ -10,6 +10,7 @@ import com.pirateseas.global.Constants;
 import com.pirateseas.model.canvasmodel.game.entity.Ship;
 import com.pirateseas.model.canvasmodel.game.objects.Item;
 import com.pirateseas.model.canvasmodel.game.objects.ItemLoader;
+import com.pirateseas.model.canvasmodel.ui.UIDisplayElement;
 import com.pirateseas.utils.approach2d.GameHelper;
 
 import android.app.Activity;
@@ -47,7 +48,10 @@ import android.widget.Toast;
 public class ShopActivity extends ListActivity{
 	private static final String TAG = "ShopActivity";
 	
+	static String descriptionTip;
+	
 	String mNature = "";
+	boolean mDebug = false;
 	
 	Player dummyPlayer;
 	Ship dummyShip;
@@ -57,9 +61,11 @@ public class ShopActivity extends ListActivity{
 	ListAdapter mAdapter;
 	
 	TextView txtDescription;
+	UIDisplayElement txtAvailableGold;
 	
+	Button btnPurchase;
 	Button btnAcceptAll;
-	Button btnCancel;
+	Button btnClose;
 	
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
@@ -68,10 +74,11 @@ public class ShopActivity extends ListActivity{
 		
 		Intent data = getIntent();
 		mNature = data.getExtras().getString(Constants.ITEMLIST_NATURE, Constants.EMPTY_STRING);
+		mDebug = data.getExtras().getBoolean(Constants.TAG_EXE_MODE);
 		
 		ItemLoader loader = new ItemLoader();
 		
-		dummyPlayer = new Player();
+		dummyPlayer = new Player(mDebug);
 		dummyShip = new Ship();
 		
 		GameHelper.loadGame(this, dummyPlayer, dummyShip);
@@ -89,7 +96,7 @@ public class ShopActivity extends ListActivity{
 		listView = (ListView) findViewById(android.R.id.list);
 		
 		// Assign loaded itemList to ListView Adapter
-		mAdapter = new ArrayAdapter<Item>(this, R.layout.list_item_layout, itemList);
+		mAdapter = new ItemAdapter(this, R.layout.list_item_layout, itemList);
 		listView.setAdapter(mAdapter);
 				
 		this.getListView().setLongClickable(true);
@@ -99,7 +106,7 @@ public class ShopActivity extends ListActivity{
 				// Are you sure you want to buy this?
 				// Affirmative: Purchase Item
 				// Negative: Nothing
-				PurchaseItemDialogFragment purchaseDialog = new PurchaseItemDialogFragment();
+				PurchaseItemDialogFragment purchaseDialog = new PurchaseItemDialogFragment(itemList.get(position));
 				purchaseDialog.show(getFragmentManager(), "ConfirmItemBuyDialog");
 				
 		        return true;
@@ -107,6 +114,9 @@ public class ShopActivity extends ListActivity{
 		});
 		
 		txtDescription = (TextView) findViewById(R.id.txtItemDescription);
+		descriptionTip = this.getResources().getString(R.string.shop_purchase_tip);
+		txtAvailableGold = (UIDisplayElement) findViewById(R.id.playerGold);
+		txtAvailableGold.setElementValue(dummyPlayer.getGold());
 		
 		// Accept all
 		btnAcceptAll = (Button) findViewById(R.id.btnReceiveAll);
@@ -118,13 +128,20 @@ public class ShopActivity extends ListActivity{
 			public void onClick(View v) {
 				for(int i = 0, size = itemList.size(); i < size; i++){
 					purchaseItem(itemList.get(i));
-				}				
+				}
+				int size = itemList.size();
+				while(!itemList.isEmpty()){
+					itemList.remove(--size);
+				}
+				
+				listView.setAdapter(mAdapter);
+				v.setVisibility(View.INVISIBLE);
 			}
 		});
 		
 		// Cancel
-		btnCancel = (Button) findViewById(R.id.btnCancel);
-		btnCancel.setOnClickListener(new OnClickListener() {
+		btnClose = (Button) findViewById(R.id.btnClose);
+		btnClose.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -139,10 +156,15 @@ public class ShopActivity extends ListActivity{
 		});
 	}
 	
-	public void purchaseItem(Item itemPurchased){
+	public boolean purchaseItem(Item itemPurchased){
+		
+		boolean purchased = false;
+		
 		// Take item price from player's gold stash
 		try {
 			dummyPlayer.useGold(this, itemPurchased.getPrice());
+			txtAvailableGold.setElementValue(dummyPlayer.getGold());
+			purchased = true;
 			
 			// Add item effects
 			switch(itemPurchased.getName()){
@@ -171,19 +193,18 @@ public class ShopActivity extends ListActivity{
 					dummyPlayer.addGold(100);
 					break;
 			}
-			
-			// Remove item from itemList
-			itemList.remove(itemPurchased);
 		} catch (NotEnoughGoldException e) {
 			Log.e(TAG, e.getMessage());
 			Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
 		}
+		
+		return purchased;
 	}
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		// Update item description on TextView
-		txtDescription.setText(itemList.get(position).getDescription());
+		txtDescription.setText(itemList.get(position).getDescription() + descriptionTip);
 	}
 	
 	private class LeaveActivityDialogFragment extends DialogFragment {
@@ -193,9 +214,9 @@ public class ShopActivity extends ListActivity{
 			// Use the Builder class for convenient dialog construction
 			AlertDialog.Builder builder = new AlertDialog.Builder(dummyActivity);
 			builder.setTitle(
-					getResources().getString(R.string.exit_dialog_title))
+					getResources().getString(R.string.exit_shop_dialog_title))
 					.setMessage(R.string.exit_shop_dialog_message)
-					.setPositiveButton(R.string.exit_dialog_positive,
+					.setPositiveButton(R.string.exit_shop_dialog_positive,
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
 										int id) {
@@ -227,6 +248,13 @@ public class ShopActivity extends ListActivity{
 	}
 	
 	private class PurchaseItemDialogFragment extends DialogFragment {
+		
+		Item item = null;
+		
+		public PurchaseItemDialogFragment(Item pressedItem) {
+			this.item = pressedItem;
+		}
+		
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
 			final Activity dummyActivity = getActivity();
@@ -239,7 +267,12 @@ public class ShopActivity extends ListActivity{
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
 										int id) {
-									purchaseItem(null);
+									if(item != null){
+										if(purchaseItem(item)){
+											itemList.remove(item);
+											listView.setAdapter(mAdapter);
+										}
+									}
 								}
 							})
 					.setNegativeButton(R.string.exit_dialog_negative,
@@ -282,10 +315,10 @@ public class ShopActivity extends ListActivity{
 						.inflate(R.layout.list_item_layout, parent, false);
 				
 				vHolder = new ViewHolder();
-				vHolder.itemIconView = (ImageView) findViewById(R.id.imgItemIcon);
-				vHolder.itemNameView = (TextView) findViewById(R.id.txtItemName);
-				vHolder.itemPriceView = (TextView) findViewById(R.id.txtItemPrice);
-				vHolder.itemPriceIconView = (ImageView) findViewById(R.id.imgGoldIcon);
+				vHolder.itemIconView = (ImageView) convertView.findViewById(R.id.imgItemIcon);
+				vHolder.itemNameView = (TextView) convertView.findViewById(R.id.txtItemName);
+				vHolder.itemPriceView = (TextView) convertView.findViewById(R.id.txtItemPrice);
+				vHolder.itemPriceIconView = (ImageView) convertView.findViewById(R.id.imgGoldIcon);
 				
 				convertView.setTag(vHolder);
 				
@@ -297,7 +330,7 @@ public class ShopActivity extends ListActivity{
 			if(item != null){
 				vHolder.itemIconView.setBackgroundResource(R.drawable.ic_launcher);
 				vHolder.itemNameView.setText(item.getName());
-				vHolder.itemPriceView.setText(item.getPrice());
+				vHolder.itemPriceView.setText("" + item.getPrice());
 				vHolder.itemPriceIconView.setBackgroundResource(R.drawable.ico_gold);				
 			}
 
