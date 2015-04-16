@@ -32,6 +32,8 @@ public class SettingsActivity extends Activity {
 
 	private float volumeValue = 0f;
 	private String labelValue;
+	
+	private boolean mDebugMode;
 
 	SharedPreferences mPreferences;
 
@@ -42,6 +44,8 @@ public class SettingsActivity extends Activity {
 
 		mPreferences = getSharedPreferences(Constants.TAG_PREF_NAME,
 				Context.MODE_PRIVATE);
+		
+		mDebugMode = mPreferences.getBoolean(Constants.TAG_EXE_MODE, false);
 
 		txtTitleLabel = (TextView) findViewById(R.id.txtSettingsLabel);
 		Typeface customFont = Typeface.createFromAsset(getAssets(), "fonts/"
@@ -117,6 +121,7 @@ public class SettingsActivity extends Activity {
 	private boolean resetPreferences() {
 		SharedPreferences.Editor editor = mPreferences.edit();
 		editor.clear();
+		editor.putBoolean(Constants.TAG_EXE_MODE, mDebugMode);
 		return editor.commit();
 	}
 

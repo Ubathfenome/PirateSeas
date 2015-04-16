@@ -49,6 +49,7 @@ public class GameHelper {
 		SharedPreferences mPreferences = context.getSharedPreferences(Constants.TAG_PREF_NAME, Context.MODE_PRIVATE);
 		
 		boolean isInDebugMode = mPreferences.getBoolean(Constants.TAG_EXE_MODE, false);
+		
 		if(!isInDebugMode){
 			player.setPassedDays(mPreferences.getInt(Constants.PREF_PLAYER_DAYS, 0));
 			player.setGold(mPreferences.getInt(Constants.PREF_PLAYER_GOLD, 0));

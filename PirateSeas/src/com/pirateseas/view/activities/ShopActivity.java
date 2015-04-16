@@ -74,11 +74,10 @@ public class ShopActivity extends ListActivity{
 		
 		Intent data = getIntent();
 		mNature = data.getExtras().getString(Constants.ITEMLIST_NATURE, Constants.EMPTY_STRING);
-		mDebug = data.getExtras().getBoolean(Constants.TAG_EXE_MODE);
 		
 		ItemLoader loader = new ItemLoader();
 		
-		dummyPlayer = new Player(mDebug);
+		dummyPlayer = new Player();
 		dummyShip = new Ship();
 		
 		GameHelper.loadGame(this, dummyPlayer, dummyShip);

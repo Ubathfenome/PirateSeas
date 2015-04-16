@@ -41,6 +41,7 @@ public class MainMenuActivity extends Activity {
 		setContentView(R.layout.activity_main_menu);
 		
 		context = this;
+		mMode = Constants.MODE_DEBUG;
 		
 		// Get Screen
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
@@ -58,6 +59,7 @@ public class MainMenuActivity extends Activity {
 		SharedPreferences.Editor editor = mPreferences.edit();
 		editor.putInt(Constants.PREF_DEVICE_WIDTH_RES, screenResolutionWidth);
 		editor.putInt(Constants.PREF_DEVICE_HEIGHT_RES, screenResolutionHeight);
+		editor.putBoolean(Constants.TAG_EXE_MODE, isInDebugMode());
 		editor.commit();
 		
 		btnNewGame = (Button) findViewById(R.id.btn_newgame);
@@ -102,7 +104,6 @@ public class MainMenuActivity extends Activity {
 					 */
 					Intent shopIntent = new Intent(context, ShopActivity.class);
 					shopIntent.putExtra(Constants.ITEMLIST_NATURE, Constants.NATURE_SHOP);
-					shopIntent.putExtra(Constants.TAG_EXE_MODE, true);
 					startActivity(shopIntent);
 				}
 			}
@@ -114,8 +115,6 @@ public class MainMenuActivity extends Activity {
 				finish();
 			}
 		});
-		
-		mMode = Constants.MODE_DEBUG;
 		
 		MusicManager.getInstance(this, R.raw.msc_casimps1_zoo_music);
 		if(!isInDebugMode())

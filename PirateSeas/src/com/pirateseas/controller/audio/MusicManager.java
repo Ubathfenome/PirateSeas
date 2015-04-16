@@ -133,6 +133,6 @@ public class MusicManager{
 	}
 	
 	public void setDeviceVolume(float volumeValue){
-		mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, (int) volumeValue, AudioManager.FLAG_SHOW_UI);
+		mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, (int) volumeValue, 0);
 	}
 }
