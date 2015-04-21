@@ -9,6 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -44,14 +45,22 @@ public class Throttle extends View {
 		init();
 	}
 
+	@SuppressLint("NewApi")
+	@SuppressWarnings("deprecation")
 	private void init() {
 		this.mLevel = 0;
 		this.maxLevels = Y_COORDS.length;
 			
 		if(!isInEditMode()){
-			mImageBase = getResources().getDrawable(R.drawable.ico_throttle_base);
-			mImageStick = getResources().getDrawable(R.drawable.ico_throttle_stick);
-			mImageHandle = getResources().getDrawable(R.drawable.ico_throttle_handle);
+			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+				mImageBase = getResources().getDrawable(R.drawable.ico_throttle_base, null);
+				mImageStick = getResources().getDrawable(R.drawable.ico_throttle_stick, null);
+				mImageHandle = getResources().getDrawable(R.drawable.ico_throttle_handle, null);
+			} else {
+				mImageBase = getResources().getDrawable(R.drawable.ico_throttle_base);
+				mImageStick = getResources().getDrawable(R.drawable.ico_throttle_stick);
+				mImageHandle = getResources().getDrawable(R.drawable.ico_throttle_handle);
+			}
 		} else {
 			mImageBase = getBackground();
 			mImageStick = getBackground();

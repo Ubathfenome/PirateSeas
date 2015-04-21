@@ -37,13 +37,16 @@ public class TutorialActivity extends FragmentActivity{
     Context context;
 	
 	int[] sensorTypes = null;
+	boolean loadGame = false;
 	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tutorial);
         
-		sensorTypes = getIntent().getIntArrayExtra(Constants.TAG_SENSOR_LIST);
+        Intent data = getIntent();
+		sensorTypes = data.getIntArrayExtra(Constants.TAG_SENSOR_LIST);
+		loadGame = data.getBooleanExtra(Constants.TAG_LOAD_GAME, true);
 		
         context = this;
 
@@ -97,6 +100,7 @@ public class TutorialActivity extends FragmentActivity{
 	private void startGame(){
 		Intent newGameIntent = new Intent(context, GameActivity.class);
 		newGameIntent.putExtra(Constants.TAG_SENSOR_LIST, sensorTypes);
+		newGameIntent.putExtra(Constants.TAG_LOAD_GAME, loadGame);
 		startActivity(newGameIntent);
 		finish();
 	}

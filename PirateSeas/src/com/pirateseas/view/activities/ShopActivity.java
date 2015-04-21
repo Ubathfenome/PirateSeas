@@ -11,7 +11,7 @@ import com.pirateseas.model.canvasmodel.game.entity.Ship;
 import com.pirateseas.model.canvasmodel.game.objects.Item;
 import com.pirateseas.model.canvasmodel.game.objects.ItemLoader;
 import com.pirateseas.model.canvasmodel.ui.UIDisplayElement;
-import com.pirateseas.utils.approach2d.GameHelper;
+import com.pirateseas.utils.persistence.GameHelper;
 
 import android.app.Activity;
 import android.app.AlertDialog;

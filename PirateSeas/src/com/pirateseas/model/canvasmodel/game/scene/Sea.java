@@ -1,8 +1,10 @@
 package com.pirateseas.model.canvasmodel.game.scene;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 
 import com.pirateseas.R;
 import com.pirateseas.model.canvasmodel.game.BasicModel;
@@ -11,12 +13,19 @@ public class Sea extends BasicModel{
 	
 	private Drawable mImageAux;
 	
+	@SuppressWarnings("deprecation")
+	@SuppressLint("NewApi")
 	public Sea(Context context, double x, double y, double mCanvasWidth,
             double mCanvasHeight){
 		super(context, x, y, mCanvasWidth, mCanvasHeight, null);
 		
-		setImage(context.getResources().getDrawable(R.drawable.blue_water_texture));
-		mImageAux = context.getResources().getDrawable(R.drawable.blue_water_texture);
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+			setImage(context.getResources().getDrawable(R.drawable.blue_water_texture, null));
+			mImageAux = context.getResources().getDrawable(R.drawable.blue_water_texture, null);
+		} else {
+			setImage(context.getResources().getDrawable(R.drawable.blue_water_texture));
+			mImageAux = context.getResources().getDrawable(R.drawable.blue_water_texture);
+		}
 	}
 	
 	@Override

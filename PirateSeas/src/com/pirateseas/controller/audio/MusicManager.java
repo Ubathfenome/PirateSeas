@@ -8,9 +8,11 @@ import com.pirateseas.global.Constants;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
+import android.os.Build;
 import android.util.Log;
 
 @SuppressLint("UseSparseArrays")
@@ -29,6 +31,9 @@ public class MusicManager{
 	public static final int SOUND_GOLD_GAINED = 0x8;
 	public static final int SOUND_GOLD_SPENT = 0x9;
 	public static final int SOUND_XP_GAINED = 0xA;
+	
+	// Variables
+	private static final int MAX_STREAM_NUMBER = 4;
 	
 	// Sounds
 	private SoundPool mSoundPool;
@@ -58,9 +63,25 @@ public class MusicManager{
 	
 	private MusicManager(){}
 	
+	@SuppressLint("NewApi")
+	@SuppressWarnings("deprecation")
 	public void initSounds(Context context, int backgroundMusicId) {
 		this.mContext = context;
-		mSoundPool = new SoundPool(4, AudioManager.STREAM_MUSIC, 100);
+		
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+			AudioAttributes.Builder attributesBuilder = new AudioAttributes.Builder();
+			attributesBuilder.setContentType(AudioAttributes.CONTENT_TYPE_MUSIC);
+			attributesBuilder.setLegacyStreamType(AudioManager.STREAM_MUSIC);
+			attributesBuilder.setUsage(AudioAttributes.USAGE_GAME);
+			SoundPool.Builder builder = new SoundPool.Builder();
+			builder.setMaxStreams(MAX_STREAM_NUMBER);
+			builder.setAudioAttributes(attributesBuilder.build());
+			mSoundPool = builder.build();
+		} else {
+			mSoundPool = new SoundPool(MAX_STREAM_NUMBER, AudioManager.STREAM_MUSIC, 100);
+		}
+		
+		
 		
 		mSoundMap = new HashMap<Integer, Integer>();
 		mAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
@@ -129,10 +150,15 @@ public class MusicManager{
 	}
 	
 	public float getDeviceVolume(){
-		return (mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC) / mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)) * 100;
+		float mCurrVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+		float mMaxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+		return (mCurrVolume / mMaxVolume) * 100;
 	}
 	
-	public void setDeviceVolume(float volumeValue){
-		mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, (int) volumeValue, 0);
+	public void setDeviceVolume(float volumeValue){		
+		float mMaxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+		int streamedVolume = (int) ((volumeValue * mMaxVolume) / 100);
+		mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, streamedVolume, 0);
+		
 	}
 }

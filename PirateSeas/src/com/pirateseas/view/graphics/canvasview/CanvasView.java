@@ -23,7 +23,7 @@ import com.pirateseas.model.canvasmodel.game.scene.Sea;
 import com.pirateseas.model.canvasmodel.game.scene.Sky;
 import com.pirateseas.model.canvasmodel.game.scene.Sun;
 import com.pirateseas.model.canvasmodel.ui.StatBar;
-import com.pirateseas.utils.approach2d.GameHelper;
+import com.pirateseas.utils.persistence.GameHelper;
 import com.pirateseas.view.activities.GameActivity;
 import com.pirateseas.view.activities.PauseActivity;
 
@@ -130,11 +130,12 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 		// Entities
 		nPlayerShip = new Ship(nContext, ShipType.LIGHT,
 				nScreenWidth / 2 - 100, nScreenHeight - HORIZON_Y_VALUE,
-				nScreenWidth, nScreenHeight, new Point(0, 0), 2, 3, 5, 0);
+				nScreenWidth, nScreenHeight, new Point(0, 0), 2, 3, 5, 20);
 
 		nShotList = new ArrayList<Shot>();
 
-		loadGame();
+		if(((GameActivity)nContext).hasToLoadGame())
+			loadGame();
 
 		// Game User Interface
 		nPlayerHBar = new StatBar(nContext, BAR_INITIAL_X_VALUE,

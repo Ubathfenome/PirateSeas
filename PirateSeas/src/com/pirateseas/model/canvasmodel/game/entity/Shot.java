@@ -2,7 +2,7 @@ package com.pirateseas.model.canvasmodel.game.entity;
 
 import com.pirateseas.R;
 import com.pirateseas.global.Constants;
-
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -170,26 +170,48 @@ public class Shot extends Entity{
 
 	}
 	
+	@SuppressLint("NewApi")
+	@SuppressWarnings("deprecation")
 	@Override
 	public void drawOnScreen(Canvas canvas) {
-		
-		switch(mStatus){
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+			switch(mStatus){
 			case Constants.SHOT_FIRED:
-				setImage(mContext.getResources().getDrawable(R.drawable.txtr_shot_smoke));
+				setImage(mContext.getResources().getDrawable(R.drawable.txtr_shot_smoke, null));
 				board.pathStart(startPoint.x, startPoint.y);
 				break;
 			case Constants.SHOT_FLYING:
-				setImage(mContext.getResources().getDrawable(R.drawable.txtr_shot_cannonball));
+				setImage(mContext.getResources().getDrawable(R.drawable.txtr_shot_cannonball, null));
 				board.pathMove(1 / endPoint.x, 1 / endPoint.y);
 				break;
 			case Constants.SHOT_HIT:
-				setImage(mContext.getResources().getDrawable(R.drawable.txtr_shot_hit));
+				setImage(mContext.getResources().getDrawable(R.drawable.txtr_shot_hit, null));
 				board.pathUp();
 				break;
 			case Constants.SHOT_MISSED:
-				setImage(mContext.getResources().getDrawable(R.drawable.txtr_shot_miss));
+				setImage(mContext.getResources().getDrawable(R.drawable.txtr_shot_miss, null));
 				board.pathUp();
 				break;
+		}
+		} else {
+			switch(mStatus){
+				case Constants.SHOT_FIRED:
+					setImage(mContext.getResources().getDrawable(R.drawable.txtr_shot_smoke));
+					board.pathStart(startPoint.x, startPoint.y);
+					break;
+				case Constants.SHOT_FLYING:
+					setImage(mContext.getResources().getDrawable(R.drawable.txtr_shot_cannonball));
+					board.pathMove(1 / endPoint.x, 1 / endPoint.y);
+					break;
+				case Constants.SHOT_HIT:
+					setImage(mContext.getResources().getDrawable(R.drawable.txtr_shot_hit));
+					board.pathUp();
+					break;
+				case Constants.SHOT_MISSED:
+					setImage(mContext.getResources().getDrawable(R.drawable.txtr_shot_miss));
+					board.pathUp();
+					break;
+			}
 		}
 		
 		// el trazo actual

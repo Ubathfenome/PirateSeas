@@ -19,15 +19,16 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 
-public class MainMenuActivity extends Activity {	
+public class MainMenuActivity extends Activity {
 	private boolean newGame = false;
 	private int mMode;
-	
+
 	protected Context context;
-	
+	protected SharedPreferences mPreferences;
+
 	protected static int screenResolutionWidth;
 	protected static int screenResolutionHeight;
-	
+
 	private Button btnNewGame;
 	private Button btnLoadGame;
 	private ImageButton btnSettings;
@@ -39,10 +40,11 @@ public class MainMenuActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main_menu);
-		
+
 		context = this;
-		mMode = Constants.MODE_DEBUG;
 		
+		mMode = Constants.MODE_DEBUG;
+
 		// Get Screen
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
 			Point size = new Point();
@@ -50,117 +52,138 @@ public class MainMenuActivity extends Activity {
 			screenResolutionWidth = size.x;
 			screenResolutionHeight = size.y;
 		} else {
-			Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+			Display display = ((WindowManager) context
+					.getSystemService(Context.WINDOW_SERVICE))
+					.getDefaultDisplay();
 			screenResolutionWidth = display.getWidth();
 			screenResolutionHeight = display.getHeight();
 		}
-		
-		SharedPreferences mPreferences = context.getSharedPreferences(Constants.TAG_PREF_NAME, Context.MODE_PRIVATE);
+
+		mPreferences = context.getSharedPreferences(Constants.TAG_PREF_NAME,
+				Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = mPreferences.edit();
 		editor.putInt(Constants.PREF_DEVICE_WIDTH_RES, screenResolutionWidth);
 		editor.putInt(Constants.PREF_DEVICE_HEIGHT_RES, screenResolutionHeight);
 		editor.putBoolean(Constants.TAG_EXE_MODE, isInDebugMode());
 		editor.commit();
-		
+
 		btnNewGame = (Button) findViewById(R.id.btn_newgame);
-		btnNewGame.setOnClickListener(new OnClickListener(){
-			public void onClick(View v){
+		btnNewGame.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
 				newGame = true;
-				Intent checkSensorListIntent = new Intent(context, SensorActivity.class);
-				startActivityForResult(checkSensorListIntent, Constants.REQUEST_SENSOR_LIST);
+				Intent checkSensorListIntent = new Intent(context,
+						SensorActivity.class);
+				startActivityForResult(checkSensorListIntent,
+						Constants.REQUEST_SENSOR_LIST);
 			}
 		});
-		
+
 		btnLoadGame = (Button) findViewById(R.id.btn_loadgame);
-		btnLoadGame.setOnClickListener(new OnClickListener(){
-			public void onClick(View v){
+		btnLoadGame.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
 				newGame = false;
-				Intent checkSensorListIntent = new Intent(context, SensorActivity.class);
-				startActivityForResult(checkSensorListIntent, Constants.REQUEST_SENSOR_LIST);
+				Intent checkSensorListIntent = new Intent(context,
+						SensorActivity.class);
+				startActivityForResult(checkSensorListIntent,
+						Constants.REQUEST_SENSOR_LIST);
 			}
 		});
-		
-		if(mPreferences.getInt(Constants.PREF_PLAYER_DAYS, 0) == 0){
+
+		if (mPreferences.getInt(Constants.PREF_PLAYER_DAYS, 0) == 0) {
 			btnLoadGame.setEnabled(false);
 		}
-		
+
 		btnSettings = (ImageButton) findViewById(R.id.btn_settings);
-		btnSettings.setOnClickListener(new OnClickListener(){
-			public void onClick(View v){
-				Intent settingsIntent = new Intent(context, SettingsActivity.class);
+		btnSettings.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				Intent settingsIntent = new Intent(context,
+						SettingsActivity.class);
 				startActivity(settingsIntent);
 			}
 		});
-		
+
 		btnHelp = (ImageButton) findViewById(R.id.btn_help);
-		btnHelp.setOnClickListener(new OnClickListener(){
-			public void onClick(View v){
-				if(!isInDebugMode()){
+		btnHelp.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				if (!isInDebugMode()) {
 					Intent helpIntent = new Intent(context, HelpActivity.class);
 					startActivity(helpIntent);
 				} else {
 					/**
-					 * Activities test section
+					 * Deep activities test section
 					 */
+					/*
 					Intent shopIntent = new Intent(context, ShopActivity.class);
 					shopIntent.putExtra(Constants.ITEMLIST_NATURE, Constants.NATURE_SHOP);
 					startActivity(shopIntent);
+					 */
+
+					/*
+					Intent gameOverIntent = new Intent(context,	GameOverActivity.class);
+					gameOverIntent.putExtra(Constants.TAG_GAME_OVER, 
+											new Player(mPreferences.getBoolean(
+														Constants.TAG_EXE_MODE, false)));
+					startActivity(gameOverIntent);
+					*/
 				}
 			}
 		});
-		
+
 		btnExit = (Button) findViewById(R.id.btn_exit);
-		btnExit.setOnClickListener(new OnClickListener(){
-			public void onClick(View v){
+		btnExit.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
 				finish();
 			}
 		});
-		
+
 		MusicManager.getInstance(this, R.raw.msc_casimps1_zoo_music);
-		if(!isInDebugMode())
+		if (!isInDebugMode())
 			MusicManager.getInstance().playBackgroundMusic();
 	}
-	
+
 	private boolean isInDebugMode() {
 		return mMode == Constants.MODE_DEBUG ? true : false;
 	}
 
-	private void launchGame(boolean display_tutorial, int[] sensorTypes){
-		if(display_tutorial == false){
+	private void launchGame(boolean displayTutorial, int[] sensorTypes) {
+		if (displayTutorial == false) {
 			Intent newGameIntent = new Intent(context, GameActivity.class);
 			newGameIntent.putExtra(Constants.TAG_SENSOR_LIST, sensorTypes);
+			newGameIntent.putExtra(Constants.TAG_LOAD_GAME, !displayTutorial);
 			startActivity(newGameIntent);
 		} else {
 			Intent tutorialIntent = new Intent(context, TutorialActivity.class);
 			tutorialIntent.putExtra(Constants.TAG_SENSOR_LIST, sensorTypes);
+			tutorialIntent.putExtra(Constants.TAG_LOAD_GAME, !displayTutorial);
 			startActivity(tutorialIntent);
 		}
 	}
 
 	@Override
 	protected void onPause() {
-		if(!isInDebugMode())
+		if (!isInDebugMode())
 			MusicManager.getInstance().pauseBackgroundMusic();
 		super.onPause();
 	}
 
 	@Override
 	protected void onResume() {
-		if(!isInDebugMode())
+		if (!isInDebugMode())
 			MusicManager.getInstance().playBackgroundMusic();
 		super.onResume();
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		switch(requestCode){
-			case Constants.REQUEST_SENSOR_LIST:
-				if (resultCode == RESULT_OK){					
-					int[] sensorTypes = data.getIntArrayExtra(Constants.TAG_SENSOR_LIST);
-					
-					launchGame(newGame, sensorTypes);
-				}
-				break;
+		switch (requestCode) {
+		case Constants.REQUEST_SENSOR_LIST:
+			if (resultCode == RESULT_OK) {
+				int[] sensorTypes = data
+						.getIntArrayExtra(Constants.TAG_SENSOR_LIST);
+
+				launchGame(newGame, sensorTypes);
+			}
+			break;
 		}
 	}
 }

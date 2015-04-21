@@ -1,7 +1,9 @@
 package com.pirateseas.model.canvasmodel.game;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 
 public class Parallax {
 	
@@ -9,11 +11,20 @@ public class Parallax {
 	public static final float speedBase = 2f;
 	public static final float speedTop = 8f;
 	
+	@SuppressLint("NewApi")
+	@SuppressWarnings("deprecation")
 	public Parallax(Context context, int resourceBase, int resourceTop){
-		if(resourceBase != 0)
-			imageBase = context.getResources().getDrawable(resourceBase);
-		if(resourceTop != 0)
-			imageTop = context.getResources().getDrawable(resourceTop);
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+			if(resourceBase != 0)
+				imageBase = context.getResources().getDrawable(resourceBase, null);
+			if(resourceTop != 0)
+				imageTop = context.getResources().getDrawable(resourceTop, null);
+		} else {
+			if(resourceBase != 0)
+				imageBase = context.getResources().getDrawable(resourceBase);
+			if(resourceTop != 0)
+				imageTop = context.getResources().getDrawable(resourceTop);
+		}
 	}
 	
 	public Drawable[] getLayers(){

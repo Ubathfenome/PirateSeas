@@ -25,6 +25,8 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
@@ -54,6 +56,9 @@ public class GameActivity extends Activity implements SensorEventListener {
 
 	protected int[] sensorTypes = null;
 	protected long sensorLastTimestamp;
+	
+	boolean loadGame = false;
+	
 	protected SensorManager mSensorManager;
 	protected List<Sensor> triggeringSensors;
 
@@ -73,14 +78,21 @@ public class GameActivity extends Activity implements SensorEventListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
+				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 		context = this;
-
 		mCanvasView = new CanvasView(this);
+		
+		Intent data = getIntent();
+		
+		loadGame = data.getBooleanExtra(Constants.TAG_LOAD_GAME, true);
 
 		// Receive the device event triggering sensor list
 		triggeringSensors = new ArrayList<Sensor>();
-		sensorTypes = getIntent().getIntArrayExtra(Constants.TAG_SENSOR_LIST);
+		sensorTypes = data.getIntArrayExtra(Constants.TAG_SENSOR_LIST);
 		mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 		for (int i = 0; i < sensorTypes.length; i++) {
 			if (sensorTypes[i] != 0)
@@ -174,6 +186,10 @@ public class GameActivity extends Activity implements SensorEventListener {
 		mGold.setElementValue(0);
 		mAmmo = (UIDisplayElement) findViewById(R.id.playerAmmunition);
 		mAmmo.setElementValue(0);
+	}
+	
+	public boolean hasToLoadGame(){
+		return loadGame;
 	}
 
 	@Override

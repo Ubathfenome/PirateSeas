@@ -49,6 +49,7 @@ public class Ship extends Entity {
 	
 	Context context;
 	
+	@SuppressWarnings("deprecation")
 	public Ship(Context context, ShipType sType, Point3D coordinates, Vector3D direction, float width, float height, float depth, int health, int ammo){
 		super(context, coordinates,direction,width,height,depth);
 		mPlane = new AdvancedPlane(vArray);

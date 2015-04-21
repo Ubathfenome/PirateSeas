@@ -25,7 +25,7 @@ public class UIDisplayElement extends View {
 		paint = new Paint();
 		paint.setColor(Color.WHITE);
 		this.mValue = value;
-		mImage = context.getResources().getDrawable(drawableResource);
+		mImage = context.getResources().getDrawable(drawableResource, null);
 	}
 	
 	public UIDisplayElement(Context context) {

@@ -6,8 +6,9 @@ public class Constants{
 	public static final int MODE_RELEASE = 0x1;
 	
 	// Tags
-	public static final String TAG_EXE_MODE = "com.pirateseas.MODE";
+	public static final String TAG_EXE_MODE = "com.pirateseas.EXE_MODE";
 	public static final String TAG_SENSOR_LIST = "com.pirateseas.SENSOR_LIST";
+	public static final String TAG_LOAD_GAME = "com.pirateseas.LOAD_GAME";
 	public static final String TAG_DISPLAY_TUTORIAL = "com.pirateseas.DISPLAY_TUTORIAL";
 	public static final String TAG_NEW_GAME = "com.pirateseas.NEW_GAME";
 	public static final String TAG_GAME_OVER = "com.pirateseas.GAME_OVER";
@@ -73,5 +74,6 @@ public class Constants{
 	public static final String ITEMLIST_NATURE = "Nature";
 	public static final String NATURE_SHOP = "Shop";
 	public static final String NATURE_TREASURE = "Treasure";
+	
 		
 }

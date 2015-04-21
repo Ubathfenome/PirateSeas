@@ -51,18 +51,17 @@ public class SettingsActivity extends Activity {
 		Typeface customFont = Typeface.createFromAsset(getAssets(), "fonts/"
 				+ Constants.FONT_NAME + ".ttf");
 		txtTitleLabel.setTypeface(customFont);
-
-		SharedPreferences.Editor editor = mPreferences.edit();
-		editor.putFloat(Constants.PREF_DEVICE_VOLUME, MusicManager
+		
+		volumeValue = (int) mPreferences.getFloat(
+				Constants.PREF_DEVICE_VOLUME, MusicManager
 				.getInstance().getDeviceVolume());
-		editor.commit();
 
 		txtVolumeLabel = (TextView) findViewById(R.id.txtVolumeLabel);
 		labelValue = (String) txtVolumeLabel.getText();
+		txtVolumeLabel.setText(labelValue + " " + (int) volumeValue);
 
 		skbVolume = (SeekBar) findViewById(R.id.sbVolume);
-		skbVolume.setProgress((int) mPreferences.getFloat(
-				Constants.PREF_DEVICE_VOLUME, 0));
+		skbVolume.setProgress((int) volumeValue);
 		skbVolume.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
 			@Override

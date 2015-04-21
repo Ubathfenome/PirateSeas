@@ -1,7 +1,9 @@
 package com.pirateseas.model.canvasmodel.game.entity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Point;
+import android.os.Build;
 import android.os.SystemClock;
 
 import com.pirateseas.R;
@@ -31,6 +33,8 @@ public class Ship extends Entity {
 		this.isPlayable = false;
 	}
 	
+	@SuppressWarnings("deprecation")
+	@SuppressLint("NewApi")
 	public Ship(Context context, ShipType sType, double x, double y, double canvasWidth, 
 				double canvasHeight, Point coordinates, int width, int height, int length, int ammo){
 		super(context, x, y, canvasWidth, canvasHeight, coordinates, width, height, length);
@@ -47,18 +51,35 @@ public class Ship extends Entity {
 		
 		this.isPlayable = (ammo == Constants.SHOT_AMMO_UNLIMITED) ? false : true;
 		
-		if(isPlayable)
-			setImage(context.getResources().getDrawable(sType.drawableValue()));
-		else{
-			switch(sType.ordinal()){
-				case 0:
-					break;
-				case 1:
-					setImage(context.getResources().getDrawable(R.drawable.enemy_front_medium));
-					break;
-				case 2:
-					setImage(context.getResources().getDrawable(R.drawable.enemy_front_heavy));
-					break;
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+			if(isPlayable)
+				setImage(context.getResources().getDrawable(sType.drawableValue(), null));
+			else{
+				switch(sType.ordinal()){
+					case 0:
+						break;
+					case 1:
+						setImage(context.getResources().getDrawable(R.drawable.enemy_front_medium, null));
+						break;
+					case 2:
+						setImage(context.getResources().getDrawable(R.drawable.enemy_front_heavy, null));
+						break;
+				}
+			}
+		} else {
+			if(isPlayable)
+				setImage(context.getResources().getDrawable(sType.drawableValue()));
+			else{
+				switch(sType.ordinal()){
+					case 0:
+						break;
+					case 1:
+						setImage(context.getResources().getDrawable(R.drawable.enemy_front_medium));
+						break;
+					case 2:
+						setImage(context.getResources().getDrawable(R.drawable.enemy_front_heavy));
+						break;
+				}
 			}
 		}
 		
@@ -67,6 +88,8 @@ public class Ship extends Entity {
 		
 	}
 	
+	@SuppressLint("NewApi")
+	@SuppressWarnings("deprecation")
 	public Ship(Context context, Ship baseShip, ShipType sType, Point coordinates, int width, int height, int length, int health, int ammo){
 		super(context, baseShip.x, baseShip.y, baseShip.mCanvasWidth, baseShip.mCanvasHeight, coordinates, width, height, length);
 		
@@ -76,7 +99,12 @@ public class Ship extends Entity {
 		
 		this.sType = sType;
 		gainHealth(health);
-		setImage(context.getResources().getDrawable(sType.drawableValue()));
+		
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+			setImage(context.getResources().getDrawable(sType.drawableValue(), null));
+		} else {
+			setImage(context.getResources().getDrawable(sType.drawableValue()));
+		}
 		
 		if(mHealthPoints > 0)
 			setStatus(Constants.STATE_ALIVE);
