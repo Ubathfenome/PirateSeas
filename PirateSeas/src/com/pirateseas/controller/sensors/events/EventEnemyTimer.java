@@ -11,6 +11,9 @@ public class EventEnemyTimer {
 		this.accX = x;
 		this.accY = y;
 		this.accZ = z;
+		
+		// TODO Establish relation between acceleration and game timer
+		
 		double possibilities = Math.random() * 10000;
 		spawn = possibilities % 100 > 75 ? true : false;
 	}

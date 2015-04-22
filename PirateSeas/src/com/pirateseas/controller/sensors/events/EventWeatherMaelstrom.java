@@ -8,4 +8,5 @@ public class EventWeatherMaelstrom {
 		return SensorType.TYPE_GYROSCOPE;
 	}
 	
+	// TODO Establish event effects on sensor trigger
 }

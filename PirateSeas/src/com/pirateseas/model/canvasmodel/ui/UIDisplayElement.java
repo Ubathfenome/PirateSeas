@@ -67,6 +67,7 @@ public class UIDisplayElement extends View {
 	@Override
 	public void onDraw(Canvas canvas){
 		mImage.draw(canvas);
+		// TODO Move text slightly to the left (Center text)
 		canvas.drawText(String.valueOf(mValue), mImage.getIntrinsicWidth() / 2 - 20, mImage.getIntrinsicHeight() / 2 + 10,paint);
 	}
 

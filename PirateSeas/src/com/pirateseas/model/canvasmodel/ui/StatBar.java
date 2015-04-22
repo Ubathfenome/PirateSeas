@@ -34,6 +34,8 @@ public class StatBar extends BasicModel {
 	public void drawOnScreen(Canvas canvas){
 		Paint mPaintLine = new Paint();
 		
+		// TODO Check values
+		
 		// Bar background
 		mPaintLine.setColor(Color.BLACK);
 		mPaintLine.setStrokeWidth(15);

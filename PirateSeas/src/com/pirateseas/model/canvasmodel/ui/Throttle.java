@@ -124,6 +124,8 @@ public class Throttle extends View {
 	public void onDraw(Canvas canvas){
 		super.onDraw(canvas);
 		
+		// TODO Check display drawables
+		
 		mImageBase.draw(canvas);
 		
 		int yCoord = Y_COORDS[mLevel];

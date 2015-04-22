@@ -16,7 +16,7 @@ public class EventDayNightCycle {
 	}
 	
 	public static int getSkyFilter(float hour){
-		// TODO
+		// TODO Check correct assignment
 		int filterValue = (int) (hour * pressure * HOUR_VALUE_RATIO);
 		String hexString = Integer.toHexString(filterValue);
 		int hexValue = Integer.valueOf(hexString);
