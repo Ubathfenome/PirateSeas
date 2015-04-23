@@ -5,29 +5,62 @@ import android.os.SystemClock;
 public class GameTimer {
 	
 	private int gameDay;
-	private float gameHour;
+	private int gameHour;
 	private long lastTimestamp;
+	
+	private static long baseTimestamp;
+	
+	private static final int SECONDS_PER_IN_GAME_HOUR = 60;
+	private static final int MINUTES_PER_IN_GAME_DAY = 10;
 	
 	public GameTimer(){
 		gameDay = 0;
-		gameHour = 0f;
+		gameHour = 0;
 		lastTimestamp = 0;
+		baseTimestamp = 0;
+	}
+	
+	public GameTimer(long bTimestamp){
+		this();		
+		baseTimestamp = bTimestamp;
 	}
 	
 	public void updateHour(){
 		long ts = SystemClock.elapsedRealtime();
-		double tmpHour = gameHour;
-		long deltaTs = ts - lastTimestamp;
-		long deltaSecs = deltaTs / 1000;	// Real-Life seconds
-		double deltaGHours = deltaSecs / 360;// In-Game hours; 1 Real-Life minutes = 1 In-Game hour
 		
-		lastTimestamp = lastTimestamp == 0 ? ts : deltaTs;
+		long deltaTs;
+		double deltaSecs = 0;		// Real-Life seconds
 		
-		tmpHour += deltaGHours;
+		if(lastTimestamp == 0)
+			baseTimestamp = ts;
+		else{
+			deltaTs = ts - baseTimestamp;
+			deltaSecs = deltaTs * 0.001;
+		}
 		
-		gameDay += (tmpHour / 24);
-				
-		this.gameHour = (float) (tmpHour % 24);
+		lastTimestamp = ts;
+		
+		gameHour = getGameHoursFromSeconds(deltaSecs);
+		gameDay = getGameDayFromGameHours(deltaSecs);	
+	}
+
+	private int getGameHoursFromSeconds(double realSecs) {
+		int inGameHour = (int) (realSecs % SECONDS_PER_IN_GAME_HOUR);
+		return inGameHour;
+	}
+	
+	private int getGameDayFromGameHours(double realSecs) {
+		float inGameHours = (float) (realSecs / SECONDS_PER_IN_GAME_HOUR);
+		int inGameDays = (int) (inGameHours / MINUTES_PER_IN_GAME_DAY);
+		return inGameDays;
+	}
+
+	public long getBaseTimestamp(){
+		return baseTimestamp;
+	}
+	
+	public long getLastTimestamp(){
+		return lastTimestamp;
 	}
 	
 	public float getHour(){

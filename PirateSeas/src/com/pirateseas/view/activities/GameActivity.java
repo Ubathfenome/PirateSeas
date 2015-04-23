@@ -25,8 +25,6 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
@@ -78,10 +76,6 @@ public class GameActivity extends Activity implements SensorEventListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
-				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 		context = this;
 		mCanvasView = new CanvasView(this);
@@ -201,6 +195,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 
 	@Override
 	protected void onResume() {
+		findViewById(R.id.rootLayoutGame).setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
 
 		if (!CanvasView.nUpdateThread.isAlive()
 				&& CanvasView.nUpdateThread.getState() != Thread.State.NEW) {

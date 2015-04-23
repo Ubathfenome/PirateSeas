@@ -49,6 +49,7 @@ public class Constants{
 	
 	public static final String EMPTY_STRING = "";
 	public static final String PREF_SENSOR_LIST = "sensorListPref";
+	public static final String PREF_PLAYER_TIMESTAMP = "playerTimestampPref";
 	public static final String PREF_PLAYER_DAYS = "playerDaysPref";
 	public static final String PREF_PLAYER_LEVEL = "playerLevelPref";
 	public static final String PREF_PLAYER_GOLD = "playerGoldPref";
@@ -74,6 +75,5 @@ public class Constants{
 	public static final String ITEMLIST_NATURE = "Nature";
 	public static final String NATURE_SHOP = "Shop";
 	public static final String NATURE_TREASURE = "Treasure";
-	
 		
 }

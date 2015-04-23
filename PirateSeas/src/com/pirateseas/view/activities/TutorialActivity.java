@@ -16,6 +16,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.View;
 
 public class TutorialActivity extends FragmentActivity{
 	/**
@@ -70,6 +71,11 @@ public class TutorialActivity extends FragmentActivity{
         });
     }
 	
+	@Override
+	protected void onResume() {
+		findViewById(R.id.pager).setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
+		super.onResume();
+	}
 	private void checkEndTutorial(){
 		LeaveTutorialDialogFragment exitDialog = new LeaveTutorialDialogFragment();
 		exitDialog.show(getFragmentManager(),"LeaveTutorialDialog");

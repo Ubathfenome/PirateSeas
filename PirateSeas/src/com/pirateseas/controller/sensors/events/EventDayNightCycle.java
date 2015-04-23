@@ -6,7 +6,7 @@ import android.util.Log;
 import com.pirateseas.controller.sensors.SensorType;
 
 public class EventDayNightCycle {
-	private static final String TAG = "com.pirateseas.EventDayNightCycle";
+	private static final String TAG = "EventDayNightCycle";
 	private static final float PSA = SensorManager.PRESSURE_STANDARD_ATMOSPHERE;
 	private static final float HOUR_VALUE_RATIO = 255 / (24 * PSA); // Ratio = 255 values / 24 hours; -> X values per hour
 	public static float pressure = PSA;
@@ -16,11 +16,8 @@ public class EventDayNightCycle {
 	}
 	
 	public static int getSkyFilter(float hour){
-		// TODO Check correct assignment
 		int filterValue = (int) (hour * pressure * HOUR_VALUE_RATIO);
-		String hexString = Integer.toHexString(filterValue);
-		int hexValue = Integer.valueOf(hexString);
-		Log.d(TAG, "Sky color mask: " + hexValue);
+		Log.d(TAG, "Sky mask: " + filterValue);
 		return filterValue;
 	}
 }

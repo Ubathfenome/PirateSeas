@@ -1,7 +1,11 @@
 package com.pirateseas.view.activities;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Point;
@@ -16,11 +20,13 @@ import android.view.Display;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
+
 import android.widget.Button;
 import android.widget.ImageButton;
 
 public class MainMenuActivity extends Activity {
 	private boolean newGame = false;
+	private boolean mOverwriteWarning = false;
 	private int mMode;
 
 	protected Context context;
@@ -40,7 +46,7 @@ public class MainMenuActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main_menu);
-
+		
 		context = this;
 		
 		mMode = Constants.MODE_DEBUG;
@@ -70,11 +76,16 @@ public class MainMenuActivity extends Activity {
 		btnNewGame = (Button) findViewById(R.id.btn_newgame);
 		btnNewGame.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				newGame = true;
-				Intent checkSensorListIntent = new Intent(context,
-						SensorActivity.class);
-				startActivityForResult(checkSensorListIntent,
-						Constants.REQUEST_SENSOR_LIST);
+				if(mOverwriteWarning){
+					OverwriteGameDialogFragment overwriteDialog = new OverwriteGameDialogFragment();
+					overwriteDialog.show(getFragmentManager(), "OverwriteGameDialog");
+				} else {
+					newGame = true;
+					Intent checkSensorListIntent = new Intent(context,
+							SensorActivity.class);
+					startActivityForResult(checkSensorListIntent,
+							Constants.REQUEST_SENSOR_LIST);
+				}
 			}
 		});
 
@@ -89,10 +100,6 @@ public class MainMenuActivity extends Activity {
 			}
 		});
 
-		if (mPreferences.getInt(Constants.PREF_PLAYER_DAYS, 0) == 0) {
-			btnLoadGame.setEnabled(false);
-		}
-
 		btnSettings = (ImageButton) findViewById(R.id.btn_settings);
 		btnSettings.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -105,27 +112,8 @@ public class MainMenuActivity extends Activity {
 		btnHelp = (ImageButton) findViewById(R.id.btn_help);
 		btnHelp.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				if (!isInDebugMode()) {
-					Intent helpIntent = new Intent(context, HelpActivity.class);
-					startActivity(helpIntent);
-				} else {
-					/**
-					 * Deep activities test section
-					 */
-					/*
-					Intent shopIntent = new Intent(context, ShopActivity.class);
-					shopIntent.putExtra(Constants.ITEMLIST_NATURE, Constants.NATURE_SHOP);
-					startActivity(shopIntent);
-					 */
-
-					/*
-					Intent gameOverIntent = new Intent(context,	GameOverActivity.class);
-					gameOverIntent.putExtra(Constants.TAG_GAME_OVER, 
-											new Player(mPreferences.getBoolean(
-														Constants.TAG_EXE_MODE, false)));
-					startActivity(gameOverIntent);
-					*/
-				}
+				Intent helpIntent = new Intent(context, HelpActivity.class);
+				startActivity(helpIntent);
 			}
 		});
 
@@ -168,6 +156,13 @@ public class MainMenuActivity extends Activity {
 
 	@Override
 	protected void onResume() {
+		findViewById(R.id.rootLayoutMainMenu).setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
+		if (mPreferences.getLong(Constants.PREF_PLAYER_TIMESTAMP, 0) == 0) {
+			btnLoadGame.setEnabled(false);
+			mOverwriteWarning = false;
+		} else {
+			mOverwriteWarning = true;
+		}
 		if (!isInDebugMode())
 			MusicManager.getInstance().playBackgroundMusic();
 		super.onResume();
@@ -184,6 +179,38 @@ public class MainMenuActivity extends Activity {
 				launchGame(newGame, sensorTypes);
 			}
 			break;
+		}
+	}
+	
+	private class OverwriteGameDialogFragment extends DialogFragment {
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			final Activity dummyActivity = getActivity();
+			// Use the Builder class for convenient dialog construction
+			AlertDialog.Builder builder = new AlertDialog.Builder(dummyActivity);
+			builder.setTitle(
+					getResources().getString(R.string.overwrite_dialog_title))
+					.setMessage(R.string.overwrite_dialog_message)
+					.setPositiveButton(R.string.overwrite_dialog_positive,
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int id) {
+									newGame = true;
+									Intent checkSensorListIntent = new Intent(context,
+											SensorActivity.class);
+									startActivityForResult(checkSensorListIntent,
+											Constants.REQUEST_SENSOR_LIST);
+								}
+							})
+					.setNegativeButton(R.string.exit_dialog_negative,
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int id) {
+									// User cancels the dialog
+								}
+							});
+			// Create the AlertDialog object and return it
+			return builder.create();
 		}
 	}
 }

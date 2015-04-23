@@ -1,5 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootLayoutSettings"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 	android:orientation="vertical"
@@ -43,7 +44,7 @@
 		android:id="@+id/btnSettingsRestore"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:text="Restore preferences"
+		android:text="@string/icd_rest_preferences"
 		android:layout_marginLeft="8dp"
 		android:layout_marginRight="8dp"
 		android:background="@drawable/xml_btn_style" />
@@ -55,15 +56,17 @@
 		android:gravity="center|bottom">
 		
 		<Button
+		    style="?android:attr/buttonBarButtonStyle"
 			android:id="@+id/btnSettingsAccept"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="@string/btn_accept"
 			android:layout_marginLeft="8dp"
-			android:layout_marginRight="8dp"
+			android:layout_marginRight="8dp"			
 			android:background="@drawable/xml_btn_style" />
 			
 		<Button
+		    style="?android:attr/buttonBarButtonStyle"
 			android:id="@+id/btnSettingsCancel" 
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"

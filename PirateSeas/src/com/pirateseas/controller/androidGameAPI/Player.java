@@ -27,6 +27,7 @@ public class Player implements Parcelable {
 	private int experience = 0;
 	private int passedDays = 0;
 	private int mapPieces = 0;
+	
 	private boolean hasCompleteMap = false;
 
 	public Player() {
@@ -51,7 +52,7 @@ public class Player implements Parcelable {
 		}
 	}
 
-	public Player(int level, int gold, int xp, int days, int mapPieces,
+	public Player(int level, int gold, int xp, long ts, int days, int mapPieces,
 			boolean map) {
 		this.level = level;
 		this.gold = gold;

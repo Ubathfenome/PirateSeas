@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.TextView;
 
 public class GameOverActivity extends Activity {
@@ -39,6 +40,11 @@ public class GameOverActivity extends Activity {
 		// TODO Upload score to the cloud? | Save score in the preferences?
 	}
 
+	@Override
+	protected void onResume() {
+		findViewById(R.id.rootLayoutGameOver).setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
+		super.onResume();
+	}
 	// OnTouch
 	//: DESTROY EVERYTHING!! Muahahaha!! >:D
 	//: Start Main Menu Activity

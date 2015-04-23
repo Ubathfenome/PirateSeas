@@ -46,17 +46,22 @@
         (Long press any item to purchase it)</string>
     
     <!-- Shop Purchase Dialog -->
-    <string name="shop_purchase_dialog_title">Purchase Confirmation Dialog</string>
+    <string name="shop_purchase_dialog_title">Purchase</string>
     <string name="shop_purchase_dialog_message">You will purchase this item!</string>
     <string name="shop_purchase_dialog_positive">Confirm</string>
     
     <!-- Restore Preferences Dialog -->
-    <string name="settings_restore_dialog_title">Restore Preferences Confirmation Dialog</string>
+    <string name="settings_restore_dialog_title">Restore Preferences</string>
     <string name="settings_restore_dialog_message">You will wipe all saved data!</string>
     <string name="settings_restore_dialog_positive">Confirm</string>
+    
+    <!-- Overwrite Game Dialog -->
+    <string name="overwrite_dialog_title">Overwrite Saved Game</string>
+    <string name="overwrite_dialog_message">Your previous saved game will be overwritten!</string>
+    <string name="overwrite_dialog_positive">Confirm</string>
 
     <!-- Exit Game Dialog -->
-    <string name="exit_dialog_title">Exit Confirmation Dialog</string>
+    <string name="exit_dialog_title">Exit</string>
     <string name="exit_dialog_message">Any unsaved progress will be lost!</string>
     <string name="exit_dialog_positive">Exit</string>
     <string name="exit_dialog_negative">Cancel</string>
@@ -93,6 +98,11 @@
         <item>Loading Yarrr&#8230;</item>
         <item>Let\'s sail, mate!</item>
     </string-array>
+    
+    <!-- Image Content descriptors -->
+    <string name="icd_anim_background">Animation background image</string>
+    <string name="icd_loading_animation">Loading animation image</string>
+    <string name="icd_rest_preferences">Restore preferences</string>
 
     <string name="default_sample_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut 
         gravida, massa nec bibendum maximus, nunc ante viverra enim, sit amet viverra nisi nulla vitae 

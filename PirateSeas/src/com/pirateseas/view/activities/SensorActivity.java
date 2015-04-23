@@ -16,12 +16,17 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.AnimationDrawable;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.AsyncTask;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class SensorActivity extends Activity{
@@ -35,6 +40,10 @@ public class SensorActivity extends Activity{
 	private List<Integer> mDeviceSensorTypes;
 	
 	private TextView tv;
+	private ImageView iv;
+	
+	private AnimationDrawable loadAnimation;
+	private Animation enterAnimation;
 	
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -45,6 +54,11 @@ public class SensorActivity extends Activity{
 		
 		// Set animation layout while loading
 		setContentView(R.layout.activity_sensors);
+		
+		iv = (ImageView) findViewById(R.id.img_load_animation);
+		iv.setBackgroundResource(R.drawable.xml_loading_animation);
+		loadAnimation = (AnimationDrawable) iv.getBackground();
+		enterAnimation = AnimationUtils.loadAnimation(this, R.anim.xml_tween_animation);
 		
 		tv = (TextView) findViewById(R.id.lbl_load_status);
 	
@@ -68,6 +82,12 @@ public class SensorActivity extends Activity{
 		}
 	}
 	
+	@Override
+	protected void onResume() {
+		findViewById(R.id.rootLayoutSensors).setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
+		super.onResume();
+	}
+
 	private boolean hasValidValues(int[] sensorList){
 		for(int i = 0; i < sensorList.length; i++){
 			if(sensorList[i] != 0)
@@ -142,6 +162,7 @@ public class SensorActivity extends Activity{
 			
 			// Start animation
 			tv.setText(getResources().getStringArray(R.array.loading_messages)[0]);
+			loadAnimation.start();
 		}
 		
 		@Override
@@ -171,9 +192,11 @@ public class SensorActivity extends Activity{
 			// Update animation
 			String[] messagesArray = getResources().getStringArray(R.array.loading_messages);
 			tv.setText(messagesArray[progress[0]/messagesArray.length]);
+			iv.startAnimation(enterAnimation);
 		}
 		
 		protected void onPostExecute(Boolean result){
+			loadAnimation.stop();
 			exitActivity(result);
 		}
 	}

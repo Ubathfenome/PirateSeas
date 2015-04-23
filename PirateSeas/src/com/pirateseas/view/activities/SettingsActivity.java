@@ -117,6 +117,12 @@ public class SettingsActivity extends Activity {
 		});
 	}
 
+	@Override
+	protected void onResume() {
+		findViewById(R.id.rootLayoutSettings).setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
+		super.onResume();
+	}
+
 	private boolean resetPreferences() {
 		SharedPreferences.Editor editor = mPreferences.edit();
 		editor.clear();

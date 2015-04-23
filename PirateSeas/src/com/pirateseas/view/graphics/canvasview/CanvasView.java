@@ -30,9 +30,9 @@ import com.pirateseas.view.activities.PauseActivity;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Point;
-import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -73,6 +73,8 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	private StatBar nPlayerHBar, nPlayerXPBar;
 	private StatBar nEnemyHBar;
 
+	private SharedPreferences nPreferences;
+	private long bTimestamp;
 	private long nGameTimestamp;
 
 	private boolean nInitialized = false;
@@ -113,7 +115,10 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	public void initialize() {
 		nStatus = Constants.GAME_STATE_NORMAL;
 
-		nGameTimer = new GameTimer();
+		nPreferences = nContext.getSharedPreferences(Constants.TAG_PREF_NAME, Context.MODE_PRIVATE);
+		bTimestamp = nPreferences.getLong(Constants.PREF_PLAYER_TIMESTAMP, 0);
+		
+		nGameTimer = new GameTimer(bTimestamp);
 		nPlayer = new Player();
 
 		// Initialize components
@@ -261,7 +266,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 							}
 						} else if (direction.equals(Constants.BACK)){
 							nCheatCounter++;
-							if(nCheatCounter == 10){
+							if(nCheatCounter == 20){
 								grantCheat2Player();
 							}
 						}
@@ -337,12 +342,18 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	private void manageTime() {
-		long ts = SystemClock.elapsedRealtime();
-		if (nGameTimestamp == 0)
-			nGameTimestamp = ts;
-		else if (ts - nGameTimestamp >= 1000) {
-			nGameTimer.updateHour();
-			nGameTimestamp = ts;
+		nGameTimestamp = nGameTimer.getLastTimestamp();
+		
+		nGameTimer.updateHour();
+		long baseTs2Save = nGameTimer.getBaseTimestamp();
+		if(baseTs2Save != 0 && bTimestamp == 0){
+			SharedPreferences.Editor editor = nPreferences.edit();
+			editor.putLong(Constants.PREF_PLAYER_TIMESTAMP, baseTs2Save);
+			editor.commit();
+		}
+		int passedDays = nGameTimer.getDay();
+		if(passedDays > 0){
+			nPlayer.setPassedDays(passedDays);
 		}
 	}
 
@@ -375,9 +386,10 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 						Constants.BAR_HEALTH);
 			}
 
-		if (nEnemyShip == null && nIsland == null) {
+		if (nEnemyShip == null && nIsland == null && (nGameTimer.getLastTimestamp() - nGameTimestamp) >= 10000) {
 			nIsland = new Island(nContext, nScreenWidth - 150, HORIZON_Y_VALUE,
 					nScreenWidth, nScreenHeight);
+			Log.v(TAG, "Island detected!");
 		}
 
 		nSun.move();
@@ -477,6 +489,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 					
 					// Display "Shop" Screen
 					((GameActivity) nContext).shop(nIsland);
+					nIsland = null;
 				}
 			}
 		} else {
