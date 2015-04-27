@@ -43,7 +43,7 @@ import android.widget.Toast;
 public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	private static final String TAG = "CanvasView";
 	private static final float DEGREE_DECREMENT_RATIO = 3.15f;
-	private static final double DEGREE_MIN_THRESHOLD = Math.pow(10, -3);
+	private static final double DEGREE_MIN_THRESHOLD = 0.2f;
 
 	private static final int HORIZON_Y_VALUE = 170;
 	private static final int BAR_INITIAL_X_VALUE = 150;
@@ -74,8 +74,9 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	private StatBar nEnemyHBar;
 
 	private SharedPreferences nPreferences;
-	private long bTimestamp;
+	private long nBaseTimestamp;
 	private long nGameTimestamp;
+	private long nLastIslandTimestamp;
 
 	private boolean nInitialized = false;
 	
@@ -116,9 +117,9 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 		nStatus = Constants.GAME_STATE_NORMAL;
 
 		nPreferences = nContext.getSharedPreferences(Constants.TAG_PREF_NAME, Context.MODE_PRIVATE);
-		bTimestamp = nPreferences.getLong(Constants.PREF_PLAYER_TIMESTAMP, 0);
+		nBaseTimestamp = nPreferences.getLong(Constants.PREF_PLAYER_TIMESTAMP, 0);
 		
-		nGameTimer = new GameTimer(bTimestamp);
+		nGameTimer = new GameTimer(nBaseTimestamp);
 		nPlayer = new Player();
 
 		// Initialize components
@@ -152,6 +153,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 				nPlayer.getExperience(), 100, Constants.BAR_EXPERIENCE);
 
 		nGameTimestamp = 0;
+		nLastIslandTimestamp = 0;
 		nCheatCounter = 0;
 
 		nInitialized = true;
@@ -289,9 +291,9 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	private void grantCheat2Player() {
-		nPlayer.addExperience(3500);
-		nPlayer.addGold(5000);
-		nPlayer.setMapPieces(5);
+		nPlayer.addExperience(200);
+		nPlayer.addGold(50);
+		nPlayer.setMapPieces(1);
 	}
 
 	private String pressedMotion(Point start, Point end) {
@@ -346,7 +348,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 		
 		nGameTimer.updateHour();
 		long baseTs2Save = nGameTimer.getBaseTimestamp();
-		if(baseTs2Save != 0 && bTimestamp == 0){
+		if(baseTs2Save != 0 && nBaseTimestamp == 0){
 			SharedPreferences.Editor editor = nPreferences.edit();
 			editor.putLong(Constants.PREF_PLAYER_TIMESTAMP, baseTs2Save);
 			editor.commit();
@@ -386,9 +388,10 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 						Constants.BAR_HEALTH);
 			}
 
-		if (nEnemyShip == null && nIsland == null && (nGameTimer.getLastTimestamp() - nGameTimestamp) >= 10000) {
+		if (nEnemyShip == null && nIsland == null && nLastIslandTimestamp != 0 && (nGameTimestamp - nLastIslandTimestamp) >= 60 * 1000) {
 			nIsland = new Island(nContext, nScreenWidth - 150, HORIZON_Y_VALUE,
 					nScreenWidth, nScreenHeight);
+			nLastIslandTimestamp = nGameTimestamp;
 			Log.v(TAG, "Island detected!");
 		}
 
@@ -404,29 +407,32 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 
 	private void manageShots() {
 		int size = nShotList.size();
-		boolean[] deadShots = new boolean[size];
-		for (int i = 0; i < size; i++) {
-			deadShots[i] = false;
-			Shot s = nShotList.get(i);
-			if (nEnemyShip != null) {
-				if (s.intersectionWithEntity(nEnemyShip)) {
-					nEnemyShip.looseHealth(s.getDamage());
+		if(size > 0){
+			boolean[] deadShots = new boolean[size];
+			for (int i = 0; i < size; i++) {
+				deadShots[i] = false;
+				Shot s = nShotList.get(i);
+				if (nEnemyShip != null) {
+					if (s.intersectionWithEntity(nEnemyShip)) {
+						nEnemyShip.looseHealth(s.getDamage());
+						s.looseHealth(s.getDamage());
+						
+						// Mark shot to destroy object
+						deadShots[i] = true;
+					}
+				}
+				if (s.intersectionWithEntity(nPlayerShip)) {
+					if(nPlayerShip.getHealth() >= s.getDamage())
+						nPlayerShip.looseHealth(s.getDamage());
 					s.looseHealth(s.getDamage());
-					
-					// Mark shot to destroy object
 					deadShots[i] = true;
 				}
 			}
-			if (s.intersectionWithEntity(nPlayerShip)) {
-				if(nPlayerShip.getHealth() >= s.getDamage())
-					nPlayerShip.looseHealth(s.getDamage());
-				s.looseHealth(s.getDamage());
-				deadShots[i] = true;
+			
+			for (int i = size - 1; i >= 0; i--) {
+				if (deadShots[i])
+					nShotList.remove(i);
 			}
-		}
-		for (int i = 0; i < size; i++) {
-			if (deadShots[i])
-				nShotList.remove(i);
 		}
 	}
 
@@ -456,19 +462,19 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	 */
 	private void managePlayer() {
 		if(nPlayerShip.isAlive()){
+			double arcPixels = ((GameActivity) nContext).ctrlWheel.getMovedPixels();
 			double degrees = ((GameActivity) nContext).ctrlWheel.getDegrees();
-			double sceneMoveValue = this.getHeight() * Math.tan(degrees);
+			double sceneMoveValue = Math.tan(degrees) + arcPixels;
 	
-			if (degrees == 0) {
-				degrees = degrees > 90 && degrees < 270 ? -sceneMoveValue
-						: sceneMoveValue;
-			} else {
-				if (degrees < DEGREE_MIN_THRESHOLD)
-					degrees = 0;
-				else
-					degrees /= DEGREE_DECREMENT_RATIO;
+			if (degrees >= DEGREE_MIN_THRESHOLD) {
+				degrees /= DEGREE_DECREMENT_RATIO;
 				((GameActivity) nContext).ctrlWheel.setDegrees(degrees);
+			} else {
+				((GameActivity) nContext).ctrlWheel.resetWheel();
 			}
+			
+			if(sceneMoveValue != 0)
+				Log.d(TAG, "Moving scene " + sceneMoveValue + " pixels");
 	
 			nSky.move(sceneMoveValue);
 			nCompass.move(sceneMoveValue);

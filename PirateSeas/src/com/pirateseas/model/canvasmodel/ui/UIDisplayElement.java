@@ -2,6 +2,7 @@ package com.pirateseas.model.canvasmodel.ui;
 
 import com.pirateseas.R;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -9,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -19,13 +21,19 @@ public class UIDisplayElement extends View {
 	private Drawable mImage;
 	private TypedArray mArray;
 	
+	@SuppressWarnings("deprecation")
+	@SuppressLint("NewApi")
 	public UIDisplayElement(Context context, int drawableResource, int value){
 		super(context);
 		
 		paint = new Paint();
 		paint.setColor(Color.WHITE);
 		this.mValue = value;
-		mImage = context.getResources().getDrawable(drawableResource, null);
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+			mImage = context.getResources().getDrawable(drawableResource, null);
+		} else {
+			mImage = context.getResources().getDrawable(drawableResource);
+		}
 	}
 	
 	public UIDisplayElement(Context context) {
@@ -67,8 +75,7 @@ public class UIDisplayElement extends View {
 	@Override
 	public void onDraw(Canvas canvas){
 		mImage.draw(canvas);
-		// TODO Move text slightly to the left (Center text)
-		canvas.drawText(String.valueOf(mValue), mImage.getIntrinsicWidth() / 2 - 20, mImage.getIntrinsicHeight() / 2 + 10,paint);
+		canvas.drawText(String.valueOf(mValue), mImage.getIntrinsicWidth() / 16, mImage.getIntrinsicHeight() / 2 + 10,paint);
 	}
 
 	@Override

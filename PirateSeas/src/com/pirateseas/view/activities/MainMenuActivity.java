@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 
 import com.pirateseas.R;
 import com.pirateseas.controller.audio.MusicManager;
@@ -20,7 +21,6 @@ import android.view.Display;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
-
 import android.widget.Button;
 import android.widget.ImageButton;
 
@@ -157,12 +157,16 @@ public class MainMenuActivity extends Activity {
 	@Override
 	protected void onResume() {
 		findViewById(R.id.rootLayoutMainMenu).setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
+		Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, 
+				Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC);
+		
 		if (mPreferences.getLong(Constants.PREF_PLAYER_TIMESTAMP, 0) == 0) {
 			btnLoadGame.setEnabled(false);
 			mOverwriteWarning = false;
 		} else {
 			mOverwriteWarning = true;
 		}
+		
 		if (!isInDebugMode())
 			MusicManager.getInstance().playBackgroundMusic();
 		super.onResume();

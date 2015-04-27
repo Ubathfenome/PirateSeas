@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.pirateseas.controller.sensors.SensorType;
 
+@SuppressWarnings("unused")
 public class EventDayNightCycle {
 	private static final String TAG = "EventDayNightCycle";
 	private static final float PSA = SensorManager.PRESSURE_STANDARD_ATMOSPHERE;
@@ -17,7 +18,7 @@ public class EventDayNightCycle {
 	
 	public static int getSkyFilter(float hour){
 		int filterValue = (int) (hour * pressure * HOUR_VALUE_RATIO);
-		Log.d(TAG, "Sky mask: " + filterValue);
+		//Log.d(TAG, "Sky mask: " + filterValue);
 		return filterValue;
 	}
 }

@@ -25,6 +25,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
@@ -67,10 +68,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 	
 	public EventEnemyTimer eventEnemy;
 
-	Point startPoint;
-	Point centerPoint;
-	Point endPoint;
-	float degrees;
+	protected Point centerPoint;
 
 	@SuppressLint("ClickableViewAccessibility")
 	@Override
@@ -105,7 +103,6 @@ public class GameActivity extends Activity implements SensorEventListener {
 			}
 		});
 
-		// TODO Check Object display
 		ctrlThrottle = (Throttle) findViewById(R.id.controlThrottle);
 		ctrlThrottle.setOnTouchListener(new OnTouchListener() {
 
@@ -117,44 +114,10 @@ public class GameActivity extends Activity implements SensorEventListener {
 
 		ctrlWheel = (Wheel) findViewById(R.id.controlWheel);
 		ctrlWheel.setOnTouchListener(new OnTouchListener() {
-
+			
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-
-				switch (event.getAction()) {
-				case MotionEvent.ACTION_DOWN:
-					startPoint = new Point((int) event.getX(), (int) event
-							.getY());
-					Log.d(TAG, "DOWN touch registered (" + startPoint.x + ", "
-							+ startPoint.y + ")");
-					break;
-				case MotionEvent.ACTION_CANCEL:
-				case MotionEvent.ACTION_UP:
-					endPoint = new Point((int) event.getX(), (int) event.getY());
-					degrees = Geometry.getRotationAngle(startPoint,
-							centerPoint, endPoint);
-					((Wheel) v).setDegrees(degrees);
-					v.setPivotX(centerPoint.x);
-					v.setPivotY(centerPoint.y);
-					v.setRotation(degrees);
-					v.postInvalidate();
-					Log.d(TAG,
-							"MOVE/CANCEL/UP touch registered (" + endPoint.x
-									+ ", " + endPoint.y + ") ["
-									+ degrees + "º degrees]");
-					break;
-				}
-
-				return true;
-			}
-		});
-
-		ctrlWheel.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				((Wheel) v).setDegrees(degrees = 0);
-				v.postInvalidate();
+				return ((Wheel) v).onTouchEvent(event);
 			}
 		});
 
@@ -189,6 +152,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 	@Override
 	protected void onPause() {
 		mSensorManager.unregisterListener(this);
+		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
 		super.onPause();
 	}
@@ -196,6 +160,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 	@Override
 	protected void onResume() {
 		findViewById(R.id.rootLayoutGame).setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
 		if (!CanvasView.nUpdateThread.isAlive()
 				&& CanvasView.nUpdateThread.getState() != Thread.State.NEW) {

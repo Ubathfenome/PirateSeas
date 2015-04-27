@@ -9,6 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -19,6 +20,7 @@ public class Throttle extends View {
 	
 	private int maxLevels;
 	private int mLevel;
+	private LayerDrawable mLayers = null;
 	private Drawable mImageBase = null;
 	private Drawable mImageStick = null;
 	private Drawable mImageHandle = null;
@@ -28,7 +30,7 @@ public class Throttle extends View {
 	
 	private static final int[] Y_COORDS = {0, 5, 10, 15};
 	
-	private static final int MODULE_MOVED = 5;
+	private static final int MODULE_MOVED = 10;
 	private static final String TAG = "Throttle";
 
 	public Throttle(Context context) {
@@ -51,7 +53,16 @@ public class Throttle extends View {
 		this.mLevel = 0;
 		this.maxLevels = Y_COORDS.length;
 			
-		if(!isInEditMode()){
+		if(!isInEditMode()){			
+			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+				mLayers = (LayerDrawable) getResources().getDrawable(R.drawable.xml_throttle_layers, null);
+			} else {
+				mLayers = (LayerDrawable) getResources().getDrawable(R.drawable.xml_throttle_layers);
+			}
+			mImageBase = mLayers.findDrawableByLayerId(R.id.throttleBase);
+			mImageStick = mLayers.findDrawableByLayerId(R.id.throttleStick);
+			mImageHandle = mLayers.findDrawableByLayerId(R.id.throttleHandler);
+		} else {
 			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
 				mImageBase = getResources().getDrawable(R.drawable.ico_throttle_base, null);
 				mImageStick = getResources().getDrawable(R.drawable.ico_throttle_stick, null);
@@ -61,11 +72,12 @@ public class Throttle extends View {
 				mImageStick = getResources().getDrawable(R.drawable.ico_throttle_stick);
 				mImageHandle = getResources().getDrawable(R.drawable.ico_throttle_handle);
 			}
-		} else {
-			mImageBase = getBackground();
-			mImageStick = getBackground();
-			mImageHandle = getBackground();
+			Drawable[] layers = {mImageBase, mImageStick, mImageHandle};
+			mLayers = new LayerDrawable(layers);
 		}
+		
+		setLayers(mLayers);
+		
 	}
 	
 	@SuppressLint("ClickableViewAccessibility")
@@ -76,16 +88,18 @@ public class Throttle extends View {
 				mStartPoint = new Point((int)event.getX(), (int)event.getY());
 				break;
 			case MotionEvent.ACTION_MOVE:
+				break;
+			case MotionEvent.ACTION_UP:
 				mLastPoint = new Point((int)event.getX(), (int)event.getY());
 				String movement = getMovementPosition();
 				
 				Log.d(TAG, "Registered Throttle movement: " + movement);
-				if (mLevel < maxLevels && movement.equals(Constants.FRONT))
+				if (mLevel < maxLevels - 1 && movement.equals(Constants.FRONT))
 					mLevel++;
 				else if (mLevel > 0 && movement.equals(Constants.BACK))
 					mLevel--;
-				break;
-			case MotionEvent.ACTION_UP:
+				
+				invalidate();
 				break;
 		}
 		return true;
@@ -121,15 +135,15 @@ public class Throttle extends View {
 	}
 	
 	@Override
-	public void onDraw(Canvas canvas){
-		super.onDraw(canvas);
+	public void onDraw(Canvas canvas){		
+		// TODO Check display drawables		
+		//mImageBase.draw(canvas);
 		
-		// TODO Check display drawables
+		mLayers.draw(canvas);
 		
-		mImageBase.draw(canvas);
+		//int yCoord = Y_COORDS[mLevel];
 		
-		int yCoord = Y_COORDS[mLevel];
-		
+		/*
 		switch(mLevel){
 			case 0:
 				mImageStick = moveDrawable(yCoord, mImageStick);
@@ -148,10 +162,11 @@ public class Throttle extends View {
 				mImageHandle = moveDrawable(yCoord + 15, mImageHandle);
 				break;
 		}
-		mImageStick.draw(canvas);
-		mImageHandle.draw(canvas);
+		*/
+		//mImageStick.draw(canvas);
+		//mImageHandle.draw(canvas);
 		
-		invalidate();
+		//super.onDraw(canvas);
 	}
 	
 	private Drawable moveDrawable(int y, Drawable image) {
@@ -160,6 +175,14 @@ public class Throttle extends View {
 		bounds.bottom += y;
 		image.setBounds(bounds);
 		return image;
+	}
+
+	public LayerDrawable getLayers() {
+		return mLayers;
+	}
+
+	public void setLayers(LayerDrawable mLayers) {
+		this.mLayers = mLayers;
 	}
 
 	@Override

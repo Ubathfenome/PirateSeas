@@ -98,6 +98,7 @@ public class Ship extends Entity {
 		this.mAmmunition = ammo;
 		
 		this.sType = sType;
+		this.mMaxHealth = sType.defaultHealthPoints() > health ? sType.defaultHealthPoints() : health;
 		gainHealth(health);
 		
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
