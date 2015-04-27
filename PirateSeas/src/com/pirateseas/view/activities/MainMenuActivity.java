@@ -17,6 +17,7 @@ import com.pirateseas.R;
 import com.pirateseas.controller.audio.MusicManager;
 import com.pirateseas.global.Constants;
 
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,6 +26,8 @@ import android.widget.Button;
 import android.widget.ImageButton;
 
 public class MainMenuActivity extends Activity {
+	private static final String TAG = "MainMenuActivity";
+	
 	private boolean newGame = false;
 	private boolean mOverwriteWarning = false;
 	private int mMode;
@@ -148,6 +151,18 @@ public class MainMenuActivity extends Activity {
 	}
 
 	@Override
+	protected void onDestroy() {
+		Log.v(TAG, "Called onDestroy");
+		super.onDestroy();
+	}
+
+	@Override
+	protected void onStop() {
+		Log.v(TAG, "Called onStop");
+		super.onStop();
+	}
+
+	@Override
 	protected void onPause() {
 		if (!isInDebugMode())
 			MusicManager.getInstance().pauseBackgroundMusic();
@@ -164,6 +179,7 @@ public class MainMenuActivity extends Activity {
 			btnLoadGame.setEnabled(false);
 			mOverwriteWarning = false;
 		} else {
+			btnLoadGame.setEnabled(true);
 			mOverwriteWarning = true;
 		}
 		

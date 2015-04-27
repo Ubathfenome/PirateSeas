@@ -13,6 +13,10 @@ import android.view.View;
 
 public class Wheel extends View {
 	private static final String TAG = "Wheel";
+	
+	private static final int MODULE_MOVED = 100;
+	
+	private double mDistanceLastTouch;
 
 	private Point startPoint, endPoint;
 	private double mDegrees;
@@ -39,7 +43,7 @@ public class Wheel extends View {
 		mDegrees = 0f;
 		mMovedPixels = 0;
 		setImage(getBackground());
-		mCenter = new Point(0, 0);
+		mCenter = new Point(this.getWidth() / 2, this.getHeight() / 2);
 	}
 
 	public Point getCenterPoint() {
@@ -76,37 +80,47 @@ public class Wheel extends View {
 
 	@Override
 	public boolean performClick() {
-		
+		init();
 		return super.performClick();
 	}
+	
+	
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
 			startPoint = new Point((int) event.getX(), (int) event.getY());
-			Log.d(TAG, "DOWN touch registered (" + startPoint.x + ", "
-					+ startPoint.y + ")");
+			break;
+		case MotionEvent.ACTION_MOVE:
+			
+			// TODO Review
+			
+			if(endPoint != null){
+				mDistanceLastTouch = Math.hypot(endPoint.x - event.getX(), endPoint.y - event.getY());
+				if(mDistanceLastTouch >= MODULE_MOVED){
+					endPoint = new Point((int) event.getX(), (int) event.getY());
+
+					Point u = new Point(endPoint.x - startPoint.x, endPoint.y
+							- startPoint.y);
+					double startDistance = Math.hypot(u.x, u.y);
+					Log.d(TAG, "Touched distance from Start= " + startDistance + " units");
+
+					mDegrees = Geometry.getRotationAngle(startPoint, mCenter, endPoint);
+
+					setMovedPixels(startDistance);
+					setDegrees(mDegrees);
+					setPivotX(mCenter.x);
+					setPivotY(mCenter.y);
+					setRotation((float) mDegrees);
+					invalidate();
+				}
+			}
+				
 			break;
 		case MotionEvent.ACTION_CANCEL:
 		case MotionEvent.ACTION_UP:
-			endPoint = new Point((int) event.getX(), (int) event.getY());
-
-			Point u = new Point(endPoint.x - startPoint.x, endPoint.y
-					- startPoint.y);
-			double distance = Math.hypot(u.x, u.y);
-			Log.d(TAG, "Touched distance = " + distance + " pixels");
-
-			mDegrees = Geometry.getRotationAngle(startPoint, mCenter, endPoint);
-
-			setMovedPixels(distance);
-			setDegrees(mDegrees);
-			setPivotX(mCenter.x);
-			setPivotY(mCenter.y);
-			setRotation((float) mDegrees);
-			invalidate();
-			Log.d(TAG, "MOVE/CANCEL/UP touch registered (" + endPoint.x + ", "
-					+ endPoint.y + ") [" + mDegrees + "º degrees]");
+			performClick();
 			break;
 		}
 

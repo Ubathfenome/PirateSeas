@@ -6,7 +6,9 @@ public class Geometry{
 	
 	public static float getRotationAngle(Point start, Point center, Point end){
 		double angleRad = 0;
-		//float angle = 0f;
+		float degrees = 0f;
+		float angle = 0f;
+		int quad = 0;		// Exclusively 1, 2, 3 or 4
 		
 		Point u = new Point(start.x - center.x, start.y - center.y);
 		Point v = new Point(end.x - center.x, end.y - center.y);
@@ -19,12 +21,48 @@ public class Geometry{
 		// v = center - end
 		
 		angleRad = Math.acos((u.x * v.x + u.y * v.y) / (modU * modV));
-		//angle = (angleRad * 180) / Math.PI;
+		degrees = (float) Math.toDegrees(angleRad);
 		
-		return (float)Math.toDegrees(angleRad);
+		// Obtain quadrant
+		quad = getQuadrant(center, end);
+		
+		// Modify angle value with quad
+		switch(quad){
+			case 1:
+				angle = 0 + degrees;
+				break;
+			case 2:
+				angle = 90 + degrees;
+				break;
+			case 3:
+				angle = 180 + degrees;
+				break;
+			case 4:
+				angle = 270 + degrees;
+				break;
+		}
+		
+		return angle;
 	}
 	
-	
+	private static int getQuadrant(Point center, Point checker) {
+		int quad = 0;
+		if(checker.x > center.x){
+			if(checker.y > center.y){
+				quad = 1;
+			} else {
+				quad = 4;
+			}
+		} else {
+			if(checker.y > center.y){
+				quad = 2;
+			} else {
+				quad = 3;
+			}
+		}
+		return quad;
+	}
+
 	public static class Point3D{
 		public final float x, y, z;
 

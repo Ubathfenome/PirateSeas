@@ -89,6 +89,7 @@ public class MainLogic extends Thread {
 				}
 			} catch (Exception ex) {
 				Log.e(TAG, "" + ex.getMessage());
+				//running = false;
 			} finally {
 				if (canvas != null) {
 					surface.unlockCanvasAndPost(canvas);

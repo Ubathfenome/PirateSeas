@@ -30,7 +30,6 @@ public class Throttle extends View {
 	
 	private static final int[] Y_COORDS = {0, 5, 10, 15};
 	
-	private static final int MODULE_MOVED = 10;
 	private static final String TAG = "Throttle";
 
 	public Throttle(Context context) {
@@ -106,67 +105,40 @@ public class Throttle extends View {
 	}
 	
 	private String getMovementPosition(){
-		String direction = null;
-		boolean changed  = false;
-		
-		if((mStartPoint.x - mLastPoint.x) > MODULE_MOVED)
-		{
-			direction = Constants.LEFT;
-			changed = true;
-		}else if((mStartPoint.x - mLastPoint.x) > -MODULE_MOVED)
-		{
-			changed = true;
-			direction = Constants.RIGHT;
-		}else if((mStartPoint.y - mLastPoint.y) > MODULE_MOVED)
-		{
-			changed = true;
-			direction = Constants.BACK;
-		}else if((mStartPoint.y - mLastPoint.y) > -MODULE_MOVED)
-		{
-			changed = true;
-			direction = Constants.FRONT;
+		int deltaX = mLastPoint.x - mStartPoint.x;
+		int deltaY = mLastPoint.y - mStartPoint.y;
+
+		if (Math.abs(deltaX) > Math.abs(deltaY)) { // Lateral movement
+			return deltaX > 0 ? Constants.RIGHT : Constants.LEFT;
+		} else { // Vertical movement
+			return deltaY > 0 ? Constants.BACK : Constants.FRONT;
 		}
-		
-		if(changed)
-		{
-			mStartPoint = mLastPoint;
-		}
-		return direction.toString();
 	}
 	
 	@Override
-	public void onDraw(Canvas canvas){		
-		// TODO Check display drawables		
-		//mImageBase.draw(canvas);
+	public void onDraw(Canvas canvas){	
+		int yCoord = Y_COORDS[mLevel];
 		
-		mLayers.draw(canvas);
-		
-		//int yCoord = Y_COORDS[mLevel];
-		
-		/*
 		switch(mLevel){
 			case 0:
-				mImageStick = moveDrawable(yCoord, mImageStick);
-				mImageHandle = moveDrawable(yCoord, mImageHandle);
+				mLayers.setDrawableByLayerId(R.id.throttleStick, moveDrawable(yCoord, mLayers.findDrawableByLayerId(R.id.throttleStick)));
+				mLayers.setDrawableByLayerId(R.id.throttleHandler, moveDrawable(yCoord, mLayers.findDrawableByLayerId(R.id.throttleHandler)));
 				break;
 			case 1:
-				mImageStick = moveDrawable(yCoord + 5, mImageStick);
-				mImageHandle = moveDrawable(yCoord + 7, mImageHandle);
+				mLayers.setDrawableByLayerId(R.id.throttleStick, moveDrawable(yCoord + 5, mLayers.findDrawableByLayerId(R.id.throttleStick)));
+				mLayers.setDrawableByLayerId(R.id.throttleHandler, moveDrawable(yCoord + 7, mLayers.findDrawableByLayerId(R.id.throttleHandler)));
 				break;
 			case 2:
-				mImageStick = moveDrawable(yCoord + 7, mImageStick);
-				mImageHandle = moveDrawable(yCoord + 10, mImageHandle);
+				mLayers.setDrawableByLayerId(R.id.throttleStick, moveDrawable(yCoord + 7, mLayers.findDrawableByLayerId(R.id.throttleStick)));
+				mLayers.setDrawableByLayerId(R.id.throttleHandler, moveDrawable(yCoord + 10, mLayers.findDrawableByLayerId(R.id.throttleHandler)));
 				break;
 			case 3:
-				mImageStick = moveDrawable(yCoord + 10 , mImageStick);
-				mImageHandle = moveDrawable(yCoord + 15, mImageHandle);
+				mLayers.setDrawableByLayerId(R.id.throttleStick, moveDrawable(yCoord + 10, mLayers.findDrawableByLayerId(R.id.throttleStick)));
+				mLayers.setDrawableByLayerId(R.id.throttleHandler, moveDrawable(yCoord + 15, mLayers.findDrawableByLayerId(R.id.throttleHandler)));
 				break;
 		}
-		*/
-		//mImageStick.draw(canvas);
-		//mImageHandle.draw(canvas);
 		
-		//super.onDraw(canvas);
+		mLayers.draw(canvas);
 	}
 	
 	private Drawable moveDrawable(int y, Drawable image) {

@@ -30,9 +30,9 @@ public class DrawableHelper{
 	}
 	
 	/**
-	 * Returns the received Drawable rotated 90 degrees
+	 * Returns the received Drawable rotated x degrees
 	 * @param d
-	 * @return 90 Degrees rotated drawable
+	 * @return x Degrees rotated drawable
 	 */
 	public static Drawable rotateDrawable(Drawable d, Context context, float angle) {
 		Drawable rotatedDrawable = null;

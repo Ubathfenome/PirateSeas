@@ -40,7 +40,6 @@ import com.pirateseas.model.canvasmodel.game.scene.Island;
 import com.pirateseas.model.canvasmodel.ui.Throttle;
 import com.pirateseas.model.canvasmodel.ui.UIDisplayElement;
 import com.pirateseas.model.canvasmodel.ui.Wheel;
-import com.pirateseas.utils.approach2d.Geometry;
 import com.pirateseas.view.graphics.canvasview.CanvasView;
 
 public class GameActivity extends Activity implements SensorEventListener {
@@ -151,16 +150,26 @@ public class GameActivity extends Activity implements SensorEventListener {
 
 	@Override
 	protected void onPause() {
+		
+		Log.v(TAG, "Called onPause");
+		
 		mSensorManager.unregisterListener(this);
 		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		
+		mCanvasView.setStatus(Constants.GAME_STATE_PAUSE);
 
 		super.onPause();
 	}
 
 	@Override
 	protected void onResume() {
+		
+		Log.v(TAG, "Called onResume");
+		
 		findViewById(R.id.rootLayoutGame).setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		
+		mCanvasView.setStatus(Constants.GAME_STATE_NORMAL);
 
 		if (!CanvasView.nUpdateThread.isAlive()
 				&& CanvasView.nUpdateThread.getState() != Thread.State.NEW) {
@@ -176,6 +185,19 @@ public class GameActivity extends Activity implements SensorEventListener {
 		}
 
 		super.onResume();
+	}
+
+	@Override
+	protected void onDestroy() {
+		Log.v(TAG, "Called onDestroy");
+		mCanvasView.setStatus(Constants.GAME_STATE_END);
+		super.onDestroy();
+	}
+
+	@Override
+	protected void onStop() {
+		Log.v(TAG, "Called onStop");
+		super.onStop();
 	}
 
 	@Override
@@ -199,7 +221,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 								public void onClick(DialogInterface dialog,
 										int id) {
 									// Exit
-									CanvasView.nStatus = Constants.GAME_STATE_END;
+									mCanvasView.setStatus(Constants.GAME_STATE_END);
 									CanvasView.nUpdateThread.setRunning(false);
 									dummyActivity.finish();
 								}

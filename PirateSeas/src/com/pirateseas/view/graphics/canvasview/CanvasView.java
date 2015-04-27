@@ -42,7 +42,7 @@ import android.widget.Toast;
 
 public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	private static final String TAG = "CanvasView";
-	private static final float DEGREE_DECREMENT_RATIO = 3.15f;
+	private static final float DEGREE_DECREMENT_RATIO = 1.15f;
 	private static final double DEGREE_MIN_THRESHOLD = 0.2f;
 
 	private static final int HORIZON_Y_VALUE = 170;
@@ -473,8 +473,10 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 				((GameActivity) nContext).ctrlWheel.resetWheel();
 			}
 			
+			/*
 			if(sceneMoveValue != 0)
 				Log.d(TAG, "Moving scene " + sceneMoveValue + " pixels");
+			*/
 	
 			nSky.move(sceneMoveValue);
 			nCompass.move(sceneMoveValue);
@@ -539,6 +541,10 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 
 	public void destroyIsland() {
 		nIsland = null;
+	}
+	
+	public void setStatus (int status){
+		nStatus = status;
 	}
 
 }
