@@ -50,7 +50,7 @@
 		    android:layout_height="wrap_content"
 		    android:layout_weight="1"
 		    android:layout_marginRight="16dp"
-		    android:background="@drawable/xml_throttle_layers" />
+		    android:background="@drawable/ico_throttle_0" />
 		
 		<Space
 		    android:id="@+id/playerBarsSpace"

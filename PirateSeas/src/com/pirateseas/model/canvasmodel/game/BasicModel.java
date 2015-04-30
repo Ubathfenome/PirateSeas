@@ -34,13 +34,22 @@ public class BasicModel{
         this.mParallax = parallax;
 	}
 	
-	public void move(double length){
-		x = x - length;
+	public void move(double xLength, double yLength){
+		x = x - xLength;
+		y = y - yLength;
+		
 		if ( x > mCanvasWidth){
 			x = 0;
 		} 
 		if ( x < 0){
 			x = mCanvasWidth;
+		}
+		
+		if ( y > mCanvasHeight){
+			y = 0;
+		} 
+		if ( y < 0){
+			y = mCanvasHeight;
 		}
 	}
 	

@@ -22,7 +22,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class SettingsActivity extends Activity {
-
 	private TextView txtTitleLabel;
 	private TextView txtVolumeLabel;
 	private SeekBar skbVolume;
@@ -119,7 +118,7 @@ public class SettingsActivity extends Activity {
 
 	@Override
 	protected void onResume() {
-		findViewById(R.id.rootLayoutSettings).setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
+		findViewById(R.id.rootLayoutSettings).setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);		
 		super.onResume();
 	}
 

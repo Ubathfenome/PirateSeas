@@ -14,6 +14,7 @@ public class Constants{
 	public static final String TAG_GAME_OVER = "com.pirateseas.GAME_OVER";
 	public static final String TAG_PREF_NAME = "com.pirateseas.PREFERENCES";
 	public static final String TAG_BRIGHTNESS_LEVEL = "com.pirateseas.BRIGHTNESS";
+	public static final String TAG_REMOVE_PREFERENCES = "com.pirateseas.REMOVE_PREFERENCES";
 	
 	// Math factors	
 	public static final double NANOS_TO_SECONDS = Math.pow(10, -9);
@@ -22,6 +23,7 @@ public class Constants{
 	// Requests
 	public static final int REQUEST_SENSOR_LIST = 0x00;
 	public static final int REQUEST_SHOP = 0x01;
+	public static final int REQUEST_REMOVE_PREFERENCES = 0x02;
 	
 	// Entity states
 	public static final int STATE_ALIVE = 0;
@@ -74,6 +76,6 @@ public class Constants{
 	
 	public static final String ITEMLIST_NATURE = "Nature";
 	public static final String NATURE_SHOP = "Shop";
-	public static final String NATURE_TREASURE = "Treasure";
+	public static final String NATURE_TREASURE = "Treasure";	
 		
 }

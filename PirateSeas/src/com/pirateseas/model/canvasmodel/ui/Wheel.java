@@ -14,12 +14,13 @@ import android.view.View;
 public class Wheel extends View {
 	private static final String TAG = "Wheel";
 	
-	private static final int MODULE_MOVED = 100;
+	private static final int MODULE_MOVED = 8;
 	
 	private double mDistanceLastTouch;
-
+	boolean mTouched;
+	
 	private Point startPoint, endPoint;
-	private double mDegrees;
+	private float mDegrees;
 	private double mMovedPixels;
 	private Point mCenter;
 	private Drawable mImage;
@@ -44,6 +45,9 @@ public class Wheel extends View {
 		mMovedPixels = 0;
 		setImage(getBackground());
 		mCenter = new Point(this.getWidth() / 2, this.getHeight() / 2);
+		setPivotX(mCenter.x);
+		setPivotY(mCenter.y);
+		mTouched = false;
 	}
 
 	public Point getCenterPoint() {
@@ -62,11 +66,11 @@ public class Wheel extends View {
 		this.mMovedPixels = mMovedPixels;
 	}
 
-	public void setDegrees(double degrees) {
+	public void setDegrees(float degrees) {
 		this.mDegrees = degrees;
 	}
 
-	public double getDegrees() {
+	public float getDegrees() {
 		return mDegrees;
 	}
 
@@ -80,47 +84,39 @@ public class Wheel extends View {
 
 	@Override
 	public boolean performClick() {
-		init();
+		//init();
+		//setRotation(mDegrees);
 		return super.performClick();
 	}
-	
-	
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
 			startPoint = new Point((int) event.getX(), (int) event.getY());
+			mTouched = true;
 			break;
 		case MotionEvent.ACTION_MOVE:
+			endPoint = new Point((int) event.getX(), (int) event.getY());
 			
-			// TODO Review
+			mMovedPixels = endPoint.x - startPoint.x;
 			
-			if(endPoint != null){
-				mDistanceLastTouch = Math.hypot(endPoint.x - event.getX(), endPoint.y - event.getY());
-				if(mDistanceLastTouch >= MODULE_MOVED){
-					endPoint = new Point((int) event.getX(), (int) event.getY());
-
-					Point u = new Point(endPoint.x - startPoint.x, endPoint.y
-							- startPoint.y);
-					double startDistance = Math.hypot(u.x, u.y);
-					Log.d(TAG, "Touched distance from Start= " + startDistance + " units");
-
-					mDegrees = Geometry.getRotationAngle(startPoint, mCenter, endPoint);
-
-					setMovedPixels(startDistance);
-					setDegrees(mDegrees);
-					setPivotX(mCenter.x);
-					setPivotY(mCenter.y);
-					setRotation((float) mDegrees);
-					invalidate();
-				}
-			}
+			Log.d(TAG, "Distance moved on X = " + mMovedPixels);
+			
+			if(mMovedPixels >= MODULE_MOVED){
+				mDegrees = Geometry.getRotationAngle(startPoint, mCenter, endPoint);
+				Log.d(TAG, "Angle = " + mDegrees + "º");
 				
+				setRotation(mDegrees);
+			}
+			
+			invalidate();
 			break;
 		case MotionEvent.ACTION_CANCEL:
 		case MotionEvent.ACTION_UP:
-			performClick();
+			mTouched = false;
+			if(mMovedPixels < MODULE_MOVED)
+				performClick();
 			break;
 		}
 
@@ -134,6 +130,10 @@ public class Wheel extends View {
 
 	public void resetWheel() {
 		init();
+	}
+
+	public boolean isBeingTouched() {
+		return mTouched;
 	}
 
 }

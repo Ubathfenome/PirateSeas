@@ -42,7 +42,7 @@ import android.widget.Toast;
 
 public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	private static final String TAG = "CanvasView";
-	private static final float DEGREE_DECREMENT_RATIO = 1.15f;
+	private static final float DEGREE_DECREMENT_RATIO = 2.65f;
 	private static final double DEGREE_MIN_THRESHOLD = 0.2f;
 
 	private static final int HORIZON_Y_VALUE = 170;
@@ -109,6 +109,10 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	 * Launches the main thread
 	 */
 	public void launchMainLogic() {
+		if(nUpdateThread != null){
+			nUpdateThread.setRunning(false);
+			nUpdateThread.interrupt();
+		}
 		nUpdateThread = null;
 		nUpdateThread = new MainLogic(getHolder(), this);
 	}
@@ -150,7 +154,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 						.defaultHealthPoints(), Constants.BAR_HEALTH);
 		nPlayerXPBar = new StatBar(nContext, BAR_INITIAL_X_VALUE,
 				nScreenHeight - 25, nScreenWidth, nScreenHeight,
-				nPlayer.getExperience(), 100, Constants.BAR_EXPERIENCE);
+				(int) nPlayer.getNextLevelThreshold(), 0, Constants.BAR_EXPERIENCE);
 
 		nGameTimestamp = 0;
 		nLastIslandTimestamp = 0;
@@ -209,8 +213,6 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	@SuppressLint("ClickableViewAccessibility")
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		// int pointerCounter = event.getPointerCount(); // Number of pulsations
-
 		int x = (int) event.getX();
 		int y = (int) event.getY();
 
@@ -268,9 +270,12 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 							}
 						} else if (direction.equals(Constants.BACK)){
 							nCheatCounter++;
-							if(nCheatCounter == 20){
+							if(nCheatCounter < 20)
+								Log.v(TAG, nCheatCounter + " touches " + (20 - nCheatCounter) + " more to go!");
+							if(nCheatCounter == 20)
 								grantCheat2Player();
-							}
+							if(nCheatCounter > 20)
+								Log.v(TAG, "You already had your prize! Do not ask for more.");
 						}
 					} else {
 						try {
@@ -316,7 +321,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	/**
-	 * Updates the view mStatus
+	 * Updates the view depending on mStatus value
 	 */
 	public synchronized void updateLogic() {
 		checkLogicThread();
@@ -331,7 +336,8 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 			break;
 		case Constants.GAME_STATE_END:
 			nUpdateThread.setRunning(false);
-			((GameActivity) nContext).finish();
+			nUpdateThread.interrupt();
+			//((GameActivity) nContext).shutdownGame();
 			break;
 		}
 	}
@@ -365,11 +371,14 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 			nEnemyHBar.setCurrentValue(nEnemyShip.getHealth());
 		nPlayerHBar.setCurrentValue(nPlayerShip.getHealth());
 		nPlayerXPBar.setCurrentValue(nPlayer.getExperience());
+		nPlayerXPBar.setMaxValue(nPlayer.getNextLevelThreshold());
 		
 		// Manage UIDisplayElements
 		((GameActivity) nContext).mGold.setElementValue(nPlayer.getGold());
+		((GameActivity) nContext).mGold.postInvalidate();
 		((GameActivity) nContext).mAmmo.setElementValue(nPlayerShip
 				.getAmmunition());
+		((GameActivity) nContext).mAmmo.postInvalidate();
 	}
 
 	private void manageEvents() {
@@ -463,14 +472,16 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	private void managePlayer() {
 		if(nPlayerShip.isAlive()){
 			double arcPixels = ((GameActivity) nContext).ctrlWheel.getMovedPixels();
-			double degrees = ((GameActivity) nContext).ctrlWheel.getDegrees();
+			float degrees = ((GameActivity) nContext).ctrlWheel.getDegrees();
 			double sceneMoveValue = Math.tan(degrees) + arcPixels;
 	
-			if (degrees >= DEGREE_MIN_THRESHOLD) {
-				degrees /= DEGREE_DECREMENT_RATIO;
-				((GameActivity) nContext).ctrlWheel.setDegrees(degrees);
-			} else {
-				((GameActivity) nContext).ctrlWheel.resetWheel();
+			if(!((GameActivity) nContext).ctrlWheel.isBeingTouched()){
+				if (degrees >= DEGREE_MIN_THRESHOLD) {
+					degrees /= DEGREE_DECREMENT_RATIO;
+					((GameActivity) nContext).ctrlWheel.setDegrees(degrees);
+				} else {
+					((GameActivity) nContext).ctrlWheel.resetWheel();
+				}
 			}
 			
 			/*
@@ -478,15 +489,15 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 				Log.d(TAG, "Moving scene " + sceneMoveValue + " pixels");
 			*/
 	
-			nSky.move(sceneMoveValue);
-			nCompass.move(sceneMoveValue);
-			nSea.move(sceneMoveValue);
+			nSky.move(-arcPixels, 0);
+			nCompass.move(-arcPixels, 0);
+			nSea.move(-arcPixels, 0);
 	
 			if (nEnemyShip != null)
-				nEnemyShip.move(sceneMoveValue);
+				nEnemyShip.move(-arcPixels, 0);
 	
 			if (nIsland != null) {
-				nIsland.move(sceneMoveValue);
+				nIsland.move(-arcPixels, 0);
 				if (nPlayerShip.arriveIsland(nIsland)){
 					try {
 						saveGame();
@@ -509,25 +520,25 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
 			int height) {
-		String logTag = TAG + ": surfaceChanged";
-		Log.d(logTag, "Ajuste de medidas: [" + width + ", " + height + "]");
-
 		nScreenWidth = width;
 		nScreenHeight = height;
 	}
 
 	public void surfaceCreated(SurfaceHolder holder) {
-		String logTag = TAG + ": surfaceCreated";
-		Log.d(logTag, "Superficie creada");
-
-		nUpdateThread.setRunning(true);
-		nUpdateThread.start();
+		Log.d(TAG, "Superficie creada");
+		
+		if(!nUpdateThread.isAlive()){
+			launchMainLogic();
+			
+			nUpdateThread.setRunning(true);
+			nUpdateThread.start();
+		} else {
+			nUpdateThread.setRunning(true);
+		}
+		
 	}
 
 	public void surfaceDestroyed(SurfaceHolder holder) {
-		String logTag = TAG + ": surfaceDestroyed";
-		Log.d(logTag, "Superficie destruida");
-
 		boolean tryAgain = true;
 		while (tryAgain) {
 			try {

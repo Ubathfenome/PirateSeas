@@ -50,7 +50,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 
 	private CanvasView mCanvasView;
 
-	private static final int SECONDS = 30;
+	private static final int SECONDS = 15;
 
 	protected int[] sensorTypes = null;
 	protected long sensorLastTimestamp;
@@ -149,23 +149,17 @@ public class GameActivity extends Activity implements SensorEventListener {
 	}
 
 	@Override
-	protected void onPause() {
-		
-		Log.v(TAG, "Called onPause");
-		
+	protected void onPause() {	
 		mSensorManager.unregisterListener(this);
 		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-		
-		mCanvasView.setStatus(Constants.GAME_STATE_PAUSE);
+		if(mCanvasView != null)
+			mCanvasView.setStatus(Constants.GAME_STATE_PAUSE);
 
 		super.onPause();
 	}
 
 	@Override
-	protected void onResume() {
-		
-		Log.v(TAG, "Called onResume");
-		
+	protected void onResume() {		
 		findViewById(R.id.rootLayoutGame).setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		
@@ -185,19 +179,6 @@ public class GameActivity extends Activity implements SensorEventListener {
 		}
 
 		super.onResume();
-	}
-
-	@Override
-	protected void onDestroy() {
-		Log.v(TAG, "Called onDestroy");
-		mCanvasView.setStatus(Constants.GAME_STATE_END);
-		super.onDestroy();
-	}
-
-	@Override
-	protected void onStop() {
-		Log.v(TAG, "Called onStop");
-		super.onStop();
 	}
 
 	@Override
@@ -350,14 +331,23 @@ public class GameActivity extends Activity implements SensorEventListener {
 	public void gameOver(Player nPlayer) {
 		Intent gameOverIntent = new Intent(this, GameOverActivity.class);
 		// Parcelable Extra with Player object content
-		gameOverIntent.putExtra(Constants.TAG_GAME_OVER, nPlayer);
+		gameOverIntent.putExtra(Constants.TAG_GAME_OVER, Player.clonePlayer(nPlayer));
 		this.startActivity(gameOverIntent);
+		shutdownGame();
 	}
 
 	public void shop(Island nIsland) {
 		Intent shopIntent = new Intent(this, ShopActivity.class);
 		shopIntent.putExtra(Constants.ITEMLIST_NATURE, nIsland.hasShop() ? Constants.NATURE_SHOP : Constants.NATURE_TREASURE);
 		this.startActivityForResult(shopIntent, Constants.REQUEST_SHOP);
+	}
+
+	/**
+	 * Free resources
+	 */
+	public void shutdownGame() {
+		mCanvasView = null;
+		finish();
 	}
 	
 	

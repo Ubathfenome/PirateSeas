@@ -51,7 +51,7 @@ public class Player implements Parcelable {
 			this.hasCompleteMap = false;
 		}
 	}
-
+	
 	public Player(int level, int gold, int xp, long ts, int days, int mapPieces,
 			boolean map) {
 		this.level = level;
@@ -69,6 +69,12 @@ public class Player implements Parcelable {
 		this.passedDays = source.readInt();
 		this.mapPieces = source.readInt();
 		this.hasCompleteMap = source.readInt() == 1 ? true : false;
+	}
+	
+	public static Player clonePlayer(Player origin) {
+		return new Player(origin.getLevel(), origin.getGold(),
+				origin.getExperience(), 0, origin.getPassedDays(),
+				origin.getMapPieces(), origin.hasCompleteMap());
 	}
 
 	/**
@@ -111,6 +117,10 @@ public class Player implements Parcelable {
 	 */
 	public int getExperience() {
 		return experience;
+	}
+	
+	public int getNextLevelThreshold(){
+		return LOG_BASES[level + 1];
 	}
 
 	/**

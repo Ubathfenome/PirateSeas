@@ -32,22 +32,27 @@ public class StatBar extends BasicModel {
 
 	@Override
 	public void drawOnScreen(Canvas canvas){
+		int startXPoint = (int) x;
+		int yValue = (int) y;
+		int endXPoint = startXPoint + BAR_LENGHT;
+		int separation = 2;
+		
 		Paint mPaintLine = new Paint();
 		
-		// TODO Check values
+		canvas.save();
 		
 		// Bar background
 		mPaintLine.setColor(Color.BLACK);
 		mPaintLine.setStrokeWidth(15);
-		canvas.drawLine((int)x, (int) y - 10, BAR_LENGHT, (int) y - 10, mPaintLine);
+		canvas.drawLine(startXPoint, yValue, endXPoint, yValue, mPaintLine);
 		
 		// Bar max value
 		if(mType == Constants.BAR_HEALTH)
 			mPaintLine.setColor(Color.RED);
 		else if (mType == Constants.BAR_EXPERIENCE)
-			mPaintLine.setColor(0x0f00ff00);
+			mPaintLine.setColor(Color.YELLOW);
 		mPaintLine.setStrokeWidth(10);
-		canvas.drawLine((int) x + 5, (int) y - 10, BAR_LENGHT - 2, (int) y - 10, mPaintLine);
+		canvas.drawLine(startXPoint + separation, yValue, endXPoint - separation, yValue, mPaintLine);
 		
 		// Bar current value
 		if(mType == Constants.BAR_HEALTH)
@@ -55,7 +60,13 @@ public class StatBar extends BasicModel {
 		else if (mType == Constants.BAR_EXPERIENCE)
 			mPaintLine.setColor(Color.GREEN);
 		mPaintLine.setStrokeWidth(10);
-		canvas.drawLine((int) x + 5, (int) y - 10, (int) ((x + 5) + (( BAR_LENGHT - 2) / (maxValue + 1)) * currentValue + 1), (int) y - 10, mPaintLine);
+		
+		double unitBar = BAR_LENGHT / 100.0f;
+		double completionPercentage = (currentValue * 100.0f) / maxValue;
+		double value = (startXPoint + (unitBar * completionPercentage)) - separation;
+		canvas.drawLine(startXPoint + separation, yValue, (float) value, yValue, mPaintLine);
+		
+		canvas.restore();
 	}
 
 	public int getCurrentValue() {
@@ -78,6 +89,10 @@ public class StatBar extends BasicModel {
 	public String toString() {
 		return "StatBar [name=" + this.getClass().getName() + ", mType=" + mType + ", maxValue=" + maxValue
 				+ ", currentValue=" + currentValue + "]";
+	}
+
+	public void setMaxValue(int nextLevelThreshold) {
+		this.maxValue = nextLevelThreshold;		
 	}
 	
 }

@@ -33,6 +33,8 @@ public class GameOverActivity extends Activity {
 		txtScore = (TextView) findViewById(R.id.txtScore);
 		
 		int score = p.getLevel() * p.getExperience() + p.getGold() * p.getPassedDays();
+		if(score == 0)
+			score = p.getExperience() + p.getGold();
 		
 		txtDays.setText("" + p.getPassedDays());
 		txtScore.setText("" + score);

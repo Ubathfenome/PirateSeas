@@ -54,7 +54,7 @@ public class SensorActivity extends Activity{
 		
 		// Set animation layout while loading
 		setContentView(R.layout.activity_sensors);
-		
+				
 		iv = (ImageView) findViewById(R.id.img_load_animation);
 		iv.setBackgroundResource(R.drawable.xml_loading_animation);
 		loadAnimation = (AnimationDrawable) iv.getBackground();
@@ -145,6 +145,7 @@ public class SensorActivity extends Activity{
 			setResult(RESULT_OK, sensorListIntent);
 		else
 			setResult(RESULT_CANCELED, sensorListIntent);
+		
 		finish();
 	}
 	

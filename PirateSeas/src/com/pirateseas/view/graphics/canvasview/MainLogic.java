@@ -88,8 +88,11 @@ public class MainLogic extends Thread {
 					}
 				}
 			} catch (Exception ex) {
-				Log.e(TAG, "" + ex.getMessage());
-				//running = false;
+				if(canvas == null){
+					setRunning(false);
+					Log.e(TAG, "Stopping logic thread");
+				} else 
+					Log.e(TAG, "" + ex.getMessage());
 			} finally {
 				if (canvas != null) {
 					surface.unlockCanvasAndPost(canvas);

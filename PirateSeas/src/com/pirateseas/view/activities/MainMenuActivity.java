@@ -17,7 +17,6 @@ import com.pirateseas.R;
 import com.pirateseas.controller.audio.MusicManager;
 import com.pirateseas.global.Constants;
 
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -26,7 +25,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 
 public class MainMenuActivity extends Activity {
-	private static final String TAG = "MainMenuActivity";
 	
 	private boolean newGame = false;
 	private boolean mOverwriteWarning = false;
@@ -84,10 +82,7 @@ public class MainMenuActivity extends Activity {
 					overwriteDialog.show(getFragmentManager(), "OverwriteGameDialog");
 				} else {
 					newGame = true;
-					Intent checkSensorListIntent = new Intent(context,
-							SensorActivity.class);
-					startActivityForResult(checkSensorListIntent,
-							Constants.REQUEST_SENSOR_LIST);
+					launchSensorActivity();
 				}
 			}
 		});
@@ -96,10 +91,7 @@ public class MainMenuActivity extends Activity {
 		btnLoadGame.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				newGame = false;
-				Intent checkSensorListIntent = new Intent(context,
-						SensorActivity.class);
-				startActivityForResult(checkSensorListIntent,
-						Constants.REQUEST_SENSOR_LIST);
+				launchSensorActivity();
 			}
 		});
 
@@ -149,17 +141,10 @@ public class MainMenuActivity extends Activity {
 			startActivity(tutorialIntent);
 		}
 	}
-
-	@Override
-	protected void onDestroy() {
-		Log.v(TAG, "Called onDestroy");
-		super.onDestroy();
-	}
-
-	@Override
-	protected void onStop() {
-		Log.v(TAG, "Called onStop");
-		super.onStop();
+	
+	private void launchSensorActivity(){
+		Intent checkSensorListIntent = new Intent(context, SensorActivity.class);
+		startActivityForResult(checkSensorListIntent, Constants.REQUEST_SENSOR_LIST);
 	}
 
 	@Override
@@ -191,14 +176,14 @@ public class MainMenuActivity extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
-		case Constants.REQUEST_SENSOR_LIST:
-			if (resultCode == RESULT_OK) {
-				int[] sensorTypes = data
-						.getIntArrayExtra(Constants.TAG_SENSOR_LIST);
-
-				launchGame(newGame, sensorTypes);
-			}
-			break;
+			case Constants.REQUEST_SENSOR_LIST:
+				if (resultCode == RESULT_OK) {
+					int[] sensorTypes = data
+							.getIntArrayExtra(Constants.TAG_SENSOR_LIST);
+	
+					launchGame(newGame, sensorTypes);
+				}
+				break;
 		}
 	}
 	
@@ -215,11 +200,12 @@ public class MainMenuActivity extends Activity {
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
 										int id) {
-									newGame = true;
-									Intent checkSensorListIntent = new Intent(context,
-											SensorActivity.class);
-									startActivityForResult(checkSensorListIntent,
-											Constants.REQUEST_SENSOR_LIST);
+									SharedPreferences.Editor editor = mPreferences.edit();
+									editor.clear();
+									editor.putBoolean(Constants.TAG_EXE_MODE, isInDebugMode());
+									editor.commit();
+									
+									launchSensorActivity();
 								}
 							})
 					.setNegativeButton(R.string.exit_dialog_negative,
