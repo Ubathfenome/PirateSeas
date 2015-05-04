@@ -23,6 +23,7 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 public class MainMenuActivity extends Activity {
 	
@@ -180,7 +181,19 @@ public class MainMenuActivity extends Activity {
 				if (resultCode == RESULT_OK) {
 					int[] sensorTypes = data
 							.getIntArrayExtra(Constants.TAG_SENSOR_LIST);
+					
+					boolean empty = true;
+					for(int i = 0, length = sensorTypes.length; i < length; i++){
+						if(sensorTypes[i] != 0)
+							empty = false;
+					}
 	
+				if (empty)
+					Toast.makeText(
+							context,
+							"No needed sensors detected. No related events will be triggered.",
+							Toast.LENGTH_LONG).show();
+
 					launchGame(newGame, sensorTypes);
 				}
 				break;

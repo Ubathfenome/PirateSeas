@@ -141,10 +141,7 @@ public class SensorActivity extends Activity{
 		editor.putString(Constants.PREF_SENSOR_LIST, putPreferenceSensorList());
 		editor.commit();
 		
-		if(result)
-			setResult(RESULT_OK, sensorListIntent);
-		else
-			setResult(RESULT_CANCELED, sensorListIntent);
+		setResult(RESULT_OK, sensorListIntent);
 		
 		finish();
 	}

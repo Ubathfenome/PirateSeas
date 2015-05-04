@@ -16,7 +16,6 @@ public class Wheel extends View {
 	
 	private static final int MODULE_MOVED = 8;
 	
-	private double mDistanceLastTouch;
 	boolean mTouched;
 	
 	private Point startPoint, endPoint;
