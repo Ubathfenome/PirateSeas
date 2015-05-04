@@ -41,7 +41,7 @@
     <string name="lbl_volume">Volume</string>
     
     <!-- Shop strings -->
-    <string name="shop_purchase_tip">\n
+    <string name="shop_purchase_hint">\n
         (Select any item to display its description)\n
         (Long press any item to purchase it)</string>
     
@@ -61,18 +61,18 @@
     <string name="overwrite_dialog_positive">Confirm</string>
 
     <!-- Exit Game Dialog -->
-    <string name="exit_dialog_title">Exit</string>
+    <string name="exit_dialog_title">Exit Saved Game</string>
     <string name="exit_dialog_message">Any unsaved progress will be lost!</string>
     <string name="exit_dialog_positive">Exit</string>
     <string name="exit_dialog_negative">Cancel</string>
 
     <!-- Exit Tutorial Dialog -->
-    <string name="exit_tutorial_dialog_title">Exit Tutorial Confirmation Dialog</string>
+    <string name="exit_tutorial_dialog_title">Exit Tutorial</string>
     <string name="exit_tutorial_dialog_message">The game will begin!</string>
     <string name="exit_tutorial_dialog_positive">Proceed</string>
     
     <!-- Exit Shop Dialog -->
-    <string name="exit_shop_dialog_title">Exit Shop Confirmation Dialog</string>
+    <string name="exit_shop_dialog_title">Exit Shop</string>
     <string name="exit_shop_dialog_message">The game will resume!</string>
     <string name="exit_shop_dialog_positive">Proceed</string>
 
@@ -114,5 +114,11 @@
         tristique auctor. Duis sit amet varius odio. Vestibulum eu dui justo. Phasellus tellus tortor, 
         molestie sollicitudin porta ac, maximus vitae orci. Nulla nibh massa, convallis egestas orci 
         quis, efficitur ultricies erat.</string>
+        
+    <!-- Game strings -->
+    <string name="gameover_title">Game Over</string>
+    <string name="gameover_hint">(Press anywhere to restart game&#8230;)</string>
+    <string name="gameover_score">Score</string>
+    <string name="gameover_days">Days passed</string>
 
 </resources>

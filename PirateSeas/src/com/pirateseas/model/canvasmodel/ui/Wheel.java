@@ -1,11 +1,13 @@
 package com.pirateseas.model.canvasmodel.ui;
 
+import com.pirateseas.R;
 import com.pirateseas.utils.approach2d.Geometry;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -83,8 +85,7 @@ public class Wheel extends View {
 
 	@Override
 	public boolean performClick() {
-		//init();
-		//setRotation(mDegrees);
+		resetWheel();
 		return super.performClick();
 	}
 
@@ -100,15 +101,15 @@ public class Wheel extends View {
 			
 			mMovedPixels = endPoint.x - startPoint.x;
 			
-			Log.d(TAG, "Distance moved on X = " + mMovedPixels);
-			
-			if(mMovedPixels >= MODULE_MOVED){
+			// Log.d(TAG, "Distance moved on X = " + mMovedPixels);
+			if (Math.abs(mMovedPixels) >= MODULE_MOVED){
 				mDegrees = Geometry.getRotationAngle(startPoint, mCenter, endPoint);
 				Log.d(TAG, "Angle = " + mDegrees + "º");
 				
+				setPivotX(mCenter.x);
+				setPivotY(mCenter.y);
 				setRotation(mDegrees);
 			}
-			
 			invalidate();
 			break;
 		case MotionEvent.ACTION_CANCEL:
@@ -127,8 +128,17 @@ public class Wheel extends View {
 		return "Wheel [mDegrees=" + mDegrees + ", mCenter=" + mCenter + "]";
 	}
 
+	@SuppressLint("NewApi")
+	@SuppressWarnings("deprecation")
 	public void resetWheel() {
-		init();
+		mDegrees = 0f;
+		mMovedPixels = 0;
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+			setImage(this.getResources().getDrawable(R.drawable.ico_wheel, null));
+		} else {
+			setImage(this.getResources().getDrawable(R.drawable.ico_wheel));
+		}
+		mTouched = false;
 	}
 
 	public boolean isBeingTouched() {

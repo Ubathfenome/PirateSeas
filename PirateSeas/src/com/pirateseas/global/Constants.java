@@ -42,7 +42,7 @@ public class Constants{
 	public static final int BAR_EXPERIENCE = 1;
 	
 	// Global variables
-	public static final int[] ENTITY_SPEED = {0, 2, 5, 10};
+	public static final int[] ENTITY_SPEED = {0, 1, 2, 5};
 	
 	public static final int GAME_FPS = 30;
 	public static final int GAME_STATE_NORMAL = 0;
@@ -66,6 +66,7 @@ public class Constants{
 	public static final String PREF_DEVICE_VOLUME = "deviceVolumePref";
 	public static final String PREF_DEVICE_HEIGHT_RES = "deviceHeightPref";
 	public static final String PREF_DEVICE_WIDTH_RES = "deviceWidthPref";
+	public static final String PREF_DEVICE_NOSENSORS = "deviceNoSensorsPref";
 	
 	public static final String FONT_NAME = "TooneyNoodleNF";
 	
@@ -76,6 +77,7 @@ public class Constants{
 	
 	public static final String ITEMLIST_NATURE = "Nature";
 	public static final String NATURE_SHOP = "Shop";
-	public static final String NATURE_TREASURE = "Treasure";	
+	public static final String NATURE_TREASURE = "Treasure";
+		
 		
 }

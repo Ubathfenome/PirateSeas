@@ -33,6 +33,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Point;
+import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -44,6 +45,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	private static final String TAG = "CanvasView";
 	private static final float DEGREE_DECREMENT_RATIO = 2.65f;
 	private static final double DEGREE_MIN_THRESHOLD = 0.2f;
+	private static final float FORWARD_BASE_VALUE = 1.05f;
 
 	private static final int HORIZON_Y_VALUE = 170;
 	private static final int BAR_INITIAL_X_VALUE = 150;
@@ -337,7 +339,6 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 		case Constants.GAME_STATE_END:
 			nUpdateThread.setRunning(false);
 			nUpdateThread.interrupt();
-			//((GameActivity) nContext).shutdownGame();
 			break;
 		}
 	}
@@ -415,26 +416,57 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	private void manageShots() {
+		long lastCheckedTimestamp = SystemClock.elapsedRealtime();
 		int size = nShotList.size();
 		if(size > 0){
 			boolean[] deadShots = new boolean[size];
 			for (int i = 0; i < size; i++) {
 				deadShots[i] = false;
 				Shot s = nShotList.get(i);
-				if (nEnemyShip != null) {
-					if (s.intersectionWithEntity(nEnemyShip)) {
-						nEnemyShip.looseHealth(s.getDamage());
-						s.looseHealth(s.getDamage());
-						
-						// Mark shot to destroy object
-						deadShots[i] = true;
+				if(s.isAlive()){
+					switch(s.getShotStatus()){
+						case Constants.SHOT_FIRED:
+							if (nGameTimestamp - s.getTimestamp() >= 500){
+								s.setShotStatus(Constants.SHOT_FLYING);
+							}
+							break;
+						case Constants.SHOT_FLYING:
+							if (lastCheckedTimestamp - nGameTimestamp >= 500){
+								if (nEnemyShip != null) {
+									if (s.intersectionWithEntity(nEnemyShip)) {
+										nEnemyShip.looseHealth(s.getDamage());
+										s.setShotStatus(Constants.SHOT_HIT);
+										s.looseHealth(s.getDamage());
+										
+										// Mark shot to destroy object
+										deadShots[i] = true;
+									}
+								}
+								if (s.intersectionWithEntity(nPlayerShip)) {
+									if(nPlayerShip.getHealth() >= s.getDamage())
+										nPlayerShip.looseHealth(s.getDamage());
+									s.looseHealth(s.getDamage());
+									s.setShotStatus(Constants.SHOT_HIT);
+									deadShots[i] = true;
+								}
+								
+								s.moveEntity();
+								
+								if (s.getCoordinates() == s.getEndPoint())
+									s.setShotStatus(Constants.SHOT_MISSED);
+							}
+							break;
+						case Constants.SHOT_HIT:
+							// TODO Play hit sound
+							break;
+						case Constants.SHOT_MISSED:
+							// TODO Play missed sound
+							s.looseHealth(s.getDamage());
+							deadShots[i] = true;
+							break;
 					}
-				}
-				if (s.intersectionWithEntity(nPlayerShip)) {
-					if(nPlayerShip.getHealth() >= s.getDamage())
-						nPlayerShip.looseHealth(s.getDamage());
-					s.looseHealth(s.getDamage());
-					deadShots[i] = true;
+				
+					
 				}
 			}
 			
@@ -473,31 +505,32 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 		if(nPlayerShip.isAlive()){
 			double arcPixels = ((GameActivity) nContext).ctrlWheel.getMovedPixels();
 			float degrees = ((GameActivity) nContext).ctrlWheel.getDegrees();
-			//double sceneMoveValue = Math.tan(degrees) + arcPixels;
 	
 			if(!((GameActivity) nContext).ctrlWheel.isBeingTouched()){
 				if (degrees >= DEGREE_MIN_THRESHOLD) {
 					degrees /= DEGREE_DECREMENT_RATIO;
 					((GameActivity) nContext).ctrlWheel.setDegrees(degrees);
 				} else {
-					((GameActivity) nContext).ctrlWheel.resetWheel();
+					((GameActivity) nContext).resetUiWheel();
 				}
 			}
 			
-			/*
-			if(sceneMoveValue != 0)
-				Log.d(TAG, "Moving scene " + sceneMoveValue + " pixels");
-			*/
+			// TODO Check Sky and Sea move algorythms 
+			// int verticalSpeed = (int) (FORWARD_BASE_VALUE * ((GameActivity) nContext).ctrlThrottle.getLevelSpeed());
+			int verticalSpeed = 0;
 	
-			nSky.move(-arcPixels, 0);
+			nSky.move(-arcPixels, -verticalSpeed);
 			nCompass.move(-arcPixels, 0);
-			nSea.move(-arcPixels, 0);
+			nSea.move(-arcPixels, verticalSpeed);
+			
+			nPlayerShip.setEntityDirection((int) nCompass.getValue());
+			// nPlayerShip.setCoordinates(new Point());
 	
 			if (nEnemyShip != null)
-				nEnemyShip.move(-arcPixels, 0);
+				nEnemyShip.move(-arcPixels, verticalSpeed);
 	
 			if (nIsland != null) {
-				nIsland.move(-arcPixels, 0);
+				nIsland.move(-arcPixels, verticalSpeed);
 				if (nPlayerShip.arriveIsland(nIsland)){
 					try {
 						saveGame();

@@ -350,6 +350,8 @@ public class GameActivity extends Activity implements SensorEventListener {
 		finish();
 	}
 	
-	
+	public void resetUiWheel(){
+		ctrlWheel.resetWheel();
+	}
 
 }

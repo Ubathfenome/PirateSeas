@@ -8,17 +8,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-public class PauseActivity extends Activity {
-	
-	private static final String TAG = "PauseActivity";
-	
+public class PauseActivity extends Activity {	
 	private Context context;
 	
 	private TextView txtTitleLabel;
@@ -61,35 +57,6 @@ public class PauseActivity extends Activity {
 			}
 		});
 		
-	}
-
-
-	@Override
-	protected void onRestart() {
-		Log.d(TAG, "Called onRestart");
-		super.onRestart();
-	}
-
-
-	@Override
-	protected void onResume() {
-		Log.d(TAG, "Called onResume");
-		super.onResume();
-	}
-
-
-	@Override
-	protected void onDestroy() {
-		Log.d(TAG, "Called onDestroy");
-		super.onDestroy();
-	}
-
-
-	@Override
-	protected void onStop() {
-		Log.d(TAG, "Called onStop");
-		super.onStop();
-	}
-	
+	}	
 	
 }

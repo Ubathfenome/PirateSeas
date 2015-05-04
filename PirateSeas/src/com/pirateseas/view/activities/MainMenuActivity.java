@@ -187,8 +187,12 @@ public class MainMenuActivity extends Activity {
 						if(sensorTypes[i] != 0)
 							emptyList = false;
 					}
-					if(!emptyList)
+					if(emptyList){
 						Toast.makeText(context, "No sensors have been detected. No events will be triggered.", Toast.LENGTH_LONG).show();
+						SharedPreferences.Editor editor = mPreferences.edit();
+						editor.putBoolean(Constants.PREF_DEVICE_NOSENSORS, true);
+						editor.commit();
+					}
 	
 					launchGame(newGame, sensorTypes);
 				}
@@ -209,12 +213,19 @@ public class MainMenuActivity extends Activity {
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
 										int id) {
+									boolean noSensors = mPreferences.getBoolean(Constants.PREF_DEVICE_NOSENSORS, false);
+									
 									SharedPreferences.Editor editor = mPreferences.edit();
 									editor.clear();
 									editor.putBoolean(Constants.TAG_EXE_MODE, isInDebugMode());
 									editor.commit();
 									
-									launchSensorActivity();
+									if(!noSensors)
+										launchSensorActivity();
+									else{
+										int[] emptySensorList = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+										launchGame(!mOverwriteWarning, emptySensorList);
+									}
 								}
 							})
 					.setNegativeButton(R.string.exit_dialog_negative,

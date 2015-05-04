@@ -24,15 +24,16 @@ public class Shot extends Entity{
 	private Point endPoint;
 	
 	private float pathLength;
+	private long mTimestamp;
 	
 	private int mDamage;
 	
-	private int mStatus;
+	private int mShotStatus;
 	
 	protected Paint mBrush = null;
 	protected Board board = null;
 	
-	public Shot(Context context, double x, double y, double mCanvasWidth, double mCanvasHeight, Point destiny){
+	public Shot(Context context, double x, double y, double mCanvasWidth, double mCanvasHeight, Point destiny, long timestampLastShot){
 		super(context, x, y, mCanvasWidth, mCanvasHeight, new Point((int)x, (int)y), 1, 1, 1);
 		
 		mContext = context;
@@ -43,6 +44,7 @@ public class Shot extends Entity{
 		setPathLength(getLength(startPoint, endPoint));
 		
 		mDamage = 10;
+		setTimestamp(timestampLastShot);
 		
 		board = new Board(context);
 		board.requestFocus();
@@ -54,6 +56,8 @@ public class Shot extends Entity{
 		mHealthPoints = 1;
 		if(mHealthPoints > 0)
 			setStatus(Constants.STATE_ALIVE);
+		
+		mShotStatus = Constants.SHOT_FIRED;
 	}
 	
 	private float getLength(Point origin, Point destiny){
@@ -167,7 +171,6 @@ public class Shot extends Entity{
 			}
 			invalidate();
 		}
-
 	}
 	
 	@SuppressLint("NewApi")
@@ -175,7 +178,7 @@ public class Shot extends Entity{
 	@Override
 	public void drawOnScreen(Canvas canvas) {
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-			switch(mStatus){
+			switch(mShotStatus){
 			case Constants.SHOT_FIRED:
 				setImage(mContext.getResources().getDrawable(R.drawable.txtr_shot_smoke, null));
 				board.pathStart(startPoint.x, startPoint.y);
@@ -194,7 +197,7 @@ public class Shot extends Entity{
 				break;
 		}
 		} else {
-			switch(mStatus){
+			switch(mShotStatus){
 				case Constants.SHOT_FIRED:
 					setImage(mContext.getResources().getDrawable(R.drawable.txtr_shot_smoke));
 					board.pathStart(startPoint.x, startPoint.y);
@@ -217,15 +220,33 @@ public class Shot extends Entity{
 		// el trazo actual
 		canvas.drawPath(board.mPath, mBrush);
 	}
+	
+	public void setShotStatus(int shotStatus) {
+		mShotStatus = shotStatus;		
+	}
+
+	public int getShotStatus() {
+		return mShotStatus;
+	}
+
+	public long getTimestamp() {
+		return mTimestamp;
+	}
+
+	public void setTimestamp(long mTimestamp) {
+		this.mTimestamp = mTimestamp;
+	}
+	
+	public Point getEndPoint() {
+		return endPoint;
+	}
 
 	@Override
 	public String toString() {
 		return "Shot [startPoint=" + startPoint + ", endPoint=" + endPoint
 				+ ", pathLength=" + pathLength + ", mDamage=" + mDamage
-				+ ", mStatus=" + mStatus +  ", entityDirection=" + entityDirection
+				+ ", mStatus=" + mShotStatus +  ", entityDirection=" + entityDirection
 				+ ", entityCoordinates=" + entityCoordinates + "]";
 	}
-	
-	
 	
 }

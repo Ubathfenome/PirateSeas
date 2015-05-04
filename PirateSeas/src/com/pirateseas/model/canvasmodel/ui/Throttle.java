@@ -125,6 +125,14 @@ public class Throttle extends View {
 			return deltaY > 0 ? Constants.BACK : Constants.FRONT;
 		}
 	}
+	
+	public int getLevel(){
+		return mLevel;
+	}
+	
+	public int getLevelSpeed(){
+		return Y_COORDS[mLevel];
+	}
 
 	@Override
 	public String toString() {

@@ -5,18 +5,22 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+
 import com.pirateseas.R;
 import com.pirateseas.model.canvasmodel.game.BasicModel;
 
-public class Compass extends BasicModel {
-	
+public class Compass extends BasicModel {	
 	private Drawable mImageAux;
+	
+	private float mValue;
 	
 	@SuppressLint("NewApi")
 	@SuppressWarnings("deprecation")
 	public Compass (Context context, double x, double y, double mCanvasWidth,
             double mCanvasHeight){
 		super(context, x, y, mCanvasWidth, mCanvasHeight, null);
+		
+		mValue = 0.0f;
 		
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
 			setImage(context.getResources().getDrawable(R.drawable.txtr_compass, null));
@@ -27,6 +31,34 @@ public class Compass extends BasicModel {
 		}
 	}
 	
+	/**
+	 * @return the mValue
+	 */
+	public float getValue() {
+		return mValue;
+	}
+
+	/**
+	 * @param mValue the mValue to set
+	 */
+	public void setValue(float value) {
+		this.mValue = value;
+	}
+	
+	@Override
+	public void move(double xLength, double yLength) {
+		super.move(xLength, yLength);
+		
+		double ratio = 360 / mCanvasWidth;
+		double roundedXPos = Math.round(x * ratio);
+		int preValue = (int) (roundedXPos - 180);
+		
+		if (x < (int) (Math.round(mCanvasWidth / 2)))
+			mValue =  0 + preValue;
+		else
+			mValue =  360 - preValue;
+	}
+
 	@Override
 	public void drawOnScreen(Canvas canvas){
 		yUp = (int) y;

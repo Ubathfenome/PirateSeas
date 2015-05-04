@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!-- Application theme. -->
-    
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Application Theme -->
     <style name="FullscreenTheme" parent="android:Theme.NoTitleBar">
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowBackground">@null</item>
@@ -10,7 +9,7 @@
         <item name="defaultValue">@style/DefaultValue</item>
     </style>
 	
-	<!-- parent="android:Theme.Dialog" -->
+	<!-- Dialog Theme -->
 	<style name="NoTitleDialog" parent="android:style/Theme.Dialog">
 		<item name="android:windowNoTitle">true</item>
 	</style>
@@ -24,7 +23,6 @@
     </style>
 
     <style name="ButtonBarButton" />
-
     <style name="DefaultValue" />
     
 </resources>

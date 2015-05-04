@@ -23,7 +23,7 @@
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
         android:layout_marginBottom="4dp"
-        android:text="@string/shop_purchase_tip"
+        android:text="@string/shop_purchase_hint"
         android:background="@drawable/xml_round_edges"/>
 
     <LinearLayout

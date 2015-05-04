@@ -113,7 +113,7 @@ public class ShopActivity extends ListActivity{
 		});
 		
 		txtDescription = (TextView) findViewById(R.id.txtItemDescription);
-		descriptionTip = this.getResources().getString(R.string.shop_purchase_tip);
+		descriptionTip = this.getResources().getString(R.string.shop_purchase_hint);
 		txtAvailableGold = (UIDisplayElement) findViewById(R.id.playerGold);
 		txtAvailableGold.setElementValue(dummyPlayer.getGold());
 		

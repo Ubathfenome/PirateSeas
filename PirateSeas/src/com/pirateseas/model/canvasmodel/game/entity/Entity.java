@@ -58,6 +58,50 @@ public class Entity extends BasicModel{
 		return (entityCoordinates.x - entityWidth / 2) <= (other.entityCoordinates.x + other.entityWidth / 2) ? true : false;
 	}
 	
+	public void moveEntity(){
+		Point copy = new Point(entityCoordinates.x, entityCoordinates.y);
+		// Avanza Plano x
+		if(Math.abs(Math.cos(entityDirection))>=Math.abs(Math.sin(entityDirection)))
+			if(entityDirection < 90 && entityDirection >= 0 || entityDirection > 270 && entityDirection <= 360)
+				// Derecha
+				copy = movePoint("Positive", "X", copy);
+			else
+				// Izquierda
+				copy = movePoint("Negative", "X", copy);
+		
+		// Avanza Plano y
+		if(Math.abs(Math.cos(entityDirection))<=Math.abs(Math.sin(entityDirection)))
+			if(entityDirection < 180 && entityDirection >= 0)
+				// Alante
+				copy = movePoint("Positive", "Y", copy);
+			else if(entityDirection >= 180 && entityDirection < 360)
+				// Atras
+				copy = movePoint("Negative", "Y", copy);
+		
+		entityCoordinates = new Point(copy.x, copy.y);
+	}
+	
+	private Point movePoint(String relation, String plane, Point point) {
+		switch(relation){
+			case "Positive":
+				if(plane.equalsIgnoreCase("X")){
+					point.x += 1;
+				} else if (plane.equalsIgnoreCase("Y")){
+					point.y += 1;
+				}
+				break;
+			case "Negative":
+				if(plane.equalsIgnoreCase("X")){
+					point.x -= 1;
+				} else if (plane.equalsIgnoreCase("Y")){
+					point.y -= 1;
+				}
+				break;
+		}
+		
+		return new Point(point.x, point.y);
+	}
+
 	public void gainHealth(int points){
 		if(points >= 0){
 			if(mHealthPoints + points <= mMaxHealth)

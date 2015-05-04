@@ -13,7 +13,7 @@
         android:layout_marginTop="48dp"
         android:layout_marginBottom="28dp"
         android:gravity="center"
-        android:text="Game Over"
+        android:text="@string/gameover_title"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <LinearLayout
@@ -28,7 +28,7 @@
         	android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="18dp"
-            android:text="Days passed" />
+            android:text="@string/gameover_days" />
 
         <TextView
             android:id="@+id/txtDays"
@@ -51,7 +51,7 @@
         	android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="18dp"
-            android:text="Score" />
+            android:text="@string/gameover_score" />
 
         <TextView
             android:id="@+id/txtScore"
@@ -66,11 +66,11 @@
         android:id="@+id/lblRestartHint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="58dp"
+        android:layout_marginTop="50dp"
         android:layout_marginLeft="8dp"
         android:layout_marginBottom="8dp"
         android:gravity="bottom"
-        android:text="(Press anywhere to restart game...)"
+        android:text="@string/gameover_hint"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </LinearLayout>
