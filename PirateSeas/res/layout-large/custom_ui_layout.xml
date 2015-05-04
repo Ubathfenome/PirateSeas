@@ -1,0 +1,94 @@
+<LinearLayout 
+	xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res/com.pirateseas"
+	android:id="@+id/UIFrame"
+	android:orientation="vertical"
+	android:layout_width="match_parent"
+    android:layout_height="match_parent">
+	
+	<LinearLayout
+		android:id="@+id/topFrame"
+		android:orientation="horizontal"
+		android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+		
+		<Space
+		    android:id="@+id/enemyHBarSpace"
+		    android:layout_width="0dp"
+		    android:layout_height="wrap_content"
+		    android:layout_gravity="fill"
+		    android:layout_weight="1" />
+			
+		<ImageButton
+			android:id="@+id/btnPause"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:paddingLeft="10dp"
+			android:contentDescription="@string/btn_pause"
+			android:src="@drawable/ico_pause"
+			android:background="@drawable/xml_btn_style" />
+	</LinearLayout>
+	
+	<Space
+	    android:id="@+id/gameSpace"
+	    android:layout_width="wrap_content"
+	    android:layout_height="550dp"
+	    android:layout_gravity="fill"
+	    android:layout_weight="1" />
+	
+	<LinearLayout
+	    android:id="@+id/bottomFrame"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_gravity="center"
+	    android:layout_weight="50"
+	    android:orientation="horizontal" >
+		
+		<com.pirateseas.model.canvasmodel.ui.Throttle
+		    android:id="@+id/controlThrottle"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_weight="1"
+		    android:layout_marginRight="160dp"
+		    android:background="@drawable/ico_throttle_0" />
+		
+		<Space
+		    android:id="@+id/playerBarsSpace"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_gravity="fill"
+		    android:layout_weight="1" />
+		
+		<Space
+		    android:id="@+id/playerSpace"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_gravity="fill"
+		    android:layout_weight="1" />
+		
+		<com.pirateseas.model.canvasmodel.ui.UIDisplayElement
+		    android:id="@+id/playerGold"
+		    android:layout_width="48dp"
+		    android:layout_height="48dp"
+		    android:layout_gravity="bottom"
+		    android:background="@drawable/ico_gold"
+		    custom:defaultValue="0" />
+			
+		<com.pirateseas.model.canvasmodel.ui.UIDisplayElement
+		    android:id="@+id/playerAmmunition"
+		    android:layout_width="48dp"
+		    android:layout_height="48dp"
+		    android:layout_gravity="bottom"
+		    android:background="@drawable/ico_ammo"
+		    custom:defaultValue="0" />
+			
+		<com.pirateseas.model.canvasmodel.ui.Wheel
+		    android:id="@+id/controlWheel"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_marginLeft="160dp"
+		    android:layout_weight="1"
+		    android:background="@drawable/ico_wheel" />
+		
+	</LinearLayout>
+</LinearLayout>

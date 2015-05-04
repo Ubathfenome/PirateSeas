@@ -473,7 +473,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 		if(nPlayerShip.isAlive()){
 			double arcPixels = ((GameActivity) nContext).ctrlWheel.getMovedPixels();
 			float degrees = ((GameActivity) nContext).ctrlWheel.getDegrees();
-			double sceneMoveValue = Math.tan(degrees) + arcPixels;
+			//double sceneMoveValue = Math.tan(degrees) + arcPixels;
 	
 			if(!((GameActivity) nContext).ctrlWheel.isBeingTouched()){
 				if (degrees >= DEGREE_MIN_THRESHOLD) {
