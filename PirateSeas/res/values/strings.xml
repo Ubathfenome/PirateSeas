@@ -75,6 +75,13 @@
     <string name="exit_shop_dialog_title">Exit Shop</string>
     <string name="exit_shop_dialog_message">The game will resume!</string>
     <string name="exit_shop_dialog_positive">Proceed</string>
+    
+    <!-- About Dialog -->
+    <string name="about_dialog_title">About us</string>
+    <string name="about_dialog_message">Game developed by \n
+        Miguel Angel Jiménez Rega - UO179050\n
+        For his Master\'s Final Work</string>
+    <string name="about_dialog_positive">OK</string>
 
     <!-- Screen Slide Content -->
     <string name="title_screen_slide">Screen Slide</string>
@@ -103,6 +110,7 @@
     <string name="icd_anim_background">Animation background image</string>
     <string name="icd_loading_animation">Loading animation image</string>
     <string name="icd_rest_preferences">Restore preferences</string>
+    <string name="icd_help_hud">Game hud image</string>
 
     <string name="default_sample_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut 
         gravida, massa nec bibendum maximus, nunc ante viverra enim, sit amet viverra nisi nulla vitae 
@@ -120,5 +128,6 @@
     <string name="gameover_hint">(Press anywhere to restart game&#8230;)</string>
     <string name="gameover_score">Score</string>
     <string name="gameover_days">Days passed</string>
+    <string name="app_about">About us&#8230;</string>
 
 </resources>

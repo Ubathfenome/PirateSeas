@@ -151,6 +151,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 	@Override
 	protected void onPause() {	
 		mSensorManager.unregisterListener(this);
+		
 		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		if(mCanvasView != null)
 			mCanvasView.setStatus(Constants.GAME_STATE_PAUSE);
@@ -315,8 +316,6 @@ public class GameActivity extends Activity implements SensorEventListener {
 		// Nothing
 	}
 	
-	
-
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch(requestCode){

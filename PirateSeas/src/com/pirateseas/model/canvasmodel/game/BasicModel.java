@@ -120,5 +120,6 @@ public class BasicModel{
  
     public void setWidth(int width) {
         this.mWidth = width;
-    }  
+    }   
+    
 }

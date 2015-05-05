@@ -1,5 +1,7 @@
 package com.pirateseas.controller.timer;
 
+import com.pirateseas.global.Constants;
+
 import android.os.SystemClock;
 
 public class GameTimer {
@@ -11,7 +13,6 @@ public class GameTimer {
 	private static long baseTimestamp;
 	
 	private static final int SECONDS_PER_IN_GAME_HOUR = 60;
-	private static final int MINUTES_PER_IN_GAME_DAY = 10;
 	
 	public GameTimer(){
 		gameDay = 0;
@@ -51,7 +52,7 @@ public class GameTimer {
 	
 	private int getGameDayFromGameHours(double realSecs) {
 		float inGameHours = (float) (realSecs / SECONDS_PER_IN_GAME_HOUR);
-		int inGameDays = (int) (inGameHours / MINUTES_PER_IN_GAME_DAY);
+		int inGameDays = (int) (inGameHours / Constants.GAME_MPIGD);
 		return inGameDays;
 	}
 

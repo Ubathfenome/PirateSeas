@@ -2,6 +2,7 @@ package com.pirateseas.model.canvasmodel.game.entity;
 
 import com.pirateseas.R;
 import com.pirateseas.global.Constants;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -33,23 +34,21 @@ public class Shot extends Entity{
 	protected Paint mBrush = null;
 	protected Board board = null;
 	
-	public Shot(Context context, double x, double y, double mCanvasWidth, double mCanvasHeight, Point destiny, long timestampLastShot){
-		super(context, x, y, mCanvasWidth, mCanvasHeight, new Point((int)x, (int)y), 1, 1, 1);
+	public Shot(Context context, double screenX, double screenY, double mCanvasWidth, double mCanvasHeight, Point entityBeginning, Point entityDestiny, int power, long timestampLastShot){
+		super(context, screenX, screenY, mCanvasWidth, mCanvasHeight, entityBeginning, 1, 1, 1);
 		
 		mContext = context;
 		
-		startPoint = new Point((int)x + entityWidth, (int)y + entityLength);
-		endPoint = destiny;
+		startPoint = entityBeginning;
+		endPoint = entityDestiny;
 		
 		setPathLength(getLength(startPoint, endPoint));
 		
-		mDamage = 10;
+		mDamage = power;
 		setTimestamp(timestampLastShot);
 		
 		board = new Board(context);
 		board.requestFocus();
-		
-		// CanvasView.addView(board);
 		
 		setBrushProperties();
 		
@@ -179,23 +178,23 @@ public class Shot extends Entity{
 	public void drawOnScreen(Canvas canvas) {
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
 			switch(mShotStatus){
-			case Constants.SHOT_FIRED:
-				setImage(mContext.getResources().getDrawable(R.drawable.txtr_shot_smoke, null));
-				board.pathStart(startPoint.x, startPoint.y);
-				break;
-			case Constants.SHOT_FLYING:
-				setImage(mContext.getResources().getDrawable(R.drawable.txtr_shot_cannonball, null));
-				board.pathMove(1 / endPoint.x, 1 / endPoint.y);
-				break;
-			case Constants.SHOT_HIT:
-				setImage(mContext.getResources().getDrawable(R.drawable.txtr_shot_hit, null));
-				board.pathUp();
-				break;
-			case Constants.SHOT_MISSED:
-				setImage(mContext.getResources().getDrawable(R.drawable.txtr_shot_miss, null));
-				board.pathUp();
-				break;
-		}
+				case Constants.SHOT_FIRED:
+					setImage(mContext.getResources().getDrawable(R.drawable.txtr_shot_smoke, null));
+					board.pathStart(startPoint.x, startPoint.y);
+					break;
+				case Constants.SHOT_FLYING:
+					setImage(mContext.getResources().getDrawable(R.drawable.txtr_shot_cannonball, null));
+					board.pathMove(endPoint.x, endPoint.y);
+					break;
+				case Constants.SHOT_HIT:
+					setImage(mContext.getResources().getDrawable(R.drawable.txtr_shot_hit, null));
+					board.pathUp();
+					break;
+				case Constants.SHOT_MISSED:
+					setImage(mContext.getResources().getDrawable(R.drawable.txtr_shot_miss, null));
+					board.pathUp();
+					break;
+			}
 		} else {
 			switch(mShotStatus){
 				case Constants.SHOT_FIRED:
@@ -204,7 +203,7 @@ public class Shot extends Entity{
 					break;
 				case Constants.SHOT_FLYING:
 					setImage(mContext.getResources().getDrawable(R.drawable.txtr_shot_cannonball));
-					board.pathMove(1 / endPoint.x, 1 / endPoint.y);
+					board.pathMove(endPoint.x, endPoint.y);
 					break;
 				case Constants.SHOT_HIT:
 					setImage(mContext.getResources().getDrawable(R.drawable.txtr_shot_hit));
@@ -219,6 +218,11 @@ public class Shot extends Entity{
 		
 		// el trazo actual
 		canvas.drawPath(board.mPath, mBrush);
+		
+		x -= mWidth;
+		y -= mHeight;
+		
+		super.drawOnScreen(canvas);
 	}
 	
 	public void setShotStatus(int shotStatus) {

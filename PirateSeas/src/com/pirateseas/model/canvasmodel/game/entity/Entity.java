@@ -41,43 +41,68 @@ public class Entity extends BasicModel{
 	
 	public boolean intersectionWithEntity(Entity other){
 		boolean intersection = false;
+		boolean horizontalInt = false, verticalInt = false;
 		
 		if (intersectionToRight(other) || intersectionToLeft(other))
-			intersection = true;
+			horizontalInt = true;
 		
-		// TODO Posible problema con coordenadas y y z
+		if (intersectionToFront(other) || intersectionToBack(other))
+			verticalInt = true;
+		
+		if(horizontalInt && verticalInt)
+			intersection = true;
 		
 		return intersection;
 	}
 	
-	private boolean intersectionToRight(Entity other){
-		return (entityCoordinates.x + entityWidth / 2) >= (other.entityCoordinates.x - other.entityWidth / 2) ? true : false;
+	private boolean intersectionToBack(Entity other) {
+		return ((entityCoordinates.y + entityHeight / 2) >= (other.entityCoordinates.y - other.entityHeight / 2))
+				&& ((entityCoordinates.y - entityWidth / 2) < (other.entityCoordinates.y - other.entityHeight / 2)) ? true
+				: false;
 	}
-	
-	private boolean intersectionToLeft(Entity other){
-		return (entityCoordinates.x - entityWidth / 2) <= (other.entityCoordinates.x + other.entityWidth / 2) ? true : false;
+
+	private boolean intersectionToFront(Entity other) {
+		return ((entityCoordinates.y - entityHeight / 2) <= (other.entityCoordinates.y + other.entityHeight / 2))
+				&& ((entityCoordinates.y + entityWidth / 2) > (other.entityCoordinates.y + other.entityHeight / 2)) ? true
+				: false;
+	}
+
+	private boolean intersectionToRight(Entity other) {
+		return ((entityCoordinates.x + entityWidth / 2) >= (other.entityCoordinates.x - other.entityWidth / 2))
+				&& ((entityCoordinates.x - entityWidth / 2) < (other.entityCoordinates.x - other.entityWidth / 2)) ? true
+				: false;
+	}
+
+	private boolean intersectionToLeft(Entity other) {
+		return ((entityCoordinates.x - entityWidth / 2) <= (other.entityCoordinates.x + other.entityWidth / 2))
+				&& ((entityCoordinates.x + entityWidth / 2) > (other.entityCoordinates.x + other.entityWidth / 2)) ? true
+				: false;
 	}
 	
 	public void moveEntity(){
 		Point copy = new Point(entityCoordinates.x, entityCoordinates.y);
 		// Avanza Plano x
 		if(Math.abs(Math.cos(entityDirection))>=Math.abs(Math.sin(entityDirection)))
-			if(entityDirection < 90 && entityDirection >= 0 || entityDirection > 270 && entityDirection <= 360)
+			if(entityDirection < 90 && entityDirection >= 0 || entityDirection > 270 && entityDirection <= 360) {
 				// Derecha
 				copy = movePoint("Positive", "X", copy);
-			else
+				x++;
+			} else {
 				// Izquierda
 				copy = movePoint("Negative", "X", copy);
-		
+				x--;
+			}
 		// Avanza Plano y
 		if(Math.abs(Math.cos(entityDirection))<=Math.abs(Math.sin(entityDirection)))
-			if(entityDirection < 180 && entityDirection >= 0)
+			if(entityDirection < 180 && entityDirection >= 0) {
 				// Alante
 				copy = movePoint("Positive", "Y", copy);
-			else if(entityDirection >= 180 && entityDirection < 360)
+				y--;
+			} else if(entityDirection >= 180 && entityDirection < 360) {
 				// Atras
 				copy = movePoint("Negative", "Y", copy);
-		
+				y++;
+			}
 		entityCoordinates = new Point(copy.x, copy.y);
 	}
 	

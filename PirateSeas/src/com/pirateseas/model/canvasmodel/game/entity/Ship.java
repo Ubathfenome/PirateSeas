@@ -98,6 +98,9 @@ public class Ship extends Entity {
 		this.mAmmunition = ammo;
 		
 		this.sType = sType;
+		this.mRange = sType.rangeMultiplier();
+		this.mPower = sType.powerMultiplier();
+		this.mReloadTime = (int) sType.powerMultiplier() * Constants.SHIP_RELOAD;
 		this.mMaxHealth = sType.defaultHealthPoints() > health ? sType.defaultHealthPoints() : health;
 		gainHealth(health);
 		
@@ -118,44 +121,66 @@ public class Ship extends Entity {
 			throw new IllegalArgumentException("Encontrado valor de puntos negativo al modificar mAmmunition");
 	}
 	
-	public Shot shootFront() throws NoAmmoException{
+	public Shot shootFront() throws NoAmmoException {
 		Shot cannonballVector = null;
-		
-		if(mAmmunition > 0 || mAmmunition == Constants.SHOT_AMMO_UNLIMITED){
+
+		if (mAmmunition > 0 || mAmmunition == Constants.SHOT_AMMO_UNLIMITED) {
 			timestampLastShot = SystemClock.elapsedRealtime();
-			cannonballVector = new Shot(context, this.entityCoordinates.x, this.entityCoordinates.y + entityLength / 2, this.mCanvasWidth, this.mCanvasHeight, new Point(0, Constants.SHIP_BASIC_RANGE * sType.rangeMultiplier()), timestampLastShot);
-			cannonballVector.setDamage((int) (10 * sType.powerMultiplier()));
-			if(mAmmunition != Constants.SHOT_AMMO_UNLIMITED)
+			cannonballVector = new Shot(context, x + (mWidth / 2), y,
+					this.mCanvasWidth, this.mCanvasHeight, new Point(
+							this.entityCoordinates.x, this.entityCoordinates.y
+									+ entityLength / 2), new Point(0,
+							Constants.SHIP_BASIC_RANGE
+									* sType.rangeMultiplier()),
+					(int) (Constants.SHIP_BASIC_DAMAGE * sType
+							.powerMultiplier()), timestampLastShot);
+			if (mAmmunition != Constants.SHOT_AMMO_UNLIMITED)
 				mAmmunition--;
 		} else {
-			throw new NoAmmoException(context.getResources().getString(R.string.exception_ammo));
+			throw new NoAmmoException(context.getResources().getString(
+					R.string.exception_ammo));
 		}
 
 		return cannonballVector;
 	}
-	
-	public Shot[] shootSide(boolean isRight) throws NoAmmoException{
+
+	public Shot[] shootSide(boolean isRight) throws NoAmmoException {
 		Shot[] cannonballArray = new Shot[3];
 		Shot cannonballVector = null;
-		
-		if(mAmmunition > 3 || mAmmunition == Constants.SHOT_AMMO_UNLIMITED){
+
+		if (mAmmunition >= 3 || mAmmunition == Constants.SHOT_AMMO_UNLIMITED) {
 			timestampLastShot = SystemClock.elapsedRealtime();
-			for(int i = 0, length = cannonballArray.length; i < length; i++){
-				if(isRight)
-					cannonballVector = new Shot(context, this.entityCoordinates.x + entityWidth / 2, this.entityCoordinates.y, this.mCanvasWidth, this.mCanvasHeight, new Point(Constants.SHIP_BASIC_RANGE * sType.rangeMultiplier(), i - 1), timestampLastShot);
+			for (int i = 0, length = cannonballArray.length; i < length; i++) {
+				if (isRight)
+					cannonballVector = new Shot(context, x + mWidth, y
+							+ (mHeight / 4), this.mCanvasWidth,
+							this.mCanvasHeight, new Point(
+									this.entityCoordinates.x + entityWidth / 2,
+									this.entityCoordinates.y), new Point(
+									Constants.SHIP_BASIC_RANGE
+											* sType.rangeMultiplier(), i - 1),
+							(int) (Constants.SHIP_BASIC_DAMAGE * sType
+									.powerMultiplier()), timestampLastShot);
 				else
-					cannonballVector = new Shot(context, this.entityCoordinates.x - entityWidth / 2, this.entityCoordinates.y, this.mCanvasWidth, this.mCanvasHeight, new Point(-Constants.SHIP_BASIC_RANGE * sType.rangeMultiplier(), i - 1), timestampLastShot);
-				cannonballVector.setDamage((int) (10 * sType.powerMultiplier()));
-								
+					cannonballVector = new Shot(context, x, y + (mHeight / 4),
+							this.mCanvasWidth, this.mCanvasHeight, new Point(
+									this.entityCoordinates.x - entityWidth / 2,
+									this.entityCoordinates.y), new Point(
+									-Constants.SHIP_BASIC_RANGE
+											* sType.rangeMultiplier(), i - 1),
+							(int) (Constants.SHIP_BASIC_DAMAGE * sType
+									.powerMultiplier()), timestampLastShot);
+
 				cannonballArray[i] = cannonballVector;
-				if(mAmmunition != Constants.SHOT_AMMO_UNLIMITED)
+				if (mAmmunition != Constants.SHOT_AMMO_UNLIMITED)
 					mAmmunition--;
 			}
 		} else {
 			cannonballArray = null;
-			throw new NoAmmoException(context.getResources().getString(R.string.exception_ammo));
+			throw new NoAmmoException(context.getResources().getString(
+					R.string.exception_ammo));
 		}
-		
+
 		return cannonballArray;
 	}
 	
@@ -230,7 +255,7 @@ public class Ship extends Entity {
 */
 	
 	public boolean isReloaded(long timestamp){
-		return timestamp - timestampLastShot > mReloadTime ? true : false;
+		return timestamp - timestampLastShot > (mReloadTime * 1000) ? true : false;
 	}
 
 	/**

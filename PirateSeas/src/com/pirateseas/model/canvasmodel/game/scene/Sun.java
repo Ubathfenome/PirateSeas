@@ -5,12 +5,11 @@ import android.content.Context;
 import android.os.Build;
 
 import com.pirateseas.R;
+import com.pirateseas.global.Constants;
 import com.pirateseas.model.canvasmodel.game.BasicModel;
 
-public class Sun extends BasicModel{
-	
-	// TODO Change sun speed value
-	private static final double SUN_SPEED = 0;
+public class Sun extends BasicModel{	
+	private double sunTraverseRatio;
 
 	@SuppressWarnings("deprecation")
 	@SuppressLint("NewApi")
@@ -23,9 +22,13 @@ public class Sun extends BasicModel{
 		} else {
 			setImage(context.getResources().getDrawable(R.drawable.txtr_orb_sun));
 		}
+		
+		sunTraverseRatio = mCanvasWidth / Constants.GAME_MPIGD;
 	}
 	
-	public void move(){
-		x += SUN_SPEED;
+	public void moveSun(float hour){
+		if(hour <= 1)
+			x = 0;
+		x += ((2 * hour) * sunTraverseRatio);
 	}
 }

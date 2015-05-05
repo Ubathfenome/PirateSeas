@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+@SuppressWarnings("unused")
 public class Throttle extends View {
 	
 	private int maxLevels;
@@ -68,8 +69,8 @@ public class Throttle extends View {
 				mLastPoint = new Point((int)event.getX(), (int)event.getY());
 				String movement = getMovementPosition();
 				
-				if(movement.equals(Constants.FRONT) || movement.equals(Constants.BACK))
-					Log.d(TAG, "Registered Throttle movement: " + movement);
+				//if(movement.equals(Constants.FRONT) || movement.equals(Constants.BACK))
+					// Log.d(TAG, "Registered Throttle movement: " + movement);
 				
 				if (mLevel < maxLevels - 1 && movement.equals(Constants.FRONT))
 					mLevel++;

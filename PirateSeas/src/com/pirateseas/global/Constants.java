@@ -25,12 +25,13 @@ public class Constants{
 	public static final int REQUEST_SHOP = 0x01;
 	public static final int REQUEST_REMOVE_PREFERENCES = 0x02;
 	
-	// Entity states
+	// Entities
 	public static final int STATE_ALIVE = 0;
 	public static final int STATE_DEAD = 1;
 	
 	public static final int SHIP_RELOAD = 2;
 	public static final int SHIP_BASIC_RANGE = 3;
+	public static final float SHIP_BASIC_DAMAGE = 10;
 	
 	public static final int SHOT_AMMO_UNLIMITED = -1;
 	public static final int SHOT_FIRED = 0;
@@ -38,13 +39,15 @@ public class Constants{
 	public static final int SHOT_HIT = 2;
 	public static final int SHOT_MISSED = 3;
 	
+	// Bar Types
 	public static final int BAR_HEALTH = 0;
 	public static final int BAR_EXPERIENCE = 1;
 	
 	// Global variables
 	public static final int[] ENTITY_SPEED = {0, 1, 2, 5};
 	
-	public static final int GAME_FPS = 30;
+	public static final int GAME_FPS = 30;			// FPS = Frames-Per-Second
+	public static final int GAME_MPIGD = 10;		// MPIGD = Minutes-Per-In-Game-Day
 	public static final int GAME_STATE_NORMAL = 0;
 	public static final int GAME_STATE_PAUSE = 1;
 	public static final int GAME_STATE_END = 2;

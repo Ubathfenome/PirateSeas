@@ -35,6 +35,10 @@ public class Clouds extends BasicModel{
 		setImage(mImageAux = mParallaxAux.getLayers()[1]);
 	}
 	
+	public void heightReposition(int bottomPadding){
+		y = mHeight - bottomPadding;
+	}
+	
 	public boolean isCloudy() {
 		return isCloudy;
 	}

@@ -47,6 +47,10 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	private static final double DEGREE_MIN_THRESHOLD = 0.2f;
 	private static final float FORWARD_BASE_VALUE = 1.05f;
 
+	private static final int CHT_VALUE = 20;
+	
+	private static final double SHOT_CHK_DELAY = 0.1d;
+	
 	private static final int HORIZON_Y_VALUE = 170;
 	private static final int BAR_INITIAL_X_VALUE = 150;
 
@@ -134,6 +138,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 		nSun = new Sun(nContext, nScreenWidth / 2, 0, nScreenWidth,
 				nScreenHeight);
 		nClouds = new Clouds(nContext, 0, 0, nScreenWidth, nScreenHeight, false);
+		nClouds.heightReposition(HORIZON_Y_VALUE - 55);
 		nCompass = new Compass(nContext, nScreenWidth / 2,
 				HORIZON_Y_VALUE - 45, nScreenWidth, nScreenHeight);
 		nSea = new Sea(nContext, 0, HORIZON_Y_VALUE, nScreenWidth,
@@ -205,7 +210,8 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 
 		for (int i = 0, size = nShotList.size(); i < size; i++) {
 			Shot s = nShotList.get(i);
-			s.drawOnScreen(canvas);
+			if(s.isAlive())
+				s.drawOnScreen(canvas);
 		}
 
 		nPlayerHBar.drawOnScreen(canvas);
@@ -236,6 +242,9 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 						String direction = pressedMotion(
 								new Point(downX, downY), new Point(x, y));
 						if (direction.equals(Constants.FRONT)) {
+							
+							nCheatCounter = nCheatCounter != 0 ? 0 : nCheatCounter;
+							
 							try {
 								nShotList.add(nPlayerShip.shootFront());
 							} catch (NoAmmoException e) {
@@ -246,6 +255,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 
 						} else if (direction.equals(Constants.RIGHT)) {
 							Shot[] shotArray = null;
+							nCheatCounter = nCheatCounter != 0 ? 0 : nCheatCounter;
 
 							try {
 								shotArray = nPlayerShip.shootSide(true);
@@ -259,6 +269,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 							}
 						} else if (direction.equals(Constants.LEFT)) {
 							Shot[] shotArray = null;
+							nCheatCounter = nCheatCounter != 0 ? 0 : nCheatCounter;
 
 							try {
 								shotArray = nPlayerShip.shootSide(false);
@@ -272,12 +283,14 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 							}
 						} else if (direction.equals(Constants.BACK)){
 							nCheatCounter++;
-							if(nCheatCounter < 20)
-								Log.v(TAG, nCheatCounter + " touches " + (20 - nCheatCounter) + " more to go!");
-							if(nCheatCounter == 20)
+							if(nCheatCounter % CHT_VALUE > 0)
+								Log.v("Cheat", CHT_VALUE - (nCheatCounter % CHT_VALUE) + " more touches to go!");
+							if(nCheatCounter % CHT_VALUE == 0)
 								grantCheat2Player();
-							if(nCheatCounter > 20)
+							/*
+							if(nCheatCounter / CHT_VALUE > 1)
 								Log.v(TAG, "You already had your prize! Do not ask for more.");
+							*/	
 						}
 					} else {
 						try {
@@ -301,6 +314,8 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 		nPlayer.addExperience(200);
 		nPlayer.addGold(50);
 		nPlayer.setMapPieces(1);
+		nPlayerShip.gainAmmo(10);
+		nPlayerShip.gainHealth(30);
 	}
 
 	private String pressedMotion(Point start, Point end) {
@@ -398,14 +413,14 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 						Constants.BAR_HEALTH);
 			}
 
-		if (nEnemyShip == null && nIsland == null && nLastIslandTimestamp != 0 && (nGameTimestamp - nLastIslandTimestamp) >= 60 * 1000) {
+		if (nEnemyShip == null && nIsland == null && nLastIslandTimestamp != 0 && (nGameTimestamp - nLastIslandTimestamp) >= 30 * 1000) {
 			nIsland = new Island(nContext, nScreenWidth - 150, HORIZON_Y_VALUE,
 					nScreenWidth, nScreenHeight);
 			nLastIslandTimestamp = nGameTimestamp;
 			Log.v(TAG, "Island detected!");
 		}
 
-		nSun.move();
+		nSun.moveSun(nGameTimer.getHour());
 		nClouds.move();
 	}
 
@@ -426,12 +441,12 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 				if(s.isAlive()){
 					switch(s.getShotStatus()){
 						case Constants.SHOT_FIRED:
-							if (nGameTimestamp - s.getTimestamp() >= 500){
+							if (nGameTimestamp - s.getTimestamp() >= SHOT_CHK_DELAY){
 								s.setShotStatus(Constants.SHOT_FLYING);
 							}
 							break;
 						case Constants.SHOT_FLYING:
-							if (lastCheckedTimestamp - nGameTimestamp >= 500){
+							if (lastCheckedTimestamp - nGameTimestamp >= SHOT_CHK_DELAY){
 								if (nEnemyShip != null) {
 									if (s.intersectionWithEntity(nEnemyShip)) {
 										nEnemyShip.looseHealth(s.getDamage());
@@ -452,7 +467,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 								
 								s.moveEntity();
 								
-								if (s.getCoordinates() == s.getEndPoint())
+								if (s.getCoordinates().x == s.getEndPoint().x && s.getCoordinates().y == s.getEndPoint().y)
 									s.setShotStatus(Constants.SHOT_MISSED);
 							}
 							break;
@@ -463,6 +478,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 							// TODO Play missed sound
 							s.looseHealth(s.getDamage());
 							deadShots[i] = true;
+							s = null;
 							break;
 					}
 				
@@ -471,8 +487,9 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 			}
 			
 			for (int i = size - 1; i >= 0; i--) {
-				if (deadShots[i])
+				if (deadShots[i]){
 					nShotList.remove(i);
+				}
 			}
 		}
 	}

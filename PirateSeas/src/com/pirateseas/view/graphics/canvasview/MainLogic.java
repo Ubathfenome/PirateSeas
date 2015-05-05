@@ -87,6 +87,8 @@ public class MainLogic extends Thread {
 						jumpedFrames++;
 					}
 				}
+			} catch (ArithmeticException arex){
+				Log.e(TAG, arex.getMessage());
 			} catch (Exception ex) {
 				if(canvas == null){
 					setRunning(false);

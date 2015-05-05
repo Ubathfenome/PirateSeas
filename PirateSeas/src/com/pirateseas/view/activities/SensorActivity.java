@@ -168,8 +168,12 @@ public class SensorActivity extends Activity{
 			int count = SensorType.values().length;
 			for(int i = 0; i < count; i++){
 				SensorType type = SensorType.values()[i];
-				if(mSensorManager.getDefaultSensor(type.getCode()) != null && triggeredSensors.contains(type)){
-					mDeviceSensorTypes.add(type.getCode());
+				if(mSensorManager.getDefaultSensor(type.getCode()) != null ){
+					if(triggeredSensors.contains(type)) {
+						mDeviceSensorTypes.add(type.getCode());
+						Log.d(TAG, "Your device has a " + type + " sensor. Its event will be triggered.");
+					} else
+						Log.d(TAG, "Your device has a " + type + " sensor, but there is no event related to it.");
 				} else {
 					// Sorry, there is no 'type' sensor on your device.
 					// The 'event' event will be disabled.

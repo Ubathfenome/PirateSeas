@@ -1,20 +1,18 @@
 package com.pirateseas.controller.sensors.events;
 
+import android.util.Log;
+
 import com.pirateseas.controller.sensors.SensorType;
 import com.pirateseas.model.canvasmodel.game.entity.Ship;
 
 public class EventEnemyTimer {
-	float accX, accY, accZ;
 	boolean spawn = false;
+	private static final String TAG = "EventEnemyTimer";
 
-	public EventEnemyTimer(float x, float y, float z){
-		this.accX = x;
-		this.accY = y;
-		this.accZ = z;
-		
-		// TODO Establish relation between acceleration and game timer
-		
-		double possibilities = Math.random() * 10000;
+	public EventEnemyTimer(float x, float y, float z){		
+		// Establish relation between acceleration and game timer
+		Log.d(TAG, "X Acceleration = " + x + "; Y Acceleration = " + y + "; Z Acceleration = " + z);
+		double possibilities = Math.random() * 100 * (x + y + z);
 		spawn = possibilities % 100 > 75 ? true : false;
 	}
 	
