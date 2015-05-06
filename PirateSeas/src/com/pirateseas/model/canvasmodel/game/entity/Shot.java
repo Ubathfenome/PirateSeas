@@ -25,6 +25,9 @@ public class Shot extends Entity{
 	private Point endPoint;
 	
 	private float pathLength;
+	private float mFlyingTime;
+	private float mCurrentTime;
+	
 	private long mTimestamp;
 	
 	private int mDamage;
@@ -34,13 +37,28 @@ public class Shot extends Entity{
 	protected Paint mBrush = null;
 	protected Board board = null;
 	
-	public Shot(Context context, double screenX, double screenY, double mCanvasWidth, double mCanvasHeight, Point entityBeginning, Point entityDestiny, int power, long timestampLastShot){
-		super(context, screenX, screenY, mCanvasWidth, mCanvasHeight, entityBeginning, 1, 1, 1);
+	protected static int shotWidth, shotHeight;
+	
+	@SuppressWarnings("deprecation")
+	@SuppressLint("NewApi")
+	public Shot(Context context, double screenX, double screenY, double mCanvasWidth, double mCanvasHeight, Point entityBeginning, Point entityDestiny, int eDirection, int power, long timestampLastShot){
+		super(context, screenX, screenY, mCanvasWidth, mCanvasHeight, entityBeginning, eDirection, 1, 1, 1);
 		
 		mContext = context;
 		
 		startPoint = entityBeginning;
 		endPoint = entityDestiny;
+		
+		mShotStatus = Constants.SHOT_FIRED;
+	
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			setImage(mContext.getResources().getDrawable(R.drawable.txtr_shot_smoke, null));
+		} else {
+			setImage(mContext.getResources().getDrawable(R.drawable.txtr_shot_smoke));
+		}
+		
+		shotWidth = mWidth;
+		shotHeight = mHeight;
 		
 		setPathLength(getLength(startPoint, endPoint));
 		
@@ -55,12 +73,10 @@ public class Shot extends Entity{
 		mHealthPoints = 1;
 		if(mHealthPoints > 0)
 			setStatus(Constants.STATE_ALIVE);
-		
-		mShotStatus = Constants.SHOT_FIRED;
 	}
 	
 	private float getLength(Point origin, Point destiny){
-		return (float) Math.sqrt(Math.pow(destiny.x - origin.x, 2)+Math.pow(destiny.y - origin.y, 2));
+		return (float) Math.hypot(destiny.x - origin.x, destiny.y - origin.y);
 	}
 	
 	/**
@@ -91,6 +107,7 @@ public class Shot extends Entity{
 
 	public void setPathLength(float pathLength) {
 		this.pathLength = pathLength;
+		this.setFlyingTime(1000 * pathLength);
 	}
 
 	public class Board extends View {
@@ -219,8 +236,8 @@ public class Shot extends Entity{
 		// el trazo actual
 		canvas.drawPath(board.mPath, mBrush);
 		
-		x -= mWidth;
-		y -= mHeight;
+		// x -= mWidth;
+		// y -= mHeight;
 		
 		super.drawOnScreen(canvas);
 	}
@@ -245,12 +262,32 @@ public class Shot extends Entity{
 		return endPoint;
 	}
 
+	public float getFlyingTime() {
+		return mFlyingTime;
+	}
+
+	public void setFlyingTime(float mFlyingTime) {
+		this.mFlyingTime = mFlyingTime;
+	}
+
+	public float getCurrentTime() {
+		return mCurrentTime;
+	}
+
+	public void setCurrentTime(float mCurrentTime) {
+		this.mCurrentTime = mCurrentTime;
+	}
+
 	@Override
 	public String toString() {
 		return "Shot [startPoint=" + startPoint + ", endPoint=" + endPoint
 				+ ", pathLength=" + pathLength + ", mDamage=" + mDamage
 				+ ", mStatus=" + mShotStatus +  ", entityDirection=" + entityDirection
 				+ ", entityCoordinates=" + entityCoordinates + "]";
+	}
+
+	public boolean isInBounds(float initialHeight) {
+		return x >= initialHeight && x + mWidth <= mCanvasWidth && y >= initialHeight && y + mHeight <= mCanvasHeight;
 	}
 	
 }

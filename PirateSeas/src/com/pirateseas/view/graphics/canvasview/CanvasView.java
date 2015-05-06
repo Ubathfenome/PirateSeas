@@ -33,7 +33,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Point;
-import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -45,11 +44,11 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	private static final String TAG = "CanvasView";
 	private static final float DEGREE_DECREMENT_RATIO = 2.65f;
 	private static final double DEGREE_MIN_THRESHOLD = 0.2f;
-	private static final float FORWARD_BASE_VALUE = 1.05f;
+	// private static final float FORWARD_BASE_VALUE = 1.05f;
 
 	private static final int CHT_VALUE = 20;
 	
-	private static final double SHOT_CHK_DELAY = 0.1d;
+	private static final int SHOT_CHK_DELAY = 10;
 	
 	private static final int HORIZON_Y_VALUE = 170;
 	private static final int BAR_INITIAL_X_VALUE = 150;
@@ -83,6 +82,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	private long nBaseTimestamp;
 	private long nGameTimestamp;
 	private long nLastIslandTimestamp;
+	private long nShotLastTimeChecked;
 
 	private boolean nInitialized = false;
 	
@@ -147,7 +147,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 		// Entities
 		nPlayerShip = new Ship(nContext, ShipType.LIGHT,
 				nScreenWidth / 2 - 100, nScreenHeight - HORIZON_Y_VALUE,
-				nScreenWidth, nScreenHeight, new Point(0, 0), 2, 3, 5, 20);
+				nScreenWidth, nScreenHeight, new Point(0, 0), 90, 2, 3, 5, 20);
 
 		nShotList = new ArrayList<Shot>();
 
@@ -165,6 +165,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 
 		nGameTimestamp = 0;
 		nLastIslandTimestamp = 0;
+		nShotLastTimeChecked = 0;
 		nCheatCounter = 0;
 
 		nInitialized = true;
@@ -210,7 +211,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 
 		for (int i = 0, size = nShotList.size(); i < size; i++) {
 			Shot s = nShotList.get(i);
-			if(s.isAlive())
+			if(s.isAlive() && s.isInBounds(HORIZON_Y_VALUE))
 				s.drawOnScreen(canvas);
 		}
 
@@ -406,7 +407,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 			if (timer.challengerApproaches(nEnemyShip)) {
 				nEnemyShip = new Ship(nContext, ShipType.HEAVY,
 						nScreenWidth / 2 + 150, 70, nScreenWidth,
-						nScreenHeight, new Point(15, 20), 3, 4, 7, -1);
+						nScreenHeight, new Point(15, 20), 270, 3, 4, 7, Constants.SHOT_AMMO_UNLIMITED);
 				nEnemyHBar = new StatBar(nContext, BAR_INITIAL_X_VALUE, 0,
 						nScreenWidth, nScreenHeight, nEnemyShip.getHealth(),
 						nEnemyShip.getType().defaultHealthPoints(),
@@ -431,41 +432,36 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	private void manageShots() {
-		long lastCheckedTimestamp = SystemClock.elapsedRealtime();
 		int size = nShotList.size();
 		if(size > 0){
 			boolean[] deadShots = new boolean[size];
 			for (int i = 0; i < size; i++) {
 				deadShots[i] = false;
 				Shot s = nShotList.get(i);
-				if(s.isAlive()){
+				if(s.isAlive() && s.isInBounds(HORIZON_Y_VALUE)){
 					switch(s.getShotStatus()){
 						case Constants.SHOT_FIRED:
 							if (nGameTimestamp - s.getTimestamp() >= SHOT_CHK_DELAY){
 								s.setShotStatus(Constants.SHOT_FLYING);
+								nShotLastTimeChecked = nGameTimestamp;
 							}
 							break;
 						case Constants.SHOT_FLYING:
-							if (lastCheckedTimestamp - nGameTimestamp >= SHOT_CHK_DELAY){
+							if (nGameTimestamp - nShotLastTimeChecked >= SHOT_CHK_DELAY){
 								if (nEnemyShip != null) {
 									if (s.intersectionWithEntity(nEnemyShip)) {
 										nEnemyShip.looseHealth(s.getDamage());
 										s.setShotStatus(Constants.SHOT_HIT);
-										s.looseHealth(s.getDamage());
-										
-										// Mark shot to destroy object
-										deadShots[i] = true;
 									}
 								}
 								if (s.intersectionWithEntity(nPlayerShip)) {
 									if(nPlayerShip.getHealth() >= s.getDamage())
 										nPlayerShip.looseHealth(s.getDamage());
-									s.looseHealth(s.getDamage());
 									s.setShotStatus(Constants.SHOT_HIT);
-									deadShots[i] = true;
 								}
 								
-								s.moveEntity();
+								s.moveEntity(s.getEndPoint());
+								nShotLastTimeChecked = nGameTimestamp;
 								
 								if (s.getCoordinates().x == s.getEndPoint().x && s.getCoordinates().y == s.getEndPoint().y)
 									s.setShotStatus(Constants.SHOT_MISSED);
@@ -473,16 +469,19 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 							break;
 						case Constants.SHOT_HIT:
 							// TODO Play hit sound
+							if (nGameTimestamp - nShotLastTimeChecked >= SHOT_CHK_DELAY){
+								s.looseHealth(s.getDamage());
+								deadShots[i] = true;
+							}
 							break;
 						case Constants.SHOT_MISSED:
 							// TODO Play missed sound
-							s.looseHealth(s.getDamage());
-							deadShots[i] = true;
-							s = null;
+							if (nGameTimestamp - nShotLastTimeChecked >= SHOT_CHK_DELAY){
+								s.looseHealth(s.getDamage());
+								deadShots[i] = true;
+							}
 							break;
-					}
-				
-					
+					}			
 				}
 			}
 			

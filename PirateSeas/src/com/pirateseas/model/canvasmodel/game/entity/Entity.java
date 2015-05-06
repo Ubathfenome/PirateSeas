@@ -8,6 +8,8 @@ import android.content.Context;
 import android.graphics.Point;
 
 public class Entity extends BasicModel{
+	
+	private static final int MOVEMENT_DELTA = 2;
 		
 	// Entity Attribs
 	protected int entityWidth;
@@ -25,7 +27,7 @@ public class Entity extends BasicModel{
 	protected int mMaxHealth = 0;
 	protected int mSpeed = 0;	
 		
-	public Entity(Context context, double x, double y, double canvasWidth, double canvasHeight, Point eCoords, int eWidth, int eHeight, int eLength){
+	public Entity(Context context, double x, double y, double canvasWidth, double canvasHeight, Point eCoords, int eDirection, int eWidth, int eHeight, int eLength){
 		super(context, x, y, canvasWidth, canvasHeight, null);
 		
 		this.entityWidth = eWidth;
@@ -34,7 +36,12 @@ public class Entity extends BasicModel{
 		
 		this.entityCoordinates = eCoords;
 		
-		entityDirection = 90;
+		if(eDirection < 0)
+			entityDirection = 360 - eDirection;
+		else if(eDirection > 360)
+			entityDirection = eDirection - 360;
+		else
+			entityDirection = eDirection;
 		
 		mSpeed = Constants.ENTITY_SPEED[0];
 	}
@@ -79,52 +86,50 @@ public class Entity extends BasicModel{
 				: false;
 	}
 	
-	public void moveEntity(){
-		Point copy = new Point(entityCoordinates.x, entityCoordinates.y);
-		// Avanza Plano x
-		if(Math.abs(Math.cos(entityDirection))>=Math.abs(Math.sin(entityDirection)))
-			if(entityDirection < 90 && entityDirection >= 0 || entityDirection > 270 && entityDirection <= 360) {
-				// Derecha
-				copy = movePoint("Positive", "X", copy);
-				x++;
-			} else {
-				// Izquierda
-				copy = movePoint("Negative", "X", copy);
-				x--;
-			}
-		// Avanza Plano y
-		if(Math.abs(Math.cos(entityDirection))<=Math.abs(Math.sin(entityDirection)))
-			if(entityDirection < 180 && entityDirection >= 0) {
-				// Alante
-				copy = movePoint("Positive", "Y", copy);
-				y--;
-			} else if(entityDirection >= 180 && entityDirection < 360) {
-				// Atras
-				copy = movePoint("Negative", "Y", copy);
-				y++;
-			}
-		entityCoordinates = new Point(copy.x, copy.y);
-	}
-	
-	private Point movePoint(String relation, String plane, Point point) {
-		switch(relation){
-			case "Positive":
-				if(plane.equalsIgnoreCase("X")){
-					point.x += 1;
-				} else if (plane.equalsIgnoreCase("Y")){
-					point.y += 1;
-				}
-				break;
-			case "Negative":
-				if(plane.equalsIgnoreCase("X")){
-					point.x -= 1;
-				} else if (plane.equalsIgnoreCase("Y")){
-					point.y -= 1;
-				}
-				break;
+	public void moveEntity(Point destiny){
+		int xDiff = 0;
+		int yDiff = 0;
+		int nextX = 0;
+		int nextY = 0;
+		
+		// Get current Point
+		Point curr = new Point(entityCoordinates.x, entityCoordinates.y);
+		
+		// Set difference with destiny Point
+		if(destiny.x > curr.x){			// Destiny to the right
+			xDiff = destiny.x - curr.x;	// Get the positive needed amount to reach the destiny
+		} else if(destiny.x < curr.x) {	// Destiny to the left
+			xDiff = curr.x - destiny.x;	// Get the positive needed amount to reach the destiny
+		}		
+		if(destiny.y > curr.y){			// Destiny to the front
+			yDiff = destiny.y - curr.y;	// Get the positive needed amount to reach the destiny
+		} else if(destiny.y < curr.y) { // Destiny to the back
+			yDiff = curr.y - destiny.y;	// Get the positive needed amount to reach the destiny
 		}
 		
-		return new Point(point.x, point.y);
+		// Calculate next Point coordinates
+		if(xDiff > 0){
+			if(destiny.x > curr.x){			// Destiny to the right
+				nextX = curr.x + 1;			// Next point moved 1 position to the side
+				x += MOVEMENT_DELTA;		// Move Bitmap coordinates relative to next Point movement
+			} else if(destiny.x < curr.x) {	// Destiny to the left
+				nextX = curr.x - 1;			// Next point moved 1 position to the side
+				x -= MOVEMENT_DELTA;		// Move Bitmap coordinates relative to next Point movement
+			}
+		} 
+		if(yDiff > 0){
+			if(destiny.y > curr.y){			// Destiny to the front
+				nextY = curr.y + 1;			// Next point moved 1 position to the front
+				y -= MOVEMENT_DELTA;		// Move Bitmap coordinates relative to next Point movement
+			} else if(destiny.y < curr.y) {	// Destiny to the back
+				nextY = curr.y - 1;			// Next point moved 1 position to the back
+				y += MOVEMENT_DELTA;		// Move Bitmap coordinates relative to next Point movement
+			}
+		}
+		
+		// Set next Point coordinates
+		Point next = new Point(nextX, nextY);
+		entityCoordinates = new Point(next.x, next.y);
 	}
 
 	public void gainHealth(int points){

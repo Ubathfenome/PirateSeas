@@ -27,7 +27,7 @@ public class Ship extends Entity {
 	private Context context;
 	
 	public Ship(){
-		super(null, 0, 0, 0, 0, new Point(0, 0), 0, 0, 0);
+		super(null, 0, 0, 0, 0, new Point(0, 0), 90, 0, 0, 0);
 		this.mAmmunition = 0;
 		this.sType = ShipType.LIGHT;
 		this.isPlayable = false;
@@ -36,8 +36,8 @@ public class Ship extends Entity {
 	@SuppressWarnings("deprecation")
 	@SuppressLint("NewApi")
 	public Ship(Context context, ShipType sType, double x, double y, double canvasWidth, 
-				double canvasHeight, Point coordinates, int width, int height, int length, int ammo){
-		super(context, x, y, canvasWidth, canvasHeight, coordinates, width, height, length);
+				double canvasHeight, Point coordinates, int direction, int width, int height, int length, int ammo){
+		super(context, x, y, canvasWidth, canvasHeight, coordinates, direction, width, height, length);
 		
 		this.context = context;
 		
@@ -90,8 +90,8 @@ public class Ship extends Entity {
 	
 	@SuppressLint("NewApi")
 	@SuppressWarnings("deprecation")
-	public Ship(Context context, Ship baseShip, ShipType sType, Point coordinates, int width, int height, int length, int health, int ammo){
-		super(context, baseShip.x, baseShip.y, baseShip.mCanvasWidth, baseShip.mCanvasHeight, coordinates, width, height, length);
+	public Ship(Context context, Ship baseShip, ShipType sType, Point coordinates, int direction, int width, int height, int length, int health, int ammo){
+		super(context, baseShip.x, baseShip.y, baseShip.mCanvasWidth, baseShip.mCanvasHeight, coordinates, direction, width, height, length);
 		
 		this.context = context;
 		
@@ -126,12 +126,12 @@ public class Ship extends Entity {
 
 		if (mAmmunition > 0 || mAmmunition == Constants.SHOT_AMMO_UNLIMITED) {
 			timestampLastShot = SystemClock.elapsedRealtime();
-			cannonballVector = new Shot(context, x + (mWidth / 2), y,
+			cannonballVector = new Shot(context, x + (mWidth / 2) - (Shot.shotWidth / 2), y,
 					this.mCanvasWidth, this.mCanvasHeight, new Point(
 							this.entityCoordinates.x, this.entityCoordinates.y
 									+ entityLength / 2), new Point(0,
 							Constants.SHIP_BASIC_RANGE
-									* sType.rangeMultiplier()),
+									* sType.rangeMultiplier()), 90,
 					(int) (Constants.SHIP_BASIC_DAMAGE * sType
 							.powerMultiplier()), timestampLastShot);
 			if (mAmmunition != Constants.SHOT_AMMO_UNLIMITED)
@@ -151,26 +151,30 @@ public class Ship extends Entity {
 		if (mAmmunition >= 3 || mAmmunition == Constants.SHOT_AMMO_UNLIMITED) {
 			timestampLastShot = SystemClock.elapsedRealtime();
 			for (int i = 0, length = cannonballArray.length; i < length; i++) {
-				if (isRight)
+				if (isRight) {
+					Point ini = new Point(this.entityCoordinates.x + entityWidth / 2, this.entityCoordinates.y);
+					Point fin = new Point(Constants.SHIP_BASIC_RANGE * sType.rangeMultiplier(), i - 1);
+					int num = fin.y - ini.y;
+					int den = fin.x - ini.x;
+					float m = (num * 1.0f) / den;
+					double angM = Math.toDegrees(Math.atan(m));
 					cannonballVector = new Shot(context, x + mWidth, y
 							+ (mHeight / 4), this.mCanvasWidth,
-							this.mCanvasHeight, new Point(
-									this.entityCoordinates.x + entityWidth / 2,
-									this.entityCoordinates.y), new Point(
-									Constants.SHIP_BASIC_RANGE
-											* sType.rangeMultiplier(), i - 1),
+							this.mCanvasHeight, ini, fin, (int) (- angM),
 							(int) (Constants.SHIP_BASIC_DAMAGE * sType
 									.powerMultiplier()), timestampLastShot);
-				else
+				} else {
+					Point ini = new Point(this.entityCoordinates.x - entityWidth / 2, this.entityCoordinates.y);
+					Point fin = new Point(-Constants.SHIP_BASIC_RANGE * sType.rangeMultiplier(), i - 1);
+					int num = fin.y - ini.y;
+					int den = fin.x - ini.x;
+					float m = (num  * 1.0f) / den;
+					double angM = Math.toDegrees(Math.atan(m));
 					cannonballVector = new Shot(context, x, y + (mHeight / 4),
-							this.mCanvasWidth, this.mCanvasHeight, new Point(
-									this.entityCoordinates.x - entityWidth / 2,
-									this.entityCoordinates.y), new Point(
-									-Constants.SHIP_BASIC_RANGE
-											* sType.rangeMultiplier(), i - 1),
+							this.mCanvasWidth, this.mCanvasHeight, ini, fin, (int) (180 - angM),
 							(int) (Constants.SHIP_BASIC_DAMAGE * sType
 									.powerMultiplier()), timestampLastShot);
-
+				}
 				cannonballArray[i] = cannonballVector;
 				if (mAmmunition != Constants.SHOT_AMMO_UNLIMITED)
 					mAmmunition--;

@@ -36,7 +36,7 @@ public class Clouds extends BasicModel{
 	}
 	
 	public void heightReposition(int bottomPadding){
-		y = mHeight - bottomPadding;
+		y = -(mHeight - bottomPadding);
 	}
 	
 	public boolean isCloudy() {
