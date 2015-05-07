@@ -10,7 +10,6 @@ import android.util.Log;
 
 import com.pirateseas.R;
 import com.pirateseas.model.canvasmodel.game.BasicModel;
-import com.pirateseas.utils.approach2d.DrawableHelper;
 
 /**
  *
@@ -21,11 +20,11 @@ import com.pirateseas.utils.approach2d.DrawableHelper;
  * @see: http://en.wikipedia.org/wiki/Alpha_compositing
  *
  */
+@SuppressWarnings("unused")
 public class Sky extends BasicModel{
-	
 	private static final String TAG = "com.pirateseas.SKY";
 	
-	private static final int FILTER_MASK = 2^(2 * 8 + 8);
+	private static final int FILTER_MASK = (int) Math.pow(2, (2 * 8 + 8));
 	
 	private Drawable mImageAux;
 	private int filterValue = 1;
@@ -42,9 +41,7 @@ public class Sky extends BasicModel{
 		} else {
 			setImage(context.getResources().getDrawable(R.drawable.txtr_sky_clear));
 			mImageAux = context.getResources().getDrawable(R.drawable.txtr_sky_clear);
-		}
-		
-		
+		}		
 	}
 	
 	@Override
@@ -53,8 +50,8 @@ public class Sky extends BasicModel{
 		xLeft = (int) x;
  
         mImage.setBounds(xLeft, yUp, (int) (xLeft + mCanvasWidth), (int) (yUp + mCanvasHeight));
-        mImage.setColorFilter(filterValue * FILTER_MASK, PorterDuff.Mode.SRC_OVER);
-        mImageAux.setColorFilter(filterValue * FILTER_MASK, PorterDuff.Mode.SRC_OVER);
+        mImage.setColorFilter(filterValue * FILTER_MASK, PorterDuff.Mode.SRC_ATOP);
+        mImageAux.setColorFilter(filterValue * FILTER_MASK, PorterDuff.Mode.SRC_ATOP);
         mImage.draw(canvas);
 		
 		// Si la xLeft no es cero 0 
@@ -70,11 +67,6 @@ public class Sky extends BasicModel{
 	
 	public void setFilterValue(int value){
 		this.filterValue = value;
-	}
-	
-	public void rotate(float angle){
-		Log.d(TAG, "Rotating sky by " + angle + " degrees");
-		this.mImage = DrawableHelper.rotateDrawable(mImage, context, angle);
 	}
 
 	@Override

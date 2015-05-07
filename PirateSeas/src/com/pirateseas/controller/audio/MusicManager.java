@@ -24,13 +24,18 @@ public class MusicManager{
 	public static final int SOUND_SHOT_FLYING = 0x1;
 	public static final int SOUND_SHOT_HIT = 0x2;
 	public static final int SOUND_SHOT_MISSED = 0x3;
-	public static final int SOUND_WEATHER_FOG = 0x4;
-	public static final int SOUND_WEATHER_STORM = 0x5;
-	public static final int SOUND_ENEMY_APPEAR = 0x6;
-	public static final int SOUND_GAME_PAUSED = 0x7;
-	public static final int SOUND_GOLD_GAINED = 0x8;
-	public static final int SOUND_GOLD_SPENT = 0x9;
-	public static final int SOUND_XP_GAINED = 0xA;
+	public static final int SOUND_SHOT_RELOADING = 0x4;
+	public static final int SOUND_WEATHER_FOG = 0x5;
+	public static final int SOUND_WEATHER_STORM = 0x6;
+	public static final int SOUND_WEATHER_MAELSTROM = 0x7;
+	public static final int SOUND_ENEMY_APPEAR = 0x8;
+	public static final int SOUND_GAME_PAUSED = 0x9;
+	public static final int SOUND_GAME_RESUMED = 0xA;
+	public static final int SOUND_GOLD_GAINED = 0xB;
+	public static final int SOUND_GOLD_SPENT = 0xC;
+	public static final int SOUND_XP_GAINED = 0xD;
+	public static final int SOUND_SCENE_RIPPLE = 0xE;
+	public static final int SOUND_SCENE_GULL = 0xF;
 	
 	// Variables
 	private static final int MAX_STREAM_NUMBER = 4;

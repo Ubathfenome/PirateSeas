@@ -14,6 +14,8 @@ import com.pirateseas.model.canvasmodel.game.Parallax;
 */
 public class Clouds extends BasicModel{
 	
+	private static final double OUTWINDOW_RATIO = 1.5;
+	
 	private boolean isCloudy;
 	private double xTop;
 	
@@ -29,8 +31,8 @@ public class Clouds extends BasicModel{
 		this.xTop = x;
 		this.isCloudy = cloudy;
 		
-		speedBase = Parallax.speedBase;
-		speedTop = Parallax.speedTop;
+		speedBase = Parallax.SPEED_BASE;
+		speedTop = Parallax.SPEED_TOP;
 		
 		setImage(mImageAux = mParallaxAux.getLayers()[1]);
 	}
@@ -48,14 +50,10 @@ public class Clouds extends BasicModel{
 	}
 	
 	public void move(){
-		if(x >= mCanvasWidth || x < 0){
-			speedBase *= (-1);
-		}
-		
-		if(xTop >= mCanvasWidth || xTop < 0){
-			speedTop *= (-1);
-		}
-		
+		if(x >= (mCanvasWidth * OUTWINDOW_RATIO))
+			x = -(mWidth * OUTWINDOW_RATIO);
+		if(xTop >= (mCanvasWidth * OUTWINDOW_RATIO))
+			xTop = -(mWidth * OUTWINDOW_RATIO);
 		
 		if(isCloudy)
 			xTop += speedTop;

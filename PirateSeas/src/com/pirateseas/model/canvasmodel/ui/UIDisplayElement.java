@@ -17,22 +17,27 @@ import android.view.View;
 public class UIDisplayElement extends View {
 	
 	private int mValue;
+	private boolean mReloading;
 	private Paint paint;
 	private Drawable mImage;
+	private Drawable mImageCancel;
 	private TypedArray mArray;
 	
-	@SuppressWarnings("deprecation")
 	@SuppressLint("NewApi")
+	@SuppressWarnings("deprecation")
 	public UIDisplayElement(Context context, int drawableResource, int value){
 		super(context);
 		
 		paint = new Paint();
 		paint.setColor(Color.WHITE);
 		this.mValue = value;
+		this.mReloading = false;
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
 			mImage = context.getResources().getDrawable(drawableResource, null);
+			mImageCancel = context.getResources().getDrawable(R.drawable.ico_cancel, null);
 		} else {
 			mImage = context.getResources().getDrawable(drawableResource);
+			mImageCancel = context.getResources().getDrawable(R.drawable.ico_cancel);
 		}
 	}
 	
@@ -54,6 +59,8 @@ public class UIDisplayElement extends View {
 		mArray.recycle();
 	}
 	
+	@SuppressLint("NewApi")
+	@SuppressWarnings("deprecation")
 	private void init(){
 		paint = new Paint();
 		paint.setColor(Color.RED);
@@ -62,6 +69,11 @@ public class UIDisplayElement extends View {
 		
 		this.mValue = mArray.getInteger(R.styleable.UIDisplayElement_defaultValue, 0);
 		this.mImage = getBackground();
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+			mImageCancel = getResources().getDrawable(R.drawable.ico_cancel, null);
+		} else {
+			mImageCancel = getResources().getDrawable(R.drawable.ico_cancel);
+		}
 	}
 	
 	public int getElementValue(){
@@ -72,9 +84,25 @@ public class UIDisplayElement extends View {
 		this.mValue = value;
 	}
 	
+	/**
+	 * @return the mReloading
+	 */
+	public boolean isReloading() {
+		return mReloading;
+	}
+
+	/**
+	 * @param mReloading the mReloading to set
+	 */
+	public void setReloading(boolean mReloading) {
+		this.mReloading = mReloading;
+	}
+
 	@Override
 	public void onDraw(Canvas canvas){
 		mImage.draw(canvas);
+		if(mReloading)
+			mImageCancel.draw(canvas);
 		canvas.drawText(String.valueOf(mValue), mImage.getIntrinsicWidth() / 16, mImage.getIntrinsicHeight() / 2 + 10,paint);
 	}
 

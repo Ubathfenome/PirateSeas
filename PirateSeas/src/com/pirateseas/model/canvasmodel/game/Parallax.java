@@ -8,8 +8,8 @@ import android.os.Build;
 public class Parallax {
 	
 	Drawable imageBase = null, imageTop = null;
-	public static final float speedBase = 2f;
-	public static final float speedTop = 8f;
+	public static final float SPEED_BASE = 1.2f;
+	public static final float SPEED_TOP = 8f;
 	
 	@SuppressLint("NewApi")
 	@SuppressWarnings("deprecation")

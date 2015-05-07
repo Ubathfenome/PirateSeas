@@ -12,12 +12,15 @@ import com.pirateseas.model.canvasmodel.game.BasicModel;
 public class Sea extends BasicModel{
 	
 	private Drawable mImageAux;
+	private static int startingHeight;
 	
 	@SuppressWarnings("deprecation")
 	@SuppressLint("NewApi")
 	public Sea(Context context, double x, double y, double mCanvasWidth,
             double mCanvasHeight){
 		super(context, x, y, mCanvasWidth, mCanvasHeight, null);
+		
+		startingHeight = (int) y;
 		
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
 			setImage(context.getResources().getDrawable(R.drawable.blue_water_texture, null));
@@ -36,7 +39,7 @@ public class Sea extends BasicModel{
         mImage.setBounds(xLeft, yUp, (int)(xLeft + mCanvasWidth), (int)(yUp + mCanvasHeight));
         mImage.draw(canvas);
 		
-		// Si la xLeft no es cero 0 
+		// Si la xLeft no es cero
 		// Es necesario pintar un fondo auxiliar por la derecha o la izquierda. 
 		if (xLeft < 0) { 
 			mImageAux.setBounds((int) (xLeft + mCanvasWidth), yUp, (int) (xLeft + mCanvasWidth) + mWidth, yUp + mHeight);
@@ -44,6 +47,36 @@ public class Sea extends BasicModel{
 		} else if (xLeft > 0) { 
 			mImageAux.setBounds((int) (xLeft - mCanvasWidth), yUp, (int) (xLeft - mCanvasWidth) + mWidth, yUp + mHeight);
 			mImageAux.draw(canvas);
+		}
+		
+		// TODO
+		// Si la yUp no es startingHeight
+		// Es necesario pintar un fondo auxiliar por arriba o por abajo.
+		if (yUp < startingHeight) { 
+			mImageAux.setBounds(xLeft, yUp, (int) mCanvasWidth, (int) mCanvasHeight);
+			mImageAux.draw(canvas);
+		} else if (yUp > startingHeight) { 
+			mImageAux.setBounds(xLeft, yUp, (int) mCanvasWidth, (int) mCanvasHeight);
+			mImageAux.draw(canvas);
+		}
+	}
+	
+	@Override
+	public void move(double xLength, double yLength){
+		x = x - xLength;
+		y = y + yLength;
+		
+		// Horizontal behavior
+		if ( x > mCanvasWidth){
+			x = 0;
+		} 
+		if ( x < 0){
+			x = mCanvasWidth;
+		}
+		
+		// Vertical behavior
+		if( y > mCanvasHeight || y < startingHeight){
+			y = startingHeight;
 		}
 	}
 }

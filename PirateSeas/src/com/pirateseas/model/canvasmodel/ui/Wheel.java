@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+@SuppressWarnings("unused")
 public class Wheel extends View {
 	private static final String TAG = "Wheel";
 	
@@ -104,7 +105,7 @@ public class Wheel extends View {
 			// Log.d(TAG, "Distance moved on X = " + mMovedPixels);
 			if (Math.abs(mMovedPixels) >= MODULE_MOVED){
 				mDegrees = Geometry.getRotationAngle(startPoint, mCenter, endPoint);
-				Log.d(TAG, "Angle = " + mDegrees + "º");
+				// Log.d(TAG, "Angle = " + mDegrees + "º");
 				
 				setPivotX(mCenter.x);
 				setPivotY(mCenter.y);

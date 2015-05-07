@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Point;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -121,8 +122,13 @@ public class MainMenuActivity extends Activity {
 		});
 
 		MusicManager.getInstance(this, R.raw.msc_casimps1_zoo_music);
-		if (!isInDebugMode())
+		
+		AsyncTask<Void, Integer, Boolean> loadSoundsTask = new LoadSounds();
+		
+		if (!isInDebugMode()){
+			loadSoundsTask.execute();
 			MusicManager.getInstance().playBackgroundMusic();
+		}
 	}
 
 	private boolean isInDebugMode() {
@@ -238,5 +244,25 @@ public class MainMenuActivity extends Activity {
 			// Create the AlertDialog object and return it
 			return builder.create();
 		}
+	}
+	
+	private class LoadSounds extends AsyncTask<Void, Integer, Boolean>{
+
+		@Override
+		protected Boolean doInBackground(Void... arg0) {
+			MusicManager.getInstance().registerSound(MusicManager.SOUND_ENEMY_APPEAR, 0);
+			MusicManager.getInstance().registerSound(MusicManager.SOUND_GAME_PAUSED, 0);
+			MusicManager.getInstance().registerSound(MusicManager.SOUND_GOLD_GAINED, 0);
+			MusicManager.getInstance().registerSound(MusicManager.SOUND_GOLD_SPENT, 0);
+			MusicManager.getInstance().registerSound(MusicManager.SOUND_SHOT_FIRED, 0);
+			MusicManager.getInstance().registerSound(MusicManager.SOUND_SHOT_FLYING, 0);
+			MusicManager.getInstance().registerSound(MusicManager.SOUND_SHOT_HIT, 0);
+			MusicManager.getInstance().registerSound(MusicManager.SOUND_SHOT_MISSED, 0);
+			MusicManager.getInstance().registerSound(MusicManager.SOUND_WEATHER_FOG, 0);
+			MusicManager.getInstance().registerSound(MusicManager.SOUND_WEATHER_STORM, 0);
+			MusicManager.getInstance().registerSound(MusicManager.SOUND_XP_GAINED, 0);
+			return true;
+		}
+		
 	}
 }

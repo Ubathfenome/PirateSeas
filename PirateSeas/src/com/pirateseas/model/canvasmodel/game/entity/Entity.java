@@ -9,7 +9,7 @@ import android.graphics.Point;
 
 public class Entity extends BasicModel{
 	
-	private static final int MOVEMENT_DELTA = 2;
+	private static final int MOVEMENT_DELTA = 12;
 		
 	// Entity Attribs
 	protected int entityWidth;
@@ -128,7 +128,7 @@ public class Entity extends BasicModel{
 		}
 		
 		// Set next Point coordinates
-		Point next = new Point(nextX, nextY);
+		Point next = new Point(xDiff > 0 ? nextX : curr.x, yDiff > 0 ? nextY : curr.y);
 		entityCoordinates = new Point(next.x, next.y);
 	}
 

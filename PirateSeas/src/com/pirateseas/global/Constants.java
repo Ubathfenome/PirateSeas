@@ -47,7 +47,7 @@ public class Constants{
 	public static final int[] ENTITY_SPEED = {0, 1, 2, 5};
 	
 	public static final int GAME_FPS = 30;			// FPS = Frames-Per-Second
-	public static final int GAME_MPIGD = 10;		// MPIGD = Minutes-Per-In-Game-Day
+	public static final int GAME_MPIGD = 1;			// MPIGD = Minutes-Per-In-Game-Day
 	public static final int GAME_STATE_NORMAL = 0;
 	public static final int GAME_STATE_PAUSE = 1;
 	public static final int GAME_STATE_END = 2;

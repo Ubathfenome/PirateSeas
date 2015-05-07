@@ -12,5 +12,5 @@
     <item android:drawable="@drawable/img_anim_cannon" android:duration="1500" />
     <item android:drawable="@drawable/img_anim_pirate" android:duration="1500" />
     <item android:drawable="@drawable/img_anim_yarr" android:duration="1500" />
-    <item android:drawable="@drawable/img_anim_null" android:duration="100"/>
+    <item android:drawable="@drawable/img_anim_done" android:duration="100"/>
 </animation-list>

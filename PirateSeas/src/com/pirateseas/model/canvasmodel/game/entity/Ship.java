@@ -158,7 +158,7 @@ public class Ship extends Entity {
 					int den = fin.x - ini.x;
 					float m = (num * 1.0f) / den;
 					double angM = Math.toDegrees(Math.atan(m));
-					cannonballVector = new Shot(context, x + mWidth, y
+					cannonballVector = new Shot(context, x + (mWidth / 2), y
 							+ (mHeight / 4), this.mCanvasWidth,
 							this.mCanvasHeight, ini, fin, (int) (- angM),
 							(int) (Constants.SHIP_BASIC_DAMAGE * sType
