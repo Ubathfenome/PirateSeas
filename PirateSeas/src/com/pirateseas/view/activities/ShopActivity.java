@@ -80,7 +80,7 @@ public class ShopActivity extends ListActivity{
 		dummyPlayer = new Player();
 		dummyShip = new Ship();
 		
-		GameHelper.loadGame(this, dummyPlayer, dummyShip);
+		GameHelper.loadGameAtPreferences(this, dummyPlayer, dummyShip);
 		dummyPlayer = GameHelper.helperPlayer;
 		dummyShip = GameHelper.helperShip;
 		
@@ -219,7 +219,7 @@ public class ShopActivity extends ListActivity{
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
 										int id) {
-									if (GameHelper.saveGame(dummyActivity, dummyPlayer, dummyShip))
+									if (GameHelper.saveGameAtPreferences(dummyActivity, dummyPlayer, dummyShip))
 										Log.v(TAG, "Game saved");
 									else
 										try {

@@ -12,8 +12,6 @@ public class GameTimer {
 	
 	private static long baseTimestamp;
 	
-	private static final int SECONDS_PER_IN_GAME_HOUR = 60;
-	
 	public GameTimer(){
 		gameDay = 0;
 		gameHour = 0;
@@ -36,7 +34,7 @@ public class GameTimer {
 			baseTimestamp = ts;
 		else{
 			deltaTs = ts - baseTimestamp;
-			deltaSecs = deltaTs * 0.001;
+			deltaSecs = deltaTs * Constants.MILLIS_TO_SECONDS_INV;
 		}
 		
 		lastTimestamp = ts;
@@ -46,12 +44,12 @@ public class GameTimer {
 	}
 
 	private int getGameHoursFromSeconds(double realSecs) {
-		int inGameHour = (int) (realSecs % SECONDS_PER_IN_GAME_HOUR);
+		int inGameHour = (int) (realSecs % Constants.SECONDS_PER_IN_GAME_HOUR);
 		return inGameHour;
 	}
 	
 	private int getGameDayFromGameHours(double realSecs) {
-		float inGameHours = (float) (realSecs / SECONDS_PER_IN_GAME_HOUR);
+		float inGameHours = (float) (realSecs / Constants.SECONDS_PER_IN_GAME_HOUR);
 		int inGameDays = (int) (inGameHours / Constants.GAME_MPIGD);
 		return inGameDays;
 	}

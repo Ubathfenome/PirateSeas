@@ -56,7 +56,7 @@ public class Sea extends BasicModel{
 			mImageAux.setBounds(xLeft, yUp, (int) mCanvasWidth, (int) mCanvasHeight);
 			mImageAux.draw(canvas);
 		} else if (yUp > startingHeight) { 
-			mImageAux.setBounds(xLeft, yUp, (int) mCanvasWidth, (int) mCanvasHeight);
+			mImageAux.setBounds(xLeft, startingHeight, (int) mCanvasWidth, (int) mCanvasHeight);
 			mImageAux.draw(canvas);
 		}
 	}

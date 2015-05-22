@@ -21,7 +21,7 @@ public class GameHelper {
 	public static Player helperPlayer;
 	public static Ship helperShip;
 
-	public static boolean saveGame(Context context, Player player, Ship ship){
+	public static boolean saveGameAtPreferences(Context context, Player player, Ship ship){
 		
 		boolean res = false;
 		
@@ -44,7 +44,12 @@ public class GameHelper {
 		return res;
 	}
 	
-	public static boolean loadGame(Context context, Player player, Ship ship){
+	public static boolean saveGameAtDatabase(Player player, Ship ship){
+		// TODO
+		return false;
+	}
+	
+	public static boolean loadGameAtPreferences(Context context, Player player, Ship ship){
 		
 		SharedPreferences mPreferences = context.getSharedPreferences(Constants.TAG_PREF_NAME, Context.MODE_PRIVATE);
 		
@@ -64,6 +69,11 @@ public class GameHelper {
 		helperShip = ship;
 		
 		return true;
+	}
+	
+	public static boolean loadGameAtDatabase(Context context, Player player, Ship ship){
+		// TODO
+		return false;
 	}
 	
 }

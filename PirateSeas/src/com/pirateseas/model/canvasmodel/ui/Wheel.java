@@ -86,7 +86,6 @@ public class Wheel extends View {
 
 	@Override
 	public boolean performClick() {
-		resetWheel();
 		return super.performClick();
 	}
 
@@ -115,9 +114,10 @@ public class Wheel extends View {
 			break;
 		case MotionEvent.ACTION_CANCEL:
 		case MotionEvent.ACTION_UP:
-			mTouched = false;
 			if(mMovedPixels < MODULE_MOVED)
 				performClick();
+			resetWheel();
+			invalidate();
 			break;
 		}
 

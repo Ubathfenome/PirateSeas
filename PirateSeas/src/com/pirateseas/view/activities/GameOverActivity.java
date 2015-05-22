@@ -3,12 +3,17 @@ package com.pirateseas.view.activities;
 import com.pirateseas.R;
 import com.pirateseas.controller.androidGameAPI.Player;
 import com.pirateseas.global.Constants;
-
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.transition.Fade;
+import android.transition.Transition;
+import android.transition.TransitionManager;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 public class GameOverActivity extends Activity {
@@ -48,11 +53,17 @@ public class GameOverActivity extends Activity {
 		super.onResume();
 	}
 	// OnTouch
+	@SuppressLint("NewApi")
 	//: DESTROY EVERYTHING!! Muahahaha!! >:D
 	//: Start Main Menu Activity
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		if(event.getAction() == MotionEvent.ACTION_DOWN){
+			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+				Transition mFadeTransition = new Fade();			
+				TransitionManager.beginDelayedTransition((ViewGroup) findViewById(R.id.rootLayoutGameOver), mFadeTransition);
+			}
+			
 			Intent newGameTaskIntent = new Intent(this, MainMenuActivity.class);
 			newGameTaskIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			startActivity(newGameTaskIntent);

@@ -22,7 +22,7 @@ import com.pirateseas.model.canvasmodel.game.BasicModel;
  */
 @SuppressWarnings("unused")
 public class Sky extends BasicModel{
-	private static final String TAG = "com.pirateseas.SKY";
+	private static final String TAG = "SKY";
 	
 	private static final int FILTER_MASK = (int) Math.pow(2, (2 * 8 + 8));
 	

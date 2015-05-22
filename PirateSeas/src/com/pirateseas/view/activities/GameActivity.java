@@ -42,6 +42,12 @@ import com.pirateseas.model.canvasmodel.ui.UIDisplayElement;
 import com.pirateseas.model.canvasmodel.ui.Wheel;
 import com.pirateseas.view.graphics.canvasview.CanvasView;
 
+/**
+ * 
+ * @author p7166421
+ *
+ * @see: http://android-developers.blogspot.com.es/2011/11/making-android-games-that-play-nice.html
+ */
 public class GameActivity extends Activity implements SensorEventListener {
 
 	private static final String TAG = "GameActivity";
@@ -50,7 +56,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 
 	private CanvasView mCanvasView;
 
-	private static final int SECONDS = 15;
+	private static final int SENSOR_UPDATE_SECONDS = 2;
 
 	protected int[] sensorTypes = null;
 	protected long sensorLastTimestamp;
@@ -233,7 +239,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 			case Sensor.TYPE_MAGNETIC_FIELD:
 				break;
 			case Sensor.TYPE_GYROSCOPE:
-				if (deltaSeconds >= SECONDS) { // Hold sensor updates
+				if (deltaSeconds >= SENSOR_UPDATE_SECONDS) { // Hold sensor updates
 					// Parameters
 					float axisSpeedX = event.values[0];
 					float axisSpeedY = event.values[1];
@@ -246,7 +252,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 				}
 				break;
 			case Sensor.TYPE_LIGHT:
-				if (deltaSeconds >= SECONDS) { // Hold sensor updates
+				if (deltaSeconds >= SENSOR_UPDATE_SECONDS) { // Hold sensor updates
 					// Parameters
 					float lux = event.values[0];
 
@@ -257,7 +263,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 				}
 				break;
 			case Sensor.TYPE_PRESSURE:
-				if (deltaSeconds >= SECONDS) { // Hold sensor updates
+				if (deltaSeconds >= SENSOR_UPDATE_SECONDS) { // Hold sensor updates
 					// Parameters
 					float millibar = event.values[0];
 
@@ -272,7 +278,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 			case Sensor.TYPE_GRAVITY:
 				break;
 			case Sensor.TYPE_LINEAR_ACCELERATION:
-				if (deltaSeconds >= SECONDS) { // Hold sensor updates
+				if (deltaSeconds >= SENSOR_UPDATE_SECONDS) { // Hold sensor updates
 					// Parameters
 					float linearAccelerationX = event.values[0];
 					float linearAccelerationY = event.values[1];
@@ -287,7 +293,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 			case Sensor.TYPE_ROTATION_VECTOR:
 				break;
 			case Sensor.TYPE_RELATIVE_HUMIDITY:
-				if (deltaSeconds >= SECONDS) { // Hold sensor updates
+				if (deltaSeconds >= SENSOR_UPDATE_SECONDS) { // Hold sensor updates
 					// Parameters
 					float airHumidityPercent = event.values[0];
 

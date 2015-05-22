@@ -17,7 +17,6 @@ public class Constants{
 	public static final String TAG_REMOVE_PREFERENCES = "com.pirateseas.REMOVE_PREFERENCES";
 	
 	// Math factors	
-	public static final double NANOS_TO_SECONDS = Math.pow(10, -9);
 	public static final int BYTES_PER_FLOAT = 4;
 	
 	// Requests
@@ -47,10 +46,17 @@ public class Constants{
 	public static final int[] ENTITY_SPEED = {0, 1, 2, 5};
 	
 	public static final int GAME_FPS = 30;			// FPS = Frames-Per-Second
-	public static final int GAME_MPIGD = 1;			// MPIGD = Minutes-Per-In-Game-Day
+	public static final int GAME_MPIGD = 2;			// MPIGD = Minutes-Per-In-Game-Day
+	
 	public static final int GAME_STATE_NORMAL = 0;
 	public static final int GAME_STATE_PAUSE = 1;
 	public static final int GAME_STATE_END = 2;
+	
+	public static final int SECONDS_PER_IN_GAME_HOUR = 60;
+	public static final int HOURS_PER_DAY = GAME_MPIGD * SECONDS_PER_IN_GAME_HOUR;
+	public static final int MILLIS_TO_SECONDS = 1000;
+	public static final double MILLIS_TO_SECONDS_INV = Math.pow(MILLIS_TO_SECONDS, -1); 
+	public static final double NANOS_TO_SECONDS = Math.pow(10, -9);
 	
 	public static final String EMPTY_STRING = "";
 	public static final String PREF_SENSOR_LIST = "sensorListPref";

@@ -20,6 +20,7 @@ import com.pirateseas.exceptions.NotEnoughGoldException;
  */
 public class Player implements Parcelable {
 	private static final int INVALID_VALUE = -1;
+	private static final int MAP_PIECES_LIMIT = 6;
 	private static final int[] LOG_BASES = {0, 400, 1900, 4500, 8200, 13000, 18900, 24900};
 
 	private int level = 0;
@@ -37,19 +38,6 @@ public class Player implements Parcelable {
 		this.passedDays = 0;
 		this.mapPieces = 0;
 		this.hasCompleteMap = false;
-	}
-	
-	public Player(boolean debug){
-		if(!debug){
-			new Player();
-		} else {
-			this.level = 2;
-			this.gold = 237;
-			this.experience = 2345;
-			this.passedDays = 4;
-			this.mapPieces = 3;
-			this.hasCompleteMap = false;
-		}
 	}
 	
 	public Player(int level, int gold, int xp, long ts, int days, int mapPieces,
@@ -166,12 +154,12 @@ public class Player implements Parcelable {
 		if (mapPieces < 0) {
 			this.mapPieces = 0;
 		} else {
-			if (mapPieces > 11) {
-				mapPieces = 11;
+			if (mapPieces > (2 * MAP_PIECES_LIMIT-1)) {
+				mapPieces = (2 * MAP_PIECES_LIMIT-1);
 			}
-			if (mapPieces % 6 == 0 && mapPieces != 0) {
+			if (mapPieces % MAP_PIECES_LIMIT == 0 && mapPieces != 0) {
 				hasCompleteMap = true;
-				mapPieces -= 6;
+				mapPieces -= MAP_PIECES_LIMIT;
 			}
 			this.mapPieces = mapPieces;
 		}
@@ -179,9 +167,9 @@ public class Player implements Parcelable {
 
 	public void addMapPiece() {
 		this.mapPieces++;
-		if (mapPieces % 6 == 0) {
+		if (mapPieces % MAP_PIECES_LIMIT == 0) {
 			hasCompleteMap = true;
-			mapPieces -= 6;
+			mapPieces -= MAP_PIECES_LIMIT;
 		}
 	}
 

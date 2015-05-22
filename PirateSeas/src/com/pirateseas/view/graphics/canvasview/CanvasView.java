@@ -46,6 +46,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	private static final float DEGREE_DECREMENT_RATIO = 2.65f;
 	private static final double DEGREE_MIN_THRESHOLD = 0.2f;
 	private static final float FORWARD_BASE_VALUE = 1.05f;
+	private static final int ISLAND_SPAWN_SECONDS_TO_CHECK = 30;
 
 	private static final int CHT_VALUE = 20;
 	
@@ -176,13 +177,13 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	public void loadGame() {
-		GameHelper.loadGame(nContext, nPlayer, nPlayerShip);
+		GameHelper.loadGameAtPreferences(nContext, nPlayer, nPlayerShip);
 		nPlayer = GameHelper.helperPlayer;
 		nPlayerShip = GameHelper.helperShip;
 	}
 
 	public void saveGame() throws SaveGameException {
-		if (GameHelper.saveGame(nContext, nPlayer, nPlayerShip))
+		if (GameHelper.saveGameAtPreferences(nContext, nPlayer, nPlayerShip))
 			Log.v(TAG, "Game saved");
 		else
 			throw new SaveGameException(nContext.getResources().getString(
@@ -241,6 +242,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 					boolean reloaded = nPlayerShip.isReloaded(nGameTimestamp);
 					if (reloaded) {
 						((GameActivity) nContext).mAmmo.setReloading(false);
+						((GameActivity) nContext).mAmmo.postInvalidate();
 						String direction = pressedMotion(
 								new Point(downX, downY), new Point(x, y));
 						if (direction.equals(Constants.FRONT)) {
@@ -292,6 +294,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 						}
 					} else {
 						((GameActivity) nContext).mAmmo.setReloading(true);
+						((GameActivity) nContext).mAmmo.postInvalidate();
 						try {
 							throw new CannonReloadingException(nContext
 									.getResources().getString(
@@ -415,11 +418,15 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 						Constants.BAR_HEALTH);
 			}
 
-		if (nEnemyShip == null && nIsland == null && nLastIslandTimestamp != 0 && (nGameTimestamp - nLastIslandTimestamp) >= 30 * 1000) {
+		if (nEnemyShip == null && 
+				nIsland == null && 
+				nLastIslandTimestamp != 0 && 
+				(nGameTimestamp - nLastIslandTimestamp) >= ISLAND_SPAWN_SECONDS_TO_CHECK * Constants.MILLIS_TO_SECONDS) {
 			nIsland = new Island(nContext, nScreenWidth - 150, HORIZON_Y_VALUE,
 					nScreenWidth, nScreenHeight);
 			nLastIslandTimestamp = nGameTimestamp;
 			Log.v(TAG, "Island detected!");
+			Toast.makeText(nContext, "Capt'n! Land in sight!", Toast.LENGTH_SHORT).show();
 		}
 
 		nClouds.move();
@@ -541,9 +548,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 				}
 			}
 			
-			// TODO Check Sky and Sea move algorythms 
 			int verticalSpeed = (int) (FORWARD_BASE_VALUE * ((GameActivity) nContext).ctrlThrottle.getLevelSpeed());
-			// int verticalSpeed = 0;
 	
 			nSky.move(-arcPixels, -verticalSpeed);
 			nCompass.move(-arcPixels, 0);

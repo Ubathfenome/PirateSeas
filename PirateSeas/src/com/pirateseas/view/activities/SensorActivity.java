@@ -31,7 +31,7 @@ import android.widget.TextView;
 
 public class SensorActivity extends Activity{
 	
-	public static final String TAG = "com.pirateseas.view.activities.SensorActivity";
+	public static final String TAG = "SensorActivity";
 	
 	private SharedPreferences mPreferences = null;
 	private int[] preferenceSensorList = null;
