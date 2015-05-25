@@ -87,6 +87,27 @@ public class Constants{
 	public static final String ITEMLIST_NATURE = "Nature";
 	public static final String NATURE_SHOP = "Shop";
 	public static final String NATURE_TREASURE = "Treasure";
+	
+	// Database
+    public static final String DATABASE_TGAME = "t_game";
+    public static final String DATABASE_TSHIP = "t_ship";
+    public static final String DATABASE_TPLAYER = "t_player";
+    
+    public static final String TGAME_KEY = "codg";
+    public static final String TGAME_TIMESTAMP = "startTime";
+    
+    public static final String TPLAYER_KEY = "codp";
+    public static final String TPLAYER_DAYS = "days";
+    public static final String TPLAYER_GOLD = "gold";
+    public static final String TPLAYER_EXP = "experience";
+    public static final String TPLAYER_MAP_PIECES = "mapPieces";
+    
+    public static final String TSHIP_KEY = "cods";
+    public static final String TSHIP_COORD_X = "coordX";
+    public static final String TSHIP_COORD_Y = "coordY";
+    public static final String TSHIP_TYPE = "type";
+    public static final String TSHIP_HEALTH = "health";
+    public static final String TSHIP_AMMO = "ammo";
 		
 		
 }

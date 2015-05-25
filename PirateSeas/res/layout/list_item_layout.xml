@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE LinearLayout>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:baselineAligned="false"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_vertical"
@@ -16,14 +18,14 @@
 	        android:id="@+id/imgItemIcon"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:contentDescription="Item icon"
+	        android:contentDescription="@string/icd_item"
 	        android:src="@drawable/ic_launcher" />
 		
 	    <TextView
 	        android:id="@+id/txtItemName"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:text="Nombre de item"
+	        android:text="@string/shop_item_name"
 	        android:textAllCaps="true"
 	        android:layout_marginLeft="8dp"
 	        android:layout_marginRight="48dp" />
@@ -40,7 +42,7 @@
 	        android:id="@+id/txtItemPrice"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:text="999"
+	        android:text="@string/max_value"
 	        android:layout_marginLeft="48dp"
 	        android:layout_marginRight="8dp" />
 	
@@ -48,7 +50,7 @@
 	        android:id="@+id/imgGoldIcon"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:contentDescription="Gold icon"
+	        android:contentDescription="@string/icd_gold"
 	        android:src="@drawable/ico_gold" />
 	</LinearLayout>	    
 

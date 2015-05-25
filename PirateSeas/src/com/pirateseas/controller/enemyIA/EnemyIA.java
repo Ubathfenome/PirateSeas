@@ -10,6 +10,8 @@ public class EnemyIA {
 	private Ship playerShip;
 	private Ship enemyShip;
 	
+	private String playerIsAt = "";
+	
 	public EnemyIA(Ship pShip, Ship eShip){
 		this.playerShip = pShip;
 		this.enemyShip = eShip;
@@ -18,22 +20,54 @@ public class EnemyIA {
 	}
 	
 	public Ship getNextMove(){
-		// TODO
+		Ship ship = null;
 		if(imHealthier() && playerWithinReach() && playerIsAligned()){
 			//SHOOT target
+			if(!playerIsAt.equals(Constants.EMPTY_STRING) && !playerIsAt.equals(Constants.BACK)){
+				switch(playerIsAt){
+				case Constants.FRONT:
+					setStatus(IAStatuses.ATTACKF.ordinal());
+					ship = enemyShip;
+					break;
+				case Constants.RIGHT:
+					setStatus(IAStatuses.ATTACKSR.ordinal());
+					ship = enemyShip;
+					break;
+				case Constants.LEFT:
+					setStatus(IAStatuses.ATTACKSL.ordinal());
+					ship = enemyShip;
+					break;
+				}
+			}
 		} else if (imHealthier() && playerWithinReach() && !playerIsAligned()){
 			//TURN to align with target
+			if(playerIsAt.equals(Constants.EMPTY_STRING) || playerIsAt.equals(Constants.BACK)){
+				setStatus(IAStatuses.TURN.ordinal());
+				// TODO
+				ship = new Ship();
+			}
 		} else if (imHealthier() && !playerWithinReach() && playerIsAligned()){
 			//MOVE closer to target
+			if(!playerIsAt.equals(Constants.EMPTY_STRING) && !playerIsAt.equals(Constants.BACK)){
+				setStatus(IAStatuses.MOVE.ordinal());
+				// TODO
+				ship = new Ship();
+			}
 		} else if (imHealthier() && !playerWithinReach() && !playerIsAligned()){
 			//IDLE let him come
+			setStatus(IAStatuses.IDLE.ordinal());
+			// TODO
+			ship = new Ship();
 		} else if (!imHealthier() && playerWithinReach()){
 			//RETREAT asap (MOVE further from player)
+			setStatus(IAStatuses.RETREAT.ordinal());
+			// TODO
+			ship = new Ship();
 		}
 		
-		return null;
+		return ship;
 	}
-	
+
 	private boolean imHealthier(){
 		return enemyShip.getHealth() >= playerShip.getHealth() ? true : false;
 	}
@@ -54,26 +88,69 @@ public class EnemyIA {
 		
 		switch(direction){
 			case 0:
-				if(enemyDirection == 270 || enemyDirection == 180 || enemyDirection == 90)
+				if(enemyDirection == 0){
+					playerIsAt = Constants.BACK;
 					return true;
+				} else if (enemyDirection == 90) {
+					playerIsAt = Constants.LEFT;
+					return true;
+				} else if(enemyDirection == 180){
+					playerIsAt = Constants.FRONT;
+					return true;
+				} else if(enemyDirection == 270){
+					playerIsAt = Constants.RIGHT;
+					return true;
+				} 
 				break;
 			case 90:
-				if(enemyDirection == 270 || enemyDirection == 180 || enemyDirection == 0)
+				if(enemyDirection == 0){
+					playerIsAt = Constants.RIGHT;
 					return true;
+				} else if(enemyDirection == 90){
+					playerIsAt = Constants.BACK;
+					return true;
+				} else if(enemyDirection == 180){
+					playerIsAt = Constants.LEFT;
+					return true;
+				} else if(enemyDirection == 270){
+					playerIsAt = Constants.FRONT;
+					return true;
+				}
 				break;
 			case 180:
-				if(enemyDirection == 270 || enemyDirection == 90 || enemyDirection == 0)
+				if(enemyDirection == 0){
+					playerIsAt = Constants.FRONT;
 					return true;
+				} else if(enemyDirection == 90){
+					playerIsAt = Constants.RIGHT;
+					return true;
+				} else if(enemyDirection == 180){
+					playerIsAt = Constants.BACK;
+					return true;
+				} else if(enemyDirection == 270){
+					playerIsAt = Constants.LEFT;
+					return true;
+				}
 				break;
 			case 270:
-				if(enemyDirection == 180 || enemyDirection == 90 || enemyDirection == 0)
+				if(enemyDirection == 0){
+					playerIsAt = Constants.LEFT;
 					return true;
+				} else if(enemyDirection == 90){
+					playerIsAt = Constants.FRONT;
+					return true;
+				} else if(enemyDirection == 180){
+					playerIsAt = Constants.RIGHT;
+					return true;
+				} else if(enemyDirection == 270){
+					playerIsAt = Constants.BACK;
+					return true;
+				}
 				break;
 		}
 		
 		return false;
-	}
-	
+	}	
 	
 	public int getStatus() {
 		return mStatus;

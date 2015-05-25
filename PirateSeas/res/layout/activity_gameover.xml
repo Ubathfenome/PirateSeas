@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE LinearLayout>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/rootLayoutGameOver"
     android:layout_width="match_parent"
@@ -36,7 +37,7 @@
         	android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="18dp"
-            android:text="999" />
+            android:text="@string/max_value" />
 	</LinearLayout>
 
     <LinearLayout
@@ -59,7 +60,7 @@
         	android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="18dp"
-            android:text="999" />
+            android:text="@string/max_value" />
 	</LinearLayout>
 
     <TextView

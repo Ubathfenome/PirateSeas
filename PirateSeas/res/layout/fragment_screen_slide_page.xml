@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   -->
-
+<!DOCTYPE ScrollView>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/content"
     android:layout_width="match_parent"
@@ -37,11 +37,12 @@
             android:lineSpacingMultiplier="1.2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="This is some tutorial content" />
+            android:text="@string/tutorial_content" />
 			
 		<ImageView android:id="@+id/imgDisplayed"
 			android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/icd_tutorial_image" />
 
     </LinearLayout>
 

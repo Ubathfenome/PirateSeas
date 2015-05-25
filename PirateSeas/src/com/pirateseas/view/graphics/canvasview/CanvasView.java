@@ -527,6 +527,25 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 			} else {
 				EnemyIA eIA = new EnemyIA(nPlayerShip, nEnemyShip);
 				nEnemyShip = eIA.getNextMove();
+				
+				try {
+					if(eIA.getStatus() == 3)  
+						nShotList.add(nEnemyShip.shootFront());
+					if(eIA.getStatus() == 4){
+						Shot[] shotArray = nEnemyShip.shootSide(true);
+						for(Shot s : shotArray){
+							nShotList.add(s);
+						}
+					}
+					if(eIA.getStatus() == 5){
+						Shot[] shotArray = nEnemyShip.shootSide(false);
+						for(Shot s : shotArray){
+							nShotList.add(s);
+						}
+					}
+				} catch (NoAmmoException e) {
+					Log.e(EXCEPTION_TAG, e.getMessage());
+				}
 			}
 		}
 	}

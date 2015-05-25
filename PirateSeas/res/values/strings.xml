@@ -13,6 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+<!DOCTYPE resources>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
     <!-- Global strings -->
@@ -41,6 +42,7 @@
     <string name="lbl_volume">Volume</string>
     
     <!-- Shop strings -->
+    <string name="shop_item_name">Item name</string>
     <string name="shop_purchase_hint">\n
         (Select any item to display its description)\n
         (Long press any item to purchase it)</string>
@@ -111,7 +113,15 @@
     <string name="icd_loading_animation">Loading animation image</string>
     <string name="icd_rest_preferences">Restore preferences</string>
     <string name="icd_help_hud">Game hud image</string>
-
+    <string name="icd_item">Item icon</string>
+    <string name="icd_gold">Gold icon</string>
+    <string name="icd_btn_settings">Setting\'s button</string>
+    <string name="icd_btn_help">Help button</string>
+    <string name="icd_tutorial_image">Tutorial background image</string>
+    
+	<!-- Numeric values -->
+    <string name="max_value">999</string>
+    
     <string name="default_sample_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut 
         gravida, massa nec bibendum maximus, nunc ante viverra enim, sit amet viverra nisi nulla vitae 
         massa. Sed tempor lectus porttitor, dapibus nibh sit amet, viverra nisi. Vivamus ex erat, 
@@ -129,5 +139,7 @@
     <string name="gameover_score">Score</string>
     <string name="gameover_days">Days passed</string>
     <string name="app_about">About us&#8230;</string>
+    <string name="tutorial_content">This is some tutorial content</string>
+    
 
 </resources>

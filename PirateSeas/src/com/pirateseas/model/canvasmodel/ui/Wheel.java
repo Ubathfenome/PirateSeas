@@ -117,7 +117,6 @@ public class Wheel extends View {
 			if(mMovedPixels < MODULE_MOVED)
 				performClick();
 			resetWheel();
-			invalidate();
 			break;
 		}
 
@@ -140,6 +139,7 @@ public class Wheel extends View {
 			setImage(this.getResources().getDrawable(R.drawable.ico_wheel));
 		}
 		mTouched = false;
+		invalidate();
 	}
 
 	public boolean isBeingTouched() {
