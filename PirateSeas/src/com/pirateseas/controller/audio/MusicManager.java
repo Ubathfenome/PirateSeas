@@ -34,8 +34,8 @@ public class MusicManager{
 	public static final int SOUND_GOLD_GAINED = 0xB;
 	public static final int SOUND_GOLD_SPENT = 0xC;
 	public static final int SOUND_XP_GAINED = 0xD;
-	public static final int SOUND_SCENE_RIPPLE = 0xE;
-	public static final int SOUND_SCENE_GULL = 0xF;
+	// public static final int SOUND_SCENE_RIPPLE = 0xE;
+	// public static final int SOUND_SCENE_GULL = 0xF;
 	
 	// Variables
 	private static final int MAX_STREAM_NUMBER = 4;

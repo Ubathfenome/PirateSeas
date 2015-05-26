@@ -70,9 +70,9 @@ public class UIDisplayElement extends View {
 		this.mValue = mArray.getInteger(R.styleable.UIDisplayElement_defaultValue, 0);
 		this.mImage = getBackground();
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-			mImageCancel = getResources().getDrawable(R.drawable.ico_cancel, null);
+			this.mImageCancel = getResources().getDrawable(R.drawable.ico_cancel, null);
 		} else {
-			mImageCancel = getResources().getDrawable(R.drawable.ico_cancel);
+			this.mImageCancel = getResources().getDrawable(R.drawable.ico_cancel);
 		}
 	}
 	
@@ -103,7 +103,7 @@ public class UIDisplayElement extends View {
 		mImage.draw(canvas);
 		if(mReloading)
 			mImageCancel.draw(canvas);
-		canvas.drawText(String.valueOf(mValue), mImage.getIntrinsicWidth() / 16, mImage.getIntrinsicHeight() / 2 + 10,paint);
+		canvas.drawText(String.valueOf(mValue), mImage.getIntrinsicWidth() / 16, mImage.getIntrinsicHeight() / 2 + 10, paint);
 	}
 
 	@Override

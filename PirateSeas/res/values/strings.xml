@@ -43,6 +43,22 @@
     
     <!-- Shop strings -->
     <string name="shop_item_name">Item name</string>
+    <string name="shop_item_crew_name">Crew</string>
+    <string name="shop_item_crew_desc">Restores 5 health points</string>
+    <string name="shop_item_repairman_name">Repairman</string>
+    <string name="shop_item_repairman_desc">Restores 15 health points</string>
+    <string name="shop_item_nest_name">Nest</string>
+    <string name="shop_item_nest_desc">Increases the effective range by 1.15</string>
+    <string name="shop_item_mats_name">Materials</string>
+    <string name="shop_item_mats_desc">Increases the max health in 10 units</string>
+    <string name="shop_item_mpiece_name">Map Piece</string>
+    <string name="shop_item_mpiece_desc">1/6 th section of a map</string>
+    <string name="shop_item_map_name">Map</string>
+    <string name="shop_item_map_desc">Shows the closest treasure</string>
+    <string name="shop_item_bpowder_name">Black Powder</string>
+    <string name="shop_item_bpowder_desc">Increases the firepower by 0.5</string>
+    <string name="shop_item_valuable_name">Valuable</string>
+    <string name="shop_item_valuable_desc">It grants you 100 gold coins</string>
     <string name="shop_purchase_hint">\n
         (Select any item to display its description)\n
         (Long press any item to purchase it)</string>

@@ -241,8 +241,6 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 				case MotionEvent.ACTION_UP:
 					boolean reloaded = nPlayerShip.isReloaded(nGameTimestamp);
 					if (reloaded) {
-						((GameActivity) nContext).mAmmo.setReloading(false);
-						((GameActivity) nContext).mAmmo.postInvalidate();
 						String direction = pressedMotion(
 								new Point(downX, downY), new Point(x, y));
 						if (direction.equals(Constants.FRONT)) {
@@ -293,8 +291,6 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 								grantCheat2Player();
 						}
 					} else {
-						((GameActivity) nContext).mAmmo.setReloading(true);
-						((GameActivity) nContext).mAmmo.postInvalidate();
 						try {
 							throw new CannonReloadingException(nContext
 									.getResources().getString(
@@ -397,8 +393,15 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 		// Manage UIDisplayElements
 		((GameActivity) nContext).mGold.setElementValue(nPlayer.getGold());
 		((GameActivity) nContext).mGold.postInvalidate();
+		
 		((GameActivity) nContext).mAmmo.setElementValue(nPlayerShip
 				.getAmmunition());
+		
+		if(nPlayerShip.isReloaded(nGameTimestamp))
+			((GameActivity) nContext).mAmmo.setReloading(false);
+		else
+			((GameActivity) nContext).mAmmo.setReloading(true);
+		
 		((GameActivity) nContext).mAmmo.postInvalidate();
 	}
 
@@ -440,6 +443,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 
 	private void manageShots() {
 		int size = nShotList.size();
+		
 		if(size > 0){
 			boolean[] deadShots = new boolean[size];
 			nShotLastTimeChecked = new long[size];
@@ -562,8 +566,13 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 				if (degrees >= DEGREE_MIN_THRESHOLD) {
 					degrees /= DEGREE_DECREMENT_RATIO;
 					((GameActivity) nContext).ctrlWheel.setDegrees(degrees);
+					((GameActivity) nContext).doWheelRotation();
+					((GameActivity) nContext).ctrlWheel.postInvalidate();
 				} else {
-					((GameActivity) nContext).resetUiWheel();
+					if(degrees != 0){
+						((GameActivity) nContext).resetUiWheel();
+						((GameActivity) nContext).ctrlWheel.postInvalidate();
+					}
 				}
 			}
 			

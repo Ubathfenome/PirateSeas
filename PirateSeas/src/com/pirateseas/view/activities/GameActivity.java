@@ -34,6 +34,7 @@ import com.pirateseas.controller.androidGameAPI.Player;
 import com.pirateseas.controller.sensors.events.EventDayNightCycle;
 import com.pirateseas.controller.sensors.events.EventEnemyTimer;
 import com.pirateseas.controller.sensors.events.EventWeatherFog;
+import com.pirateseas.controller.sensors.events.EventWeatherMaelstrom;
 import com.pirateseas.controller.sensors.events.EventWeatherStorm;
 import com.pirateseas.global.Constants;
 import com.pirateseas.model.canvasmodel.game.scene.Island;
@@ -226,7 +227,6 @@ public class GameActivity extends Activity implements SensorEventListener {
 		}
 	}
 
-	@SuppressWarnings("unused")
 	@Override
 	public void onSensorChanged(SensorEvent event) {
 		Sensor sensor = event.sensor;
@@ -235,8 +235,38 @@ public class GameActivity extends Activity implements SensorEventListener {
 		if (arrayContainsValue(sensorTypes, sensor.getType())) {
 			switch (sensor.getType()) {
 			case Sensor.TYPE_ACCELEROMETER:
+				if (deltaSeconds >= SENSOR_UPDATE_SECONDS) { // Hold sensor updates
+					// Parameters
+					float axisSpeedX = event.values[0];
+					float axisSpeedY = event.values[1];
+					float axisSpeedZ = event.values[2];
+
+					// Log.d(TAG, "Gravity (m/s^2): " + axisSpeedX + " / " + axisSpeedY + " / " + axisSpeedZ);
+					
+					// Event
+					if(EventWeatherMaelstrom.generateMaelstrom(axisSpeedX, axisSpeedY, axisSpeedZ)){
+						ctrlWheel.setDegrees(720);
+						doWheelRotation();
+						ctrlWheel.postInvalidate();
+					}
+					
+					sensorLastTimestamp = event.timestamp;
+				}
 				break;
 			case Sensor.TYPE_MAGNETIC_FIELD:
+				if (deltaSeconds >= SENSOR_UPDATE_SECONDS) {
+					// Parameters
+					float microTeslaX = event.values[0];
+					float microTeslaY = event.values[1];
+					float microTeslaZ = event.values[2];
+					
+					Log.d(TAG, "Magnetic field (uT): " + microTeslaX + " / " + microTeslaY + " / " + microTeslaZ);
+					
+					// Event
+					
+					
+					sensorLastTimestamp = event.timestamp;
+				}
 				break;
 			case Sensor.TYPE_GYROSCOPE:
 				if (deltaSeconds >= SENSOR_UPDATE_SECONDS) { // Hold sensor updates
@@ -245,8 +275,10 @@ public class GameActivity extends Activity implements SensorEventListener {
 					float axisSpeedY = event.values[1];
 					float axisSpeedZ = event.values[2];
 
+					Log.d(TAG, "Gyroscope (rad/s): x = " + axisSpeedX + "; y = " + axisSpeedY + "; z = " + axisSpeedZ);
+										
 					// Event
-					// TODO Event method call
+					
 					
 					sensorLastTimestamp = event.timestamp;
 				}
@@ -255,6 +287,8 @@ public class GameActivity extends Activity implements SensorEventListener {
 				if (deltaSeconds >= SENSOR_UPDATE_SECONDS) { // Hold sensor updates
 					// Parameters
 					float lux = event.values[0];
+					
+					// Log.d(TAG, "Light (l): " + lux);
 
 					// Event
 					EventWeatherFog.adjustScreenBrightness(context, lux % 100);
@@ -274,6 +308,17 @@ public class GameActivity extends Activity implements SensorEventListener {
 				}
 				break;
 			case Sensor.TYPE_PROXIMITY:
+				if (deltaSeconds >= SENSOR_UPDATE_SECONDS) {
+					// Parameters
+					float centimeters = event.values[0];
+					
+					Log.d(TAG, "Proximity (cm): " + centimeters + " // " + sensor.getMaximumRange());
+					
+					// Event
+					
+					
+					sensorLastTimestamp = event.timestamp;
+				}
 				break;
 			case Sensor.TYPE_GRAVITY:
 				break;
@@ -296,6 +341,8 @@ public class GameActivity extends Activity implements SensorEventListener {
 				if (deltaSeconds >= SENSOR_UPDATE_SECONDS) { // Hold sensor updates
 					// Parameters
 					float airHumidityPercent = event.values[0];
+					
+					Log.d(TAG, "Humidity (%): " + airHumidityPercent + " // " + sensor.getMaximumRange());
 
 					// Event
 					mCanvasView.nClouds.setCloudy(EventWeatherStorm.setCloudyDay(airHumidityPercent));
@@ -357,6 +404,16 @@ public class GameActivity extends Activity implements SensorEventListener {
 	
 	public void resetUiWheel(){
 		ctrlWheel.resetWheel();
+	}
+
+	public void doWheelRotation() {
+		this.runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				ctrlWheel.rotateWheel();
+			}
+		});
 	}
 
 }

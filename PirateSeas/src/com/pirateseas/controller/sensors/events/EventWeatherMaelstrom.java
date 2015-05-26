@@ -1,21 +1,28 @@
 package com.pirateseas.controller.sensors.events;
 
-import android.graphics.Point;
 import android.util.Log;
 
 import com.pirateseas.controller.sensors.SensorType;
 
+@SuppressWarnings("unused")
 public class EventWeatherMaelstrom {
 	private static final String TAG = "EventWeatherMaelstrom";
+	private static final int AVERAGE = 10;
+	private static final int THRESHOLD = 4;
 
 	public static SensorType getSensorType() {
-		return SensorType.TYPE_GYROSCOPE;
+		return SensorType.TYPE_ACCELEROMETER;
 	}
 	
 	// Establish event effects on sensor trigger
-	public Point generateMaelstrom(float xSpeed, float ySpeed, float zSpeed){
-		float omegaMovement = (float) Math.sqrt(xSpeed*xSpeed + ySpeed*ySpeed + zSpeed*zSpeed);
-		Log.d(TAG,"Angular speed (rad/s)" + omegaMovement);
-		return null;		
+	public static boolean generateMaelstrom(float xSpeed, float ySpeed, float zSpeed){
+		double gHypot = Math.sqrt(xSpeed*xSpeed + ySpeed*ySpeed + zSpeed*zSpeed);
+		
+		// Log.d(TAG, "Gravity (m/s^2): " + gHypot);
+		
+		if(Math.abs(gHypot - AVERAGE) >= THRESHOLD)
+			return true;
+		
+		return false;		
 	}
 }

@@ -75,7 +75,7 @@ public class ShopActivity extends ListActivity{
 		Intent data = getIntent();
 		mNature = data.getExtras().getString(Constants.ITEMLIST_NATURE, Constants.EMPTY_STRING);
 		
-		ItemLoader loader = new ItemLoader();
+		ItemLoader loader = new ItemLoader(this);
 		
 		dummyPlayer = new Player();
 		dummyShip = new Ship();

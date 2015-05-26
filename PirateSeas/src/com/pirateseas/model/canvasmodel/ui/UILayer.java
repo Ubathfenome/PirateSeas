@@ -51,8 +51,7 @@ public class UILayer extends ViewGroup {
 		
 		// Inflate layer view
 		LayoutInflater inflater = LayoutInflater.from(context);
-		uiLayerView = inflater.inflate(R.layout.custom_ui_layout,this, true);
-		//uiLayerView = inflate(getContext(), R.layout.custom_ui_layout, null);
+		uiLayerView = inflater.inflate(R.layout.custom_ui_layout, this, true);
 		
 		init(0, 0);
 	}
@@ -217,7 +216,6 @@ public class UILayer extends ViewGroup {
             super(source);
         }
     }
-	
 	
 	@Override
 	public void onDraw(Canvas canvas){
