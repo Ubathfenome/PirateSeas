@@ -5,64 +5,92 @@ import com.pirateseas.model.canvasmodel.game.entity.Ship;
 
 public class EnemyIA {
 	
-	private int mStatus;
+	private IAStatus mStatus;
 	
 	private Ship playerShip;
 	private Ship enemyShip;
 	
 	private String playerIsAt = "";
 	
+	private static final double DEGREES_TO_AUTOTURN = 30.0;
+	
 	public EnemyIA(Ship pShip, Ship eShip){
 		this.playerShip = pShip;
 		this.enemyShip = eShip;
 		
-		setStatus(IAStatuses.IDLE.ordinal());
+		setStatus(IAStatus.IDLE);
 	}
 	
 	public Ship getNextMove(){
 		Ship ship = null;
+		
 		if(imHealthier() && playerWithinReach() && playerIsAligned()){
 			//SHOOT target
 			if(!playerIsAt.equals(Constants.EMPTY_STRING) && !playerIsAt.equals(Constants.BACK)){
 				switch(playerIsAt){
 				case Constants.FRONT:
-					setStatus(IAStatuses.ATTACKF.ordinal());
-					ship = enemyShip;
+					setStatus(IAStatus.ATTACKF);
 					break;
 				case Constants.RIGHT:
-					setStatus(IAStatuses.ATTACKSR.ordinal());
-					ship = enemyShip;
+					setStatus(IAStatus.ATTACKSR);
 					break;
 				case Constants.LEFT:
-					setStatus(IAStatuses.ATTACKSL.ordinal());
-					ship = enemyShip;
+					setStatus(IAStatus.ATTACKSL);
 					break;
 				}
 			}
 		} else if (imHealthier() && playerWithinReach() && !playerIsAligned()){
 			//TURN to align with target
 			if(playerIsAt.equals(Constants.EMPTY_STRING) || playerIsAt.equals(Constants.BACK)){
-				setStatus(IAStatuses.TURN.ordinal());
-				// TODO
-				ship = new Ship();
+				if(Math.random() <= 0.5)
+					setStatus(IAStatus.TURNR);
+				else
+					setStatus(IAStatus.TURNL);
 			}
 		} else if (imHealthier() && !playerWithinReach() && playerIsAligned()){
 			//MOVE closer to target
 			if(!playerIsAt.equals(Constants.EMPTY_STRING) && !playerIsAt.equals(Constants.BACK)){
-				setStatus(IAStatuses.MOVE.ordinal());
-				// TODO
-				ship = new Ship();
+				setStatus(IAStatus.MOVE);
 			}
 		} else if (imHealthier() && !playerWithinReach() && !playerIsAligned()){
 			//IDLE let him come
-			setStatus(IAStatuses.IDLE.ordinal());
-			// TODO
-			ship = new Ship();
+			setStatus(IAStatus.IDLE);
 		} else if (!imHealthier() && playerWithinReach()){
 			//RETREAT asap (MOVE further from player)
-			setStatus(IAStatuses.RETREAT.ordinal());
-			// TODO
+			setStatus(IAStatus.RETREAT);
+		}
+		
+		// Check current status
+		switch(mStatus){
+		case IDLE:
+			// TODO Hold still
 			ship = new Ship();
+			break;
+		case MOVE:
+			// TODO Move Enemy ship forwards
+			ship = new Ship();
+			break;
+		case TURNR:
+			// TODO Turn Enemy ship to the right
+			ship = new Ship();
+			break;
+		case TURNL:
+			// TODO Turn Enemy ship to the left
+			ship = new Ship();
+			break;
+		case ATTACKF:
+			ship = enemyShip;
+			break;
+		case ATTACKSR:
+			ship = enemyShip;
+			break;
+		case ATTACKSL:
+			ship = enemyShip;
+			break;
+		case RETREAT:
+			// TODO Establish retreat behaviour for enemy ships
+			ship = new Ship();
+			break;
 		}
 		
 		return ship;
@@ -152,16 +180,12 @@ public class EnemyIA {
 		return false;
 	}	
 	
-	public int getStatus() {
+	public IAStatus getStatus() {
 		return mStatus;
 	}
 
-	public void setStatus(int mStatus) {
+	public void setStatus(IAStatus mStatus) {
 		this.mStatus = mStatus;
-	}
-
-	private enum IAStatuses{
-		IDLE, MOVE, TURN, ATTACKF, ATTACKSR, ATTACKSL, RETREAT
 	}
 
 	@Override

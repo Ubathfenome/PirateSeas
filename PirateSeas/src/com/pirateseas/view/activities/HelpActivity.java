@@ -70,7 +70,20 @@ public class HelpActivity extends Activity {
 			AlertDialog.Builder builder = new AlertDialog.Builder(dummyActivity);
 			builder.setTitle(
 					getResources().getString(R.string.about_dialog_title))
-					.setMessage(R.string.about_dialog_message)
+					.setMessage(
+							getResources().getString(
+									R.string.about_dialog_message)
+									+ "\n"
+									+ String.format(
+											getResources().getString(
+													R.string.shown_version),
+											getResources().getInteger(
+													R.integer.master_version),
+											getResources().getInteger(
+													R.integer.commit_version),
+											getResources()
+													.getInteger(
+															R.integer.compilement_version)))
 					.setPositiveButton(R.string.about_dialog_positive,
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,

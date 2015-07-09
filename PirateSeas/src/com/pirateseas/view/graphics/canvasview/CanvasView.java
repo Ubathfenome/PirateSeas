@@ -7,6 +7,7 @@ import com.pirateseas.R;
 import com.pirateseas.controller.androidGameAPI.Player;
 import com.pirateseas.controller.audio.MusicManager;
 import com.pirateseas.controller.enemyIA.EnemyIA;
+import com.pirateseas.controller.enemyIA.IAStatus;
 import com.pirateseas.controller.sensors.events.EventDayNightCycle;
 import com.pirateseas.controller.sensors.events.EventEnemyTimer;
 import com.pirateseas.controller.timer.GameTimer;
@@ -533,15 +534,15 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 				nEnemyShip = eIA.getNextMove();
 				
 				try {
-					if(eIA.getStatus() == 3)  
+					if(eIA.getStatus() == IAStatus.ATTACKF)  
 						nShotList.add(nEnemyShip.shootFront());
-					if(eIA.getStatus() == 4){
+					if(eIA.getStatus() == IAStatus.ATTACKSR){
 						Shot[] shotArray = nEnemyShip.shootSide(true);
 						for(Shot s : shotArray){
 							nShotList.add(s);
 						}
 					}
-					if(eIA.getStatus() == 5){
+					if(eIA.getStatus() == IAStatus.ATTACKSL){
 						Shot[] shotArray = nEnemyShip.shootSide(false);
 						for(Shot s : shotArray){
 							nShotList.add(s);
@@ -578,6 +579,8 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 			
 			int verticalSpeed = (int) (FORWARD_BASE_VALUE * ((GameActivity) nContext).ctrlThrottle.getLevelSpeed());
 	
+			if(arcPixels != 0)
+				Log.v(TAG, "Moving scene " + (-arcPixels) + " pixels");
 			nSky.move(-arcPixels, -verticalSpeed);
 			nCompass.move(-arcPixels, 0);
 			nSea.move(-arcPixels, verticalSpeed);

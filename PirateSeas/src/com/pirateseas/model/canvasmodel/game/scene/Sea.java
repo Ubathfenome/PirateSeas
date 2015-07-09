@@ -48,8 +48,7 @@ public class Sea extends BasicModel{
 			mImageAux.setBounds((int) (xLeft - mCanvasWidth), yUp, (int) (xLeft - mCanvasWidth) + mWidth, yUp + mHeight);
 			mImageAux.draw(canvas);
 		}
-		
-		// TODO
+
 		// Si la yUp no es startingHeight
 		// Es necesario pintar un fondo auxiliar por arriba o por abajo.
 		if (yUp < startingHeight) { 
@@ -64,7 +63,7 @@ public class Sea extends BasicModel{
 	@Override
 	public void move(double xLength, double yLength){
 		x = x - xLength;
-		y = y + yLength;
+		y = y + Math.abs(yLength);
 		
 		// Horizontal behavior
 		if ( x > mCanvasWidth){

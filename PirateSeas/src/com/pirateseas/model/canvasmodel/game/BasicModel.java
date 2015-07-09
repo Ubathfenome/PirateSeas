@@ -38,11 +38,13 @@ public class BasicModel{
 		x = x - xLength;
 		y = y - yLength;
 		
-		if ( x > mCanvasWidth){
+		// TEST Changing mCanvasWidth for mWidth
+		
+		if ( x > mWidth){
 			x = 0;
 		} 
 		if ( x < 0){
-			x = mCanvasWidth;
+			x = mWidth;
 		}
 		
 		if ( y > mCanvasHeight){

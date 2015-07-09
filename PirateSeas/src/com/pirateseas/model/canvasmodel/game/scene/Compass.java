@@ -69,7 +69,8 @@ public class Compass extends BasicModel {
 		
 		// Si la xLeft no es cero 0 
 		// Es necesario pintar un fondo auxiliar por la derecha o la izquierda. 
-		if (xLeft < 0) { 
+        // TODO 
+		if (xLeft < 0 && xLeft + mWidth <= mCanvasWidth) { 
 			mImageAux.setBounds((int) (xLeft + mWidth), yUp, (int) (xLeft + mWidth) + mWidth, yUp + mHeight);
 			mImageAux.draw(canvas);
 		} else if (xLeft > 0) { 

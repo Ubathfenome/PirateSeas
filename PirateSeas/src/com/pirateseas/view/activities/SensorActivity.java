@@ -45,9 +45,6 @@ public class SensorActivity extends Activity{
 	private AnimationDrawable loadAnimation;
 	private Animation enterAnimation;
 	
-	/* (non-Javadoc)
-	 * @see android.app.Activity#onCreate(android.os.Bundle)
-	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

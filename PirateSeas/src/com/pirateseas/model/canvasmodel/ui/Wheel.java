@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
-@SuppressWarnings("unused")
 public class Wheel extends View {
 	private static final String TAG = "Wheel";
 	
@@ -101,7 +100,15 @@ public class Wheel extends View {
 			
 			mMovedPixels = endPoint.x - startPoint.x;
 			
-			// Log.d(TAG, "Distance moved on X = " + mMovedPixels);
+			Log.d(TAG, "Pre-modified distance moved on X = " + mMovedPixels);
+			
+			// Si la cantidad movida es mayor que la anchura del control, ajustar la cantidad al ancho del control
+			int maxValue = (int) (this.getWidth() * 0.1);
+			if (Math.abs(mMovedPixels) > maxValue)
+				mMovedPixels = mMovedPixels < 0 ? (-maxValue) : maxValue;
+			
+			Log.d(TAG, "Post-modified distance moved on X = " + mMovedPixels);
+			
 			if (Math.abs(mMovedPixels) >= MODULE_MOVED){
 				mDegrees = Geometry.getRotationAngle(startPoint, mCenter, endPoint);
 				// Log.d(TAG, "Angle = " + mDegrees + "º");
@@ -109,6 +116,9 @@ public class Wheel extends View {
 				setPivotX(mCenter.x);
 				setPivotY(mCenter.y);
 				setRotation(mDegrees);
+			} else {
+				mMovedPixels = 0;
+				Log.v(TAG, "Ignored mMovedPixels value");
 			}
 			invalidate();
 			break;
