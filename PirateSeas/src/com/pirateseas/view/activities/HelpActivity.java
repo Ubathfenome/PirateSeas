@@ -83,7 +83,7 @@ public class HelpActivity extends Activity {
 													R.integer.commit_version),
 											getResources()
 													.getInteger(
-															R.integer.compilement_version)))
+															R.integer.compile_version)))
 					.setPositiveButton(R.string.about_dialog_positive,
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,

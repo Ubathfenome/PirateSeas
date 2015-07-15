@@ -63,13 +63,14 @@ public class Compass extends BasicModel {
 	public void drawOnScreen(Canvas canvas){
 		yUp = (int) y;
 		xLeft = (int) x;
+		
+		// XXX TIP Avoid Overlapping images. Support concurrent behaviour.
  
         mImage.setBounds(xLeft, yUp, (int)(xLeft + mWidth), (int)(yUp + mHeight));
         mImage.draw(canvas);
 		
 		// Si la xLeft no es cero 0 
 		// Es necesario pintar un fondo auxiliar por la derecha o la izquierda. 
-        // TODO 
 		if (xLeft < 0 && xLeft + mWidth <= mCanvasWidth) { 
 			mImageAux.setBounds((int) (xLeft + mWidth), yUp, (int) (xLeft + mWidth) + mWidth, yUp + mHeight);
 			mImageAux.draw(canvas);

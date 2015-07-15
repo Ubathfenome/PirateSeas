@@ -5,6 +5,7 @@
     android:installLocation="auto"
     android:versionCode="1"
     android:versionName="@string/shown_version" >
+    <!-- http://stackoverflow.com/questions/12426750/how-to-automatically-modify-versionname-in-manifest-during-build -->
 
     <uses-sdk
         android:minSdkVersion="15"

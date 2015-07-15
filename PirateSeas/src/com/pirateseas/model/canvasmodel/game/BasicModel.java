@@ -6,6 +6,8 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 
 public class BasicModel{
+	protected static final int FILTER_MASK = (int) Math.pow(2, (2 * 8 + 8));
+	
 	protected Context context;
     protected double mCanvasHeight;
     protected double mCanvasWidth;
@@ -20,6 +22,8 @@ public class BasicModel{
 	
     protected int yUp;
     protected int xLeft;
+    
+    protected int filterValue = 1;
 
 
 	public BasicModel(Context context, double x, double y, double mCanvasWidth,

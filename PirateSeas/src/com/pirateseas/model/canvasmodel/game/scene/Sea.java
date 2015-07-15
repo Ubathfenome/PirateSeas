@@ -23,11 +23,11 @@ public class Sea extends BasicModel{
 		startingHeight = (int) y;
 		
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-			setImage(context.getResources().getDrawable(R.drawable.blue_water_texture, null));
-			mImageAux = context.getResources().getDrawable(R.drawable.blue_water_texture, null);
+			setImage(context.getResources().getDrawable(R.drawable.txtr_water, null));
+			mImageAux = context.getResources().getDrawable(R.drawable.txtr_water, null);
 		} else {
-			setImage(context.getResources().getDrawable(R.drawable.blue_water_texture));
-			mImageAux = context.getResources().getDrawable(R.drawable.blue_water_texture);
+			setImage(context.getResources().getDrawable(R.drawable.txtr_water));
+			mImageAux = context.getResources().getDrawable(R.drawable.txtr_water);
 		}
 	}
 	
@@ -77,5 +77,9 @@ public class Sea extends BasicModel{
 		if( y > mCanvasHeight || y < startingHeight){
 			y = startingHeight;
 		}
+	}
+	
+	public void setFilterValue(int value){
+		this.filterValue = value;
 	}
 }

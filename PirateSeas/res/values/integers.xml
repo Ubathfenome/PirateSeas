@@ -2,7 +2,7 @@
 <resources>
     
     <integer name="master_version">2</integer>
-    <integer name="commit_version">42</integer>
-    <integer name="compilement_version">4</integer>
+    <integer name="commit_version">43</integer>
+    <integer name="compile_version">7</integer>
     
 </resources>

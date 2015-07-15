@@ -22,12 +22,9 @@ import com.pirateseas.model.canvasmodel.game.BasicModel;
  */
 @SuppressWarnings("unused")
 public class Sky extends BasicModel{
-	private static final String TAG = "SKY";
-	
-	private static final int FILTER_MASK = (int) Math.pow(2, (2 * 8 + 8));
+	private static final String TAG = "Sky";
 	
 	private Drawable mImageAux;
-	private int filterValue = 1;
 	
 	@SuppressWarnings("deprecation")
 	@SuppressLint("NewApi")

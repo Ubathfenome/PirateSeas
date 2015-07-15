@@ -409,6 +409,9 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	private void manageEvents() {
 		nSky.setFilterValue(EventDayNightCycle.getSkyFilter(nGameTimer
 				.getHour()));
+		
+		nSea.setFilterValue(EventDayNightCycle.getSkyFilter(nGameTimer
+				.getHour()));
 
 		EventEnemyTimer timer = ((GameActivity) nContext).eventEnemy;
 		if (timer != null)
