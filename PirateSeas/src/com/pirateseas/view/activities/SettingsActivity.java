@@ -16,8 +16,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,8 +32,12 @@ public class SettingsActivity extends Activity {
 	private Button btnRestore;
 	private Button btnSettingsAccept;
 	private Button btnSettingsCancel;
+	private Switch swControlMode;
+	private CheckBox chkUseAmmoKeys;
 
 	private float volumeValue = 0f;
+	private boolean controlValue = false;
+	private boolean ammoKeysEnabled = false;
 	private String labelValue;
 	
 	private boolean mDebugMode;
@@ -54,6 +62,8 @@ public class SettingsActivity extends Activity {
 		volumeValue = (int) mPreferences.getFloat(
 				Constants.PREF_DEVICE_VOLUME, MusicManager
 				.getInstance().getDeviceVolume());
+		controlValue = mPreferences.getBoolean(Constants.PREF_CONTROL_MODE, Constants.PREF_GAME_TOUCH);
+		ammoKeysEnabled = mPreferences.getBoolean(Constants.PREF_USE_AMMO_KEYS, false);
 
 		txtVolumeLabel = (TextView) findViewById(R.id.txtVolumeLabel);
 		labelValue = (String) txtVolumeLabel.getText();
@@ -80,6 +90,28 @@ public class SettingsActivity extends Activity {
 				txtVolumeLabel.setText(labelValue + " " + progress);
 			}
 		});
+		
+		swControlMode = (Switch) findViewById(R.id.tbControlMode);
+		swControlMode.setChecked(controlValue);
+		swControlMode.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(CompoundButton v, boolean isChecked) {
+				v.setChecked(isChecked);
+				controlValue = isChecked;
+			}
+		});
+		
+		chkUseAmmoKeys = (CheckBox) findViewById(R.id.chkChangeAmmo);
+		chkUseAmmoKeys.setChecked(ammoKeysEnabled);
+		chkUseAmmoKeys.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(CompoundButton v, boolean isChecked) {
+				v.setChecked(isChecked);
+				ammoKeysEnabled = isChecked;
+			}
+		});
 
 		btnRestore = (Button) findViewById(R.id.btnSettingsRestore);
 		btnRestore.setOnClickListener(new OnClickListener() {
@@ -100,6 +132,8 @@ public class SettingsActivity extends Activity {
 				// Save changes in preferences
 				SharedPreferences.Editor editor = mPreferences.edit();
 				editor.putFloat(Constants.PREF_DEVICE_VOLUME, volumeValue);
+				editor.putBoolean(Constants.PREF_CONTROL_MODE, controlValue);
+				editor.putBoolean(Constants.PREF_USE_AMMO_KEYS, ammoKeysEnabled);
 				editor.commit();
 
 				finish();
@@ -126,6 +160,8 @@ public class SettingsActivity extends Activity {
 		SharedPreferences.Editor editor = mPreferences.edit();
 		editor.clear();
 		editor.putBoolean(Constants.TAG_EXE_MODE, mDebugMode);
+		editor.putBoolean(Constants.PREF_CONTROL_MODE, Constants.PREF_GAME_TOUCH);
+		editor.putBoolean(Constants.PREF_USE_AMMO_KEYS, false);
 		return editor.commit();
 	}
 

@@ -19,7 +19,6 @@ import com.pirateseas.model.canvasmodel.game.entity.Ship;
 import com.pirateseas.model.canvasmodel.game.entity.ShipType;
 import com.pirateseas.model.canvasmodel.game.entity.Shot;
 import com.pirateseas.model.canvasmodel.game.scene.Clouds;
-import com.pirateseas.model.canvasmodel.game.scene.Compass;
 import com.pirateseas.model.canvasmodel.game.scene.Island;
 import com.pirateseas.model.canvasmodel.game.scene.Sea;
 import com.pirateseas.model.canvasmodel.game.scene.Sky;
@@ -36,6 +35,7 @@ import android.graphics.Canvas;
 import android.graphics.Point;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -44,9 +44,6 @@ import android.widget.Toast;
 public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	private static final String TAG = "CanvasView";
 	private static final String EXCEPTION_TAG = "CustomException";
-	private static final float DEGREE_DECREMENT_RATIO = 2.65f;
-	private static final double DEGREE_MIN_THRESHOLD = 0.2f;
-	private static final float FORWARD_BASE_VALUE = 1.05f;
 	private static final int ISLAND_SPAWN_SECONDS_TO_CHECK = 30;
 
 	private static final int CHT_VALUE = 20;
@@ -67,7 +64,6 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	public Player nPlayer;
 
 	private Sky nSky;
-	private Compass nCompass;
 	private Sea nSea;
 	public Clouds nClouds;
 
@@ -90,6 +86,10 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	private boolean nDebug = false;
 	
 	private int nCheatCounter;
+	private int nGameMode;
+	private String nDirection;
+	
+	private boolean nControlMode;
 
 	int downX = 0, downY = 0;
 
@@ -141,8 +141,6 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 		nSky = new Sky(nContext, 0, 0, nScreenWidth, nScreenHeight);
 		nClouds = new Clouds(nContext, 0, 0, nScreenWidth, nScreenHeight, false);
 		nClouds.heightReposition(HORIZON_Y_VALUE - 55);
-		nCompass = new Compass(nContext, nScreenWidth / 2,
-				HORIZON_Y_VALUE - 45, nScreenWidth, nScreenHeight);
 		nSea = new Sea(nContext, 0, HORIZON_Y_VALUE, nScreenWidth,
 				nScreenHeight);
 
@@ -169,6 +167,8 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 		nLastIslandTimestamp = 0;
 		nShotLastTimeChecked = null;
 		nCheatCounter = 0;
+		nGameMode = Constants.GAMEMODE_BATTLE;
+		nControlMode = nPreferences.getBoolean(Constants.PREF_CONTROL_MODE, Constants.PREF_GAME_TOUCH);
 
 		nInitialized = true;
 	}
@@ -199,7 +199,6 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	protected void drawOnScreen(Canvas canvas) {
 		nSky.drawOnScreen(canvas);
 		nClouds.drawOnScreen(canvas);
-		nCompass.drawOnScreen(canvas);
 		nSea.drawOnScreen(canvas);
 
 		nPlayerShip.drawOnScreen(canvas);
@@ -219,6 +218,12 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 		nPlayerHBar.drawOnScreen(canvas);
 		nPlayerXPBar.drawOnScreen(canvas);
 	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		// TODO Auto-generated method stub
+		return true;
+	}
 
 	@SuppressLint("ClickableViewAccessibility")
 	@Override
@@ -232,6 +237,18 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 		}
 
 		if (nStatus == Constants.GAME_STATE_NORMAL) {
+			// TODO If is "One touch" Then "Shoot Selected"
+			
+			// TODO If "Touch control" Then 
+			if(nControlMode){
+				// If "Touch direction" is Right Then "Move Left"
+				// ElseIf "Touch direction" is Left Then "Move Right"
+			} else {
+				
+			}
+				
+			// ElseIf "Sensor control" Then
+			
 			if ((x > (getWidth() - (getWidth() / 6))) && (y < getHeight() / 6)) {
 				nStatus = Constants.GAME_STATE_PAUSE;
 				Intent pauseActivityIntent = new Intent(nContext,
@@ -239,6 +256,8 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 				nContext.startActivity(pauseActivityIntent);
 			} else {
 				switch (event.getAction()) {
+				case MotionEvent.ACTION_MOVE:
+					break;
 				case MotionEvent.ACTION_UP:
 					boolean reloaded = nPlayerShip.isReloaded(nGameTimestamp);
 					if (reloaded) {
@@ -347,6 +366,8 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 		case Constants.GAME_STATE_NORMAL:
 			manageTime();
 			manageEvents();
+			manageMode();
+			manageScreen();
 			manageEntities();
 			manageUI();
 			break;
@@ -384,26 +405,60 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	private void manageUI() {
-		// Manage StatBars
-		if(nEnemyShip != null)
-			nEnemyHBar.setCurrentValue(nEnemyShip.getHealth());
-		nPlayerHBar.setCurrentValue(nPlayerShip.getHealth());
-		nPlayerXPBar.setCurrentValue(nPlayer.getExperience());
-		nPlayerXPBar.setMaxValue(nPlayer.getNextLevelThreshold());
+		if (nGameMode == Constants.GAMEMODE_BATTLE) {
+			// Manage StatBars
+			if (nEnemyShip != null)
+				nEnemyHBar.setCurrentValue(nEnemyShip.getHealth());
+			nPlayerHBar.setCurrentValue(nPlayerShip.getHealth());
+			nPlayerXPBar.setCurrentValue(nPlayer.getExperience());
+			nPlayerXPBar.setMaxValue(nPlayer.getNextLevelThreshold());
+
+			// Manage UIDisplayElements
+			((GameActivity) nContext).mGold.setElementValue(nPlayer.getGold());
+			((GameActivity) nContext).mGold.postInvalidate();
+
+			((GameActivity) nContext).mAmmo.setElementValue(nPlayerShip
+					.getAmmunition());
+
+			if (nPlayerShip.isReloaded(nGameTimestamp))
+				((GameActivity) nContext).mAmmo.setReloading(false);
+			else
+				((GameActivity) nContext).mAmmo.setReloading(true);
+
+			((GameActivity) nContext).mAmmo.postInvalidate();
+		} else {
+			
+		}
+	}
+
+	private void manageMode() {
+		switch(nGameMode){
+		case Constants.GAMEMODE_BATTLE:
+				if(nEnemyShip == null){
+					nGameMode = Constants.GAMEMODE_ADVANCE;
+				}
+			break;
+		case Constants.GAMEMODE_ADVANCE:
+			switch(nDirection){
+			case Constants.FRONT:
+				// TODO
+				break;
+			case Constants.RIGHT:
+				// TODO
+				break;
+			case Constants.LEFT:
+				// TODO
+				break;
+			}
+			nDirection = Constants.EMPTY_STRING;
+			break;
+		}
 		
-		// Manage UIDisplayElements
-		((GameActivity) nContext).mGold.setElementValue(nPlayer.getGold());
-		((GameActivity) nContext).mGold.postInvalidate();
+	}
+	
+	private void manageScreen() {
+		// TODO Auto-generated method stub
 		
-		((GameActivity) nContext).mAmmo.setElementValue(nPlayerShip
-				.getAmmunition());
-		
-		if(nPlayerShip.isReloaded(nGameTimestamp))
-			((GameActivity) nContext).mAmmo.setReloading(false);
-		else
-			((GameActivity) nContext).mAmmo.setReloading(true);
-		
-		((GameActivity) nContext).mAmmo.postInvalidate();
 	}
 
 	private void manageEvents() {
@@ -563,38 +618,21 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 	 */
 	private void managePlayer() {
 		if(nPlayerShip.isAlive()){
-			double arcPixels = ((GameActivity) nContext).ctrlWheel.getMovedPixels();
-			float degrees = ((GameActivity) nContext).ctrlWheel.getDegrees();
-	
-			if(!((GameActivity) nContext).ctrlWheel.isBeingTouched()){
-				if (degrees >= DEGREE_MIN_THRESHOLD) {
-					degrees /= DEGREE_DECREMENT_RATIO;
-					((GameActivity) nContext).ctrlWheel.setDegrees(degrees);
-					((GameActivity) nContext).doWheelRotation();
-					((GameActivity) nContext).ctrlWheel.postInvalidate();
-				} else {
-					if(degrees != 0){
-						((GameActivity) nContext).resetUiWheel();
-						((GameActivity) nContext).ctrlWheel.postInvalidate();
-					}
-				}
-			}
 			
-			int verticalSpeed = (int) (FORWARD_BASE_VALUE * ((GameActivity) nContext).ctrlThrottle.getLevelSpeed());
-	
-			if(arcPixels != 0)
-				Log.v(TAG, "Moving scene " + (-arcPixels) + " pixels");
-			nSky.move(-arcPixels, -verticalSpeed);
-			nCompass.move(-arcPixels, 0);
-			nSea.move(-arcPixels, verticalSpeed);
 			
-			nPlayerShip.setEntityDirection((int) nCompass.getValue());
+			// TODO Check last enemy destroyed
+			
+			//nSky.move(-arcPixels, -verticalSpeed);
+			//nCompass.move(-arcPixels, 0);
+			//nSea.move(-arcPixels, verticalSpeed);
+			
+			//nPlayerShip.setEntityDirection((int) nCompass.getValue());
 	
 			if (nEnemyShip != null)
-				nEnemyShip.move(-arcPixels, verticalSpeed);
+				//nEnemyShip.move(-arcPixels, verticalSpeed);
 	
 			if (nIsland != null) {
-				nIsland.move(-arcPixels, verticalSpeed);
+				//nIsland.move(-arcPixels, verticalSpeed);
 				if (nPlayerShip.arriveIsland(nIsland)){
 					try {
 						saveGame();

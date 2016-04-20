@@ -40,6 +40,10 @@
     <string name="btn_receive">Receive All</string>
     <string name="btn_pause">Pause Button</string>
     <string name="lbl_volume">Volume</string>
+    <string name="tb_control_sensor">Sensor Control</string>
+    <string name="tb_control_touch">Touch Control</string>
+    <string name="lbl_control_mode">Control Mode</string>
+    <string name="chk_change_ammo">Change ammo type with volume keys</string>
     
     <!-- Shop strings -->
     <string name="shop_item_name">Item name</string>
@@ -134,6 +138,7 @@
     <string name="icd_btn_settings">Setting\'s button</string>
     <string name="icd_btn_help">Help button</string>
     <string name="icd_tutorial_image">Tutorial background image</string>
+    <string name="icd_btn_change_ammo">Change ammo image</string>
     
 	<!-- Numeric values -->
 	<string name="shown_version">Alpha %1$d.%2$d_%3$d</string>
@@ -151,6 +156,11 @@
         quis, efficitur ultricies erat.</string>
         
     <!-- Game strings -->
+    <string name="tutorial_1">Arrr Mate!! Welcome to PIRATE SEAS!!\nYarr want to rule these seas and loot all the booty.</string>
+    <string name="tutorial_2">You will have to move your mobile device to turn your ship. (Default setting)</string>
+    <string name="tutorial_3">Touch the screen to shoot your selected ammo.</string>
+    <string name="tutorial_4">Cycle through your ammo types touching the selected ammo icon. (Default setting)</string>
+    <string name="tutorial_5">Colect booty by sinking your enemies or discovering treasures on the islands in your path.</string>
     <string name="gameover_title">Game Over</string>
     <string name="gameover_hint">(Press anywhere to restart game&#8230;)</string>
     <string name="gameover_score">Score</string>

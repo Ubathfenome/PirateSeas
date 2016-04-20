@@ -11,23 +11,16 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Point;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
-import android.view.ViewTreeObserver;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.WindowManager;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 
 import com.pirateseas.R;
 import com.pirateseas.controller.androidGameAPI.Player;
@@ -38,9 +31,7 @@ import com.pirateseas.controller.sensors.events.EventWeatherMaelstrom;
 import com.pirateseas.controller.sensors.events.EventWeatherStorm;
 import com.pirateseas.global.Constants;
 import com.pirateseas.model.canvasmodel.game.scene.Island;
-import com.pirateseas.model.canvasmodel.ui.Throttle;
 import com.pirateseas.model.canvasmodel.ui.UIDisplayElement;
-import com.pirateseas.model.canvasmodel.ui.Wheel;
 import com.pirateseas.view.graphics.canvasview.CanvasView;
 
 /**
@@ -69,12 +60,8 @@ public class GameActivity extends Activity implements SensorEventListener {
 
 	public ImageButton btnPause;
 	public UIDisplayElement mGold, mAmmo;
-	public Throttle ctrlThrottle;
-	public Wheel ctrlWheel;
 	
 	public EventEnemyTimer eventEnemy;
-
-	protected Point centerPoint;
 
 	@SuppressLint("ClickableViewAccessibility")
 	@Override
@@ -109,42 +96,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 			}
 		});
 
-		ctrlThrottle = (Throttle) findViewById(R.id.controlThrottle);
-		ctrlThrottle.setOnTouchListener(new OnTouchListener() {
-
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				return ((Throttle) v).onTouchEvent(event);
-			}
-		});
-
-		ctrlWheel = (Wheel) findViewById(R.id.controlWheel);
-		ctrlWheel.setOnTouchListener(new OnTouchListener() {
-			
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				return ((Wheel) v).onTouchEvent(event);
-			}
-		});
-
-		final LinearLayout gUI = (LinearLayout) findViewById(R.id.guiLayer);
-		ViewTreeObserver vto = ctrlWheel.getViewTreeObserver();
-		vto.addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
-			@SuppressWarnings("deprecation")
-			@SuppressLint("NewApi")
-			@Override
-			public void onGlobalLayout() {
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-					gUI.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-				} else {
-					gUI.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-				}
-
-				ctrlWheel.setCenterPoint(new Point(ctrlWheel.getMeasuredWidth() / 2, ctrlWheel.getMeasuredHeight() / 2));
-				centerPoint = ctrlWheel.getCenterPoint();
-			}
-		});
-
+		
 		mGold = (UIDisplayElement) findViewById(R.id.playerGold);
 		mGold.setElementValue(0);
 		mAmmo = (UIDisplayElement) findViewById(R.id.playerAmmunition);
@@ -245,9 +197,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 					
 					// Event
 					if(EventWeatherMaelstrom.generateMaelstrom(axisSpeedX, axisSpeedY, axisSpeedZ)){
-						ctrlWheel.setDegrees(720);
-						doWheelRotation();
-						ctrlWheel.postInvalidate();
+						
 					}
 					
 					sensorLastTimestamp = event.timestamp;
@@ -401,19 +351,4 @@ public class GameActivity extends Activity implements SensorEventListener {
 		mCanvasView = null;
 		finish();
 	}
-	
-	public void resetUiWheel(){
-		ctrlWheel.resetWheel();
-	}
-
-	public void doWheelRotation() {
-		this.runOnUiThread(new Runnable() {
-			
-			@Override
-			public void run() {
-				ctrlWheel.rotateWheel();
-			}
-		});
-	}
-
 }

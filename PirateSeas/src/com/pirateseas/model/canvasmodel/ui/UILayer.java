@@ -22,9 +22,6 @@ public class UILayer extends ViewGroup {
 
 	private View uiLayerView;
 	
-	public Throttle mThrottleControl;
-	public Wheel mWheelControl;
-	
 	public UIDisplayElement mGold;
 	public UIDisplayElement mAmmo;
 	

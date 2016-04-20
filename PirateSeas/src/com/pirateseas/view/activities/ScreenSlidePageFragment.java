@@ -81,19 +81,27 @@ public class ScreenSlidePageFragment extends Fragment {
 		switch(mPageNumber){
 			case 0:
 				imageReference = R.drawable.img_tutorial_1;
+				((TextView) rootView.findViewById(R.id.text2)).setText(getResources().getString(R.string.tutorial_1));
 				break;
 			case 1:
 				imageReference = R.drawable.img_tutorial_1;
+				((TextView) rootView.findViewById(R.id.text2)).setText(getResources().getString(R.string.tutorial_2));
 				break;
 			case 2:
 				imageReference = R.drawable.img_tutorial_1;
+				((TextView) rootView.findViewById(R.id.text2)).setText(getResources().getString(R.string.tutorial_3));
+				break;
+			case 3:
+				imageReference = R.drawable.img_tutorial_1;
+				((TextView) rootView.findViewById(R.id.text2)).setText(getResources().getString(R.string.tutorial_4));
 				break;
 			default:
 				imageReference = R.drawable.img_tutorial_1;
+				((TextView) rootView.findViewById(R.id.text2)).setText(getResources().getString(R.string.tutorial_5));
 				break;
 		}
 		
-		((TextView) rootView.findViewById(R.id.text2)).setText(getResources().getString(R.string.default_sample_text));
+		
 		((ScrollView) rootView.findViewById(R.id.content)).setBackgroundResource(imageReference);
 
         return rootView;

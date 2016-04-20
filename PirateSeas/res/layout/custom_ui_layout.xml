@@ -12,6 +12,16 @@
 		android:orientation="horizontal"
 		android:layout_width="fill_parent"
         android:layout_height="wrap_content">
+        
+	    <ImageButton
+	        android:id="@+id/btnChangeAmmo"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:alpha="0.45"
+	        android:background="@drawable/xml_btn_style"
+	        android:contentDescription="@string/icd_btn_change_ammo"
+	        android:paddingLeft="10dp"
+	        android:src="@drawable/txtr_ammo_default" />
 		
 		<Space
 		    android:id="@+id/enemyHBarSpace"
@@ -44,15 +54,7 @@
 	    android:layout_gravity="center"
 	    android:layout_weight="50"
 	    android:orientation="horizontal" >
-		
-		<com.pirateseas.model.canvasmodel.ui.Throttle
-		    android:id="@+id/controlThrottle"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:layout_weight="1"
-		    android:layout_marginRight="16dp"
-		    android:background="@drawable/ico_throttle_0" />
-		
+			
 		<Space
 		    android:id="@+id/playerBarsSpace"
 		    android:layout_width="match_parent"
@@ -71,6 +73,7 @@
 		    android:id="@+id/playerGold"
 		    android:layout_width="48dp"
 		    android:layout_height="48dp"
+		    android:layout_margin="8dp"
 		    android:layout_gravity="bottom"
 		    android:background="@drawable/ico_gold"
 		    custom:defaultValue="0" />
@@ -79,17 +82,9 @@
 		    android:id="@+id/playerAmmunition"
 		    android:layout_width="48dp"
 		    android:layout_height="48dp"
+		    android:layout_margin="8dp"
 		    android:layout_gravity="bottom"
 		    android:background="@drawable/ico_ammo"
-		    custom:defaultValue="0" />
-			
-		<com.pirateseas.model.canvasmodel.ui.Wheel
-		    android:id="@+id/controlWheel"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:layout_marginLeft="16dp"
-		    android:layout_weight="1"
-		    android:background="@drawable/ico_wheel" />
-		
+		    custom:defaultValue="0" />		
 	</LinearLayout>
 </LinearLayout>

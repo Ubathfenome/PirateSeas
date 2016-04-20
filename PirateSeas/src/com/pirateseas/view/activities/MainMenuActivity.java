@@ -73,6 +73,7 @@ public class MainMenuActivity extends Activity {
 		SharedPreferences.Editor editor = mPreferences.edit();
 		editor.putInt(Constants.PREF_DEVICE_WIDTH_RES, screenResolutionWidth);
 		editor.putInt(Constants.PREF_DEVICE_HEIGHT_RES, screenResolutionHeight);
+		editor.putBoolean(Constants.PREF_CONTROL_MODE, Constants.PREF_GAME_TOUCH);
 		editor.putBoolean(Constants.TAG_EXE_MODE, isInDebugMode());
 		editor.commit();
 

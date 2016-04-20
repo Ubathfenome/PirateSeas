@@ -33,7 +33,7 @@
 	<Space
 	    android:id="@+id/gameSpace"
 	    android:layout_width="wrap_content"
-	    android:layout_height="550dp"
+	    android:layout_height="350dp"
 	    android:layout_gravity="fill"
 	    android:layout_weight="1" />
 	
@@ -44,14 +44,6 @@
 	    android:layout_gravity="center"
 	    android:layout_weight="50"
 	    android:orientation="horizontal" >
-		
-		<com.pirateseas.model.canvasmodel.ui.Throttle
-		    android:id="@+id/controlThrottle"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:layout_weight="1"
-		    android:layout_marginRight="160dp"
-		    android:background="@drawable/ico_throttle_0" />
 		
 		<Space
 		    android:id="@+id/playerBarsSpace"
@@ -81,15 +73,6 @@
 		    android:layout_height="48dp"
 		    android:layout_gravity="bottom"
 		    android:background="@drawable/ico_ammo"
-		    custom:defaultValue="0" />
-			
-		<com.pirateseas.model.canvasmodel.ui.Wheel
-		    android:id="@+id/controlWheel"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:layout_marginLeft="160dp"
-		    android:layout_weight="1"
-		    android:background="@drawable/ico_wheel" />
-		
+		    custom:defaultValue="0" />		
 	</LinearLayout>
 </LinearLayout>

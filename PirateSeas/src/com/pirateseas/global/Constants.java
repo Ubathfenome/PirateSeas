@@ -4,6 +4,8 @@ public class Constants{
 	// Modes
 	public static final int MODE_DEBUG = 0x0;
 	public static final int MODE_RELEASE = 0x1;
+	public static final int GAMEMODE_ADVANCE = 0x2;
+	public static final int GAMEMODE_BATTLE = 0x3;
 	
 	// Tags
 	public static final String TAG_EXE_MODE = "com.pirateseas.EXE_MODE";
@@ -76,6 +78,12 @@ public class Constants{
 	public static final String PREF_DEVICE_HEIGHT_RES = "deviceHeightPref";
 	public static final String PREF_DEVICE_WIDTH_RES = "deviceWidthPref";
 	public static final String PREF_DEVICE_NOSENSORS = "deviceNoSensorsPref";
+	
+	public static final String PREF_CONTROL_MODE = "gameControlMode";
+	public static final boolean PREF_GAME_SENSORS = false;
+	public static final boolean PREF_GAME_TOUCH = true;
+	
+	public static final String PREF_USE_AMMO_KEYS = "useAmmoKeys";
 	
 	public static final String FONT_NAME = "TooneyNoodleNF";
 	
