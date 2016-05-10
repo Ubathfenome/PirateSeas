@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/advanced_screen_frame"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal" >
+    
+    <Space
+        android:layout_width="@dimen/padding_size"
+        android:layout_height="wrap_content"
+        android:layout_gravity="fill" />
+    
+    <ImageButton
+        android:id="@+id/btnLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:layout_margin="@dimen/padding_size"
+        android:background="@drawable/ico_arrow_left" >
+
+        </ImageButton>
+    <ImageButton 
+        	android:id="@+id/btnFront"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:layout_gravity="center_vertical|center_horizontal"
+	        android:layout_margin="@dimen/padding_size"
+	        android:background="@drawable/ico_arrow_front">
+        </ImageButton>
+    <ImageButton 
+        	android:id="@+id/btnRight"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:layout_gravity="center_vertical|center_horizontal"
+	        android:layout_margin="@dimen/padding_size"
+	        android:background="@drawable/ico_arrow_right">
+        </ImageButton>
+        
+    <Space
+        android:layout_width="@dimen/padding_size"
+        android:layout_height="wrap_content"
+        android:layout_gravity="fill" />
+
+</LinearLayout>

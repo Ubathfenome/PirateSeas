@@ -193,11 +193,11 @@ public class GameActivity extends Activity implements SensorEventListener {
 					float axisSpeedY = event.values[1];
 					float axisSpeedZ = event.values[2];
 
-					// Log.d(TAG, "Gravity (m/s^2): " + axisSpeedX + " / " + axisSpeedY + " / " + axisSpeedZ);
+					Log.d(TAG, "TYPE_ACCELEROMETER: Gravity (m/s^2): " + axisSpeedX + " / " + axisSpeedY + " / " + axisSpeedZ);
 					
 					// Event
 					if(EventWeatherMaelstrom.generateMaelstrom(axisSpeedX, axisSpeedY, axisSpeedZ)){
-						
+						// TODO Notify CanvasView to turn the screen around
 					}
 					
 					sensorLastTimestamp = event.timestamp;
@@ -210,10 +210,10 @@ public class GameActivity extends Activity implements SensorEventListener {
 					float microTeslaY = event.values[1];
 					float microTeslaZ = event.values[2];
 					
-					Log.d(TAG, "Magnetic field (uT): " + microTeslaX + " / " + microTeslaY + " / " + microTeslaZ);
+					Log.d(TAG, "TYPE_MAGNETIC_FIELD: Magnetic field (uT): " + microTeslaX + " / " + microTeslaY + " / " + microTeslaZ);
 					
 					// Event
-					
+					eventEnemy = new EventEnemyTimer(microTeslaX, microTeslaY, microTeslaZ);
 					
 					sensorLastTimestamp = event.timestamp;
 				}
@@ -225,10 +225,10 @@ public class GameActivity extends Activity implements SensorEventListener {
 					float axisSpeedY = event.values[1];
 					float axisSpeedZ = event.values[2];
 
-					Log.d(TAG, "Gyroscope (rad/s): x = " + axisSpeedX + "; y = " + axisSpeedY + "; z = " + axisSpeedZ);
+					Log.d(TAG, "TYPE_GYROSCOPE: Gyroscope (rad/s): x = " + axisSpeedX + "; y = " + axisSpeedY + "; z = " + axisSpeedZ);
 										
 					// Event
-					
+					// XXX Establish an event in a future version of the game
 					
 					sensorLastTimestamp = event.timestamp;
 				}
@@ -238,7 +238,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 					// Parameters
 					float lux = event.values[0];
 					
-					// Log.d(TAG, "Light (l): " + lux);
+					Log.d(TAG, "TYPE_LIGHT: Light (l): " + lux);
 
 					// Event
 					EventWeatherFog.adjustScreenBrightness(context, lux % 100);
@@ -262,10 +262,10 @@ public class GameActivity extends Activity implements SensorEventListener {
 					// Parameters
 					float centimeters = event.values[0];
 					
-					Log.d(TAG, "Proximity (cm): " + centimeters + " // " + sensor.getMaximumRange());
+					Log.d(TAG, "TYPE_PROXIMITY: Proximity (cm): " + centimeters + " // " + sensor.getMaximumRange());
 					
 					// Event
-					
+					// XXX Establish an event in a future version of the game
 					
 					sensorLastTimestamp = event.timestamp;
 				}
@@ -278,9 +278,11 @@ public class GameActivity extends Activity implements SensorEventListener {
 					float linearAccelerationX = event.values[0];
 					float linearAccelerationY = event.values[1];
 					float linearAccelerationZ = event.values[2];
-
+					
+					Log.d(TAG, "TYPE_LINEAR_ACCELERATION: Acceleration force (m/s^2): " + linearAccelerationX + " / " + linearAccelerationY + " / " + linearAccelerationZ);
+					
 					// Event
-					eventEnemy = new EventEnemyTimer(linearAccelerationX, linearAccelerationY, linearAccelerationZ);
+					// XXX Establish an event in a future version of the game
 					
 					sensorLastTimestamp = event.timestamp;
 				}
@@ -292,7 +294,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 					// Parameters
 					float airHumidityPercent = event.values[0];
 					
-					Log.d(TAG, "Humidity (%): " + airHumidityPercent + " // " + sensor.getMaximumRange());
+					Log.d(TAG, "TYPE_RELATIVE_HUMIDITY: Humidity (%): " + airHumidityPercent + " // " + sensor.getMaximumRange());
 
 					// Event
 					mCanvasView.nClouds.setCloudy(EventWeatherStorm.setCloudyDay(airHumidityPercent));
@@ -317,6 +319,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
 		// Nothing
+		Log.d(TAG, "Sensor " + sensor.getName() + " got changed in " + accuracy);
 	}
 	
 	@Override

@@ -11,13 +11,14 @@ public class EventEnemyTimer {
 
 	public EventEnemyTimer(float x, float y, float z){		
 		// Establish relation between acceleration and game timer
-		Log.d(TAG, "X Acceleration = " + x + "; Y Acceleration = " + y + "; Z Acceleration = " + z);
-		double possibilities = Math.random() * 100 * (x + y + z);
-		spawn = possibilities % 100 > 75 ? true : false;
+		Log.d(TAG, "X = " + x + "; Y = " + y + "; Z = " + z);
+		float possibilities = x + y + z;
+		Log.d(TAG, "Actual possibilities of enemy spawn: " + possibilities + "%");
+		spawn = Math.abs(possibilities) > 75 ? true : false;
 	}
 	
 	public static SensorType getSensorType() {
-		return SensorType.TYPE_LINEAR_ACCELERATION;
+		return SensorType.TYPE_MAGNETIC_FIELD;
 	}
 
 	public boolean challengerApproaches(Ship nEnemyShip) {
