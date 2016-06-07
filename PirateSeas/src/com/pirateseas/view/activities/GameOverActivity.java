@@ -44,7 +44,7 @@ public class GameOverActivity extends Activity {
 		txtDays.setText("" + p.getPassedDays());
 		txtScore.setText("" + score);
 		
-		// TODO Upload score to the cloud? | Save score in the preferences?
+		// XXX Upload score to the cloud? | Save score in the preferences?
 	}
 
 	@Override

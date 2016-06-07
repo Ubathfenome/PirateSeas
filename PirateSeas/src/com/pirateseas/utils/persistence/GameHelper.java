@@ -12,6 +12,7 @@ import android.util.Log;
 
 import com.pirateseas.controller.androidGameAPI.Player;
 import com.pirateseas.global.Constants;
+import com.pirateseas.model.canvasmodel.game.entity.Ammunitions;
 import com.pirateseas.model.canvasmodel.game.entity.Ship;
 import com.pirateseas.model.canvasmodel.game.entity.ShipType;
 
@@ -50,7 +51,9 @@ public class GameHelper {
 		editor.putInt(Constants.PREF_PLAYER_MAP_PIECES, player.getMapPieces());
 		editor.putInt(Constants.PREF_SHIP_COORDINATES_X, ship.getCoordinates().x);
 		editor.putInt(Constants.PREF_SHIP_COORDINATES_Y, ship.getCoordinates().y);
-		editor.putInt(Constants.PREF_SHIP_AMMUNITION, ship.getAmmunition());
+		for(Ammunitions a : Ammunitions.values()){
+			editor.putInt(a.getName(), ship.getAmmunition(a));
+		}
 		editor.putInt(Constants.PREF_SHIP_HEALTH, ship.getHealth());
 		editor.putInt(Constants.PREF_SHIP_TYPE, ship.getType().ordinal());
 		
@@ -130,7 +133,11 @@ public class GameHelper {
 		register.put(Constants.TSHIP_COORD_Y, ship.getCoordinates().y);
 		register.put(Constants.TSHIP_TYPE, ship.getType().ordinal());
 		register.put(Constants.TSHIP_HEALTH, ship.getHealth());
-		register.put(Constants.TSHIP_AMMO, ship.getAmmunition());
+		register.put(Constants.TSHIP_AMMO_DEFAULT, ship.getAmmunition(Ammunitions.DEFAULT));
+		register.put(Constants.TSHIP_AMMO_AIMED, ship.getAmmunition(Ammunitions.AIMED));
+		register.put(Constants.TSHIP_AMMO_DOUBLE, ship.getAmmunition(Ammunitions.DOUBLE));
+		register.put(Constants.TSHIP_AMMO_SWEEP, ship.getAmmunition(Ammunitions.SWEEP));
+		register.put(Constants.TSHIP_SELECTED_AMMO, ship.getSelectedAmmunition());
 		return register;
 	}
 	
@@ -174,7 +181,7 @@ public class GameHelper {
 		helperPlayer = player;
 		
 		Point p = new Point(mPreferences.getInt(Constants.PREF_SHIP_COORDINATES_X, 0), mPreferences.getInt(Constants.PREF_SHIP_COORDINATES_Y, 0));
-		int ammo = mPreferences.getInt(Constants.PREF_SHIP_AMMUNITION, 20);
+		int ammo = mPreferences.getInt(Constants.PREF_SHIP_AMMUNITIONS, 20);
 		ShipType st = ShipType.values()[mPreferences.getInt(Constants.PREF_SHIP_TYPE, 0)];
 		int hp = mPreferences.getInt(Constants.PREF_SHIP_HEALTH, st.defaultHealthPoints());
 		ship = new Ship(context, ship, st, p, DEFAULT_DIRECTION, DEFAULT_SHIP_WIDTH, DEFAULT_SHIP_HEIGHT, DEFAULT_SHIP_LENGTH, hp, ammo);
@@ -244,10 +251,20 @@ public class GameHelper {
 						Constants.TSHIP_COORD_Y, 
 						Constants.TSHIP_TYPE, 
 						Constants.TSHIP_HEALTH,
-						Constants.TSHIP_AMMO},
+						Constants.TSHIP_AMMO_DEFAULT,
+						Constants.TSHIP_AMMO_AIMED,
+						Constants.TSHIP_AMMO_DOUBLE,
+						Constants.TSHIP_AMMO_SWEEP,
+						Constants.TSHIP_SELECTED_AMMO},
 					null, null, null, null, null, null);
 			if (c.moveToLast()) {
 				lastShipRow = c.getInt(c.getColumnIndexOrThrow(Constants.TSHIP_KEY));
+				int[] ammoTypes = {
+						c.getInt(c.getColumnIndexOrThrow(Constants.TSHIP_AMMO_DEFAULT)),
+						c.getInt(c.getColumnIndexOrThrow(Constants.TSHIP_AMMO_AIMED)),
+						c.getInt(c.getColumnIndexOrThrow(Constants.TSHIP_AMMO_DOUBLE)),
+						c.getInt(c.getColumnIndexOrThrow(Constants.TSHIP_AMMO_SWEEP))};
+				int selectedAmmoType = c.getInt(c.getColumnIndexOrThrow(Constants.TSHIP_SELECTED_AMMO));
 				fussionShip = new Ship(context, ship, 
 						ShipType.values()[c.getInt(c.getColumnIndexOrThrow(Constants.TSHIP_TYPE))], 
 						new Point(
@@ -258,7 +275,8 @@ public class GameHelper {
 						DEFAULT_SHIP_HEIGHT, 
 						DEFAULT_SHIP_LENGTH,
 						c.getInt(c.getColumnIndexOrThrow(Constants.TSHIP_HEALTH)),
-						c.getInt(c.getColumnIndexOrThrow(Constants.TSHIP_AMMO)));
+						ammoTypes,
+						selectedAmmoType);
 			}
 		} catch (IllegalArgumentException ex) {
 			String msg = "DATABASE ERROR: " + ex.getMessage();

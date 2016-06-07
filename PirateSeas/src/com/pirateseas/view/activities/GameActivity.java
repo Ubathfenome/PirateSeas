@@ -197,7 +197,8 @@ public class GameActivity extends Activity implements SensorEventListener {
 					
 					// Event
 					if(EventWeatherMaelstrom.generateMaelstrom(axisSpeedX, axisSpeedY, axisSpeedZ)){
-						// TODO Notify CanvasView to turn the screen around
+						// Notify CanvasView to turn the screen around
+						mCanvasView.maelstorm();
 					}
 					
 					sensorLastTimestamp = event.timestamp;
@@ -213,7 +214,8 @@ public class GameActivity extends Activity implements SensorEventListener {
 					Log.d(TAG, "TYPE_MAGNETIC_FIELD: Magnetic field (uT): " + microTeslaX + " / " + microTeslaY + " / " + microTeslaZ);
 					
 					// Event
-					eventEnemy = new EventEnemyTimer(microTeslaX, microTeslaY, microTeslaZ);
+					if(eventEnemy == null && !mCanvasView.hasEnemyShip())
+						eventEnemy = new EventEnemyTimer(microTeslaX, microTeslaY, microTeslaZ);
 					
 					sensorLastTimestamp = event.timestamp;
 				}

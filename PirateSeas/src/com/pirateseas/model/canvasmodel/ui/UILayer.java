@@ -56,7 +56,7 @@ public class UILayer extends ViewGroup {
 	public UILayer(Context context, Player player, Ship ship){
 		this(context);
 		
-		init(player.getGold(), ship.getAmmunition());
+		init(player.getGold(), ship.getSelectedAmmunition());
 	}
 	
 	private void init(int gold, int ammo){				

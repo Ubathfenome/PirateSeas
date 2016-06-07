@@ -2,8 +2,12 @@ package com.pirateseas.global;
 
 public class Constants{
 	// Modes
-	public static final int MODE_DEBUG = 0x0;
-	public static final int MODE_RELEASE = 0x1;
+	private static final int MODE_DEBUG = 0x0;
+	@SuppressWarnings("unused")
+	private static final int MODE_RELEASE = 0x1;
+	
+	public static final int MODE = MODE_DEBUG;
+	
 	public static final int GAMEMODE_ADVANCE = 0x2;
 	public static final int GAMEMODE_BATTLE = 0x3;
 	
@@ -70,7 +74,7 @@ public class Constants{
 	public static final String PREF_PLAYER_MAP_PIECES = "playerMapPiecesPref";
 	public static final String PREF_SHIP_COORDINATES_X = "shipCoordinatesXPref";
 	public static final String PREF_SHIP_COORDINATES_Y = "shipCoordinatesYPref";
-	public static final String PREF_SHIP_AMMUNITION = "shipAmmunitionPref";
+	public static final String PREF_SHIP_AMMUNITIONS = "shipAmmunitionPref";
 	public static final String PREF_SHIP_HEALTH = "shipHealthPref";
 	public static final String PREF_SHIP_TYPE = "shipTypePref";
 	
@@ -115,7 +119,13 @@ public class Constants{
     public static final String TSHIP_COORD_Y = "coordY";
     public static final String TSHIP_TYPE = "type";
     public static final String TSHIP_HEALTH = "health";
-    public static final String TSHIP_AMMO = "ammo";
+    public static final String TSHIP_AMMO_DEFAULT = "ammoDefault";
+    public static final String TSHIP_AMMO_AIMED = "ammoAimed";
+    public static final String TSHIP_AMMO_DOUBLE = "ammoDouble";
+    public static final String TSHIP_AMMO_SWEEP = "ammoSweep";
+	public static final String TSHIP_SELECTED_AMMO = "ammoSelection";
 		
-		
+	public static boolean isInDebugMode(int mMode) {
+		return mMode == Constants.MODE_DEBUG ? true : false;
+	}
 }

@@ -141,6 +141,7 @@
     <string name="icd_btn_change_ammo">Change ammo image</string>
     
 	<!-- Numeric values -->
+	<string name="version">Alpha</string>
 	<string name="shown_version">Alpha %1$d.%2$d_%3$d</string>
     <string name="max_value">999</string>
     

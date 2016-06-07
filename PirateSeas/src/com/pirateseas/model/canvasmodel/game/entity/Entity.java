@@ -25,7 +25,8 @@ public class Entity extends BasicModel{
 	// Common attribs
 	protected int mHealthPoints = 0;
 	protected int mMaxHealth = 0;
-	protected int mSpeed = 0;	
+	protected int mSpeedXLevel = 0;
+	protected int mSpeedY = 0;
 		
 	public Entity(Context context, double x, double y, double canvasWidth, double canvasHeight, Point eCoords, int eDirection, int eWidth, int eHeight, int eLength){
 		super(context, x, y, canvasWidth, canvasHeight, null);
@@ -43,7 +44,8 @@ public class Entity extends BasicModel{
 		else
 			entityDirection = eDirection;
 		
-		mSpeed = Constants.ENTITY_SPEED[0];
+		mSpeedXLevel = Constants.ENTITY_SPEED[0];
+		mSpeedY = Constants.ENTITY_SPEED[0];
 	}
 	
 	public boolean intersectionWithEntity(Entity other){
@@ -157,9 +159,21 @@ public class Entity extends BasicModel{
 		return mHealthPoints > 0 ? true : false;
 	}
 	
-	public void changeSpeed(int speedLevel){
+	public void increaseSpeedX(){
+		if(mSpeedXLevel < Constants.ENTITY_SPEED.length - 1){
+			mSpeedXLevel++;
+		}
+	}
+	
+	public void decreaseSpeedX(){
+		if(mSpeedXLevel > 0){
+			mSpeedXLevel--;
+		}
+	}
+	
+	public void changeSpeedX(int speedLevel){
 		if(speedLevel >= 0 && speedLevel <= Constants.ENTITY_SPEED.length)
-			mSpeed =  Constants.ENTITY_SPEED[speedLevel];
+			mSpeedXLevel =  Constants.ENTITY_SPEED[speedLevel];
 	}
 	
 	public int compareTo(Entity other){
@@ -180,7 +194,7 @@ public class Entity extends BasicModel{
 	}
 	
 	public boolean isMoving(){
-		return mSpeed > 0 ? true : false;
+		return mSpeedXLevel > 0 ? true : false;
 	}
 	
 	/**

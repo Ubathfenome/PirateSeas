@@ -1,6 +1,5 @@
 package com.pirateseas.controller.audio;
 
-import java.io.IOException;
 import java.util.HashMap;
 
 import com.pirateseas.global.Constants;
@@ -11,7 +10,6 @@ import android.content.SharedPreferences;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.SoundPool;
 import android.os.Build;
 import android.util.Log;
 
@@ -20,29 +18,26 @@ public class MusicManager{
 	private static final String TAG = "MusicManager";
 	
 	// Sound Ids
-	public static final int SOUND_SHOT_FIRED = 0x0;
-	public static final int SOUND_SHOT_FLYING = 0x1;
-	public static final int SOUND_SHOT_HIT = 0x2;
-	public static final int SOUND_SHOT_MISSED = 0x3;
-	public static final int SOUND_SHOT_RELOADING = 0x4;
-	public static final int SOUND_WEATHER_FOG = 0x5;
-	public static final int SOUND_WEATHER_STORM = 0x6;
-	public static final int SOUND_WEATHER_MAELSTROM = 0x7;
-	public static final int SOUND_ENEMY_APPEAR = 0x8;
-	public static final int SOUND_GAME_PAUSED = 0x9;
-	public static final int SOUND_GAME_RESUMED = 0xA;
-	public static final int SOUND_GOLD_GAINED = 0xB;
-	public static final int SOUND_GOLD_SPENT = 0xC;
-	public static final int SOUND_XP_GAINED = 0xD;
-	// public static final int SOUND_SCENE_RIPPLE = 0xE;
-	// public static final int SOUND_SCENE_GULL = 0xF;
-	
-	// Variables
-	private static final int MAX_STREAM_NUMBER = 4;
-	
+	public final static int SOUND_SHOT_FIRED = 0x0;
+	public final static int SOUND_SHOT_HIT = 0x1;
+	public final static int SOUND_SHOT_MISSED = 0x2;
+	public final static int SOUND_SHOT_RELOADING = 0x3;
+	public final static int SOUND_SHOT_EXPLOSION = 0x4;
+	public final static int SOUND_WEATHER_FOG = 0x5;
+	public final static int SOUND_WEATHER_STORM = 0x6;
+	public final static int SOUND_WEATHER_MAELSTROM = 0x7;
+	public final static int SOUND_ENEMY_APPEAR = 0x8;
+	public final static int SOUND_GOLD_GAINED = 0x9;
+	public final static int SOUND_GOLD_SPENT = 0xA;
+	public final static int SOUND_XP_GAINED = 0xB;
+	public final static int MUSIC_GAME_PAUSED = 0xC;
+	public final static int MUSIC_BATTLE = 0xD;
+	public final static int MUSIC_ISLAND = 0xE;
+	public final static int MUSIC_GAME_MENU = 0xF;
+		
 	// Sounds
-	private SoundPool mSoundPool;
-	private HashMap<Integer, Integer> mSoundMap;
+	private HashMap<Integer,Integer> mSoundKeys;
+	private SoundPools mSoundPools;
 	private AudioManager  mAudioManager;
 	private Context mContext;
 
@@ -51,12 +46,27 @@ public class MusicManager{
 	
 	private static MusicManager mInstance = null;
 	
-	public static MusicManager getInstance(Context context, int backgroundMusicId){
-		mInstance = new MusicManager();
-		mInstance.initSounds(context, backgroundMusicId);
+	public static MusicManager getInstance(Context context,
+			int backgroundMusicId) {
+		if (mInstance == null) {
+			mInstance = new MusicManager();
+		}
+		if (mInstance.mBackgroundMusic == null){
+			mInstance.initSounds(context, backgroundMusicId);
+		}
 		return mInstance;
 	}
-	
+
+	public static MusicManager getInstance(Context context) {
+		if (mInstance == null) {
+			mInstance = new MusicManager();
+		}
+		if (mInstance.mAudioManager == null){
+			mInstance.init(context);
+		}
+		return mInstance;
+	}
+
 	public static MusicManager getInstance() {
 		synchronized (MusicManager.class) {
 			if (mInstance == null) {
@@ -68,8 +78,13 @@ public class MusicManager{
 	
 	private MusicManager(){}
 	
+	private void init(Context context) {
+		mSoundPools = new SoundPools();
+		mSoundKeys = new HashMap<Integer,Integer>();
+		mAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+	}
+	
 	@SuppressLint("NewApi")
-	@SuppressWarnings("deprecation")
 	public void initSounds(Context context, int backgroundMusicId) {
 		this.mContext = context;
 		
@@ -77,41 +92,31 @@ public class MusicManager{
 			AudioAttributes.Builder attributesBuilder = new AudioAttributes.Builder();
 			attributesBuilder.setContentType(AudioAttributes.CONTENT_TYPE_MUSIC);
 			attributesBuilder.setLegacyStreamType(AudioManager.STREAM_MUSIC);
-			attributesBuilder.setUsage(AudioAttributes.USAGE_GAME);
-			SoundPool.Builder builder = new SoundPool.Builder();
-			builder.setMaxStreams(MAX_STREAM_NUMBER);
-			builder.setAudioAttributes(attributesBuilder.build());
-			mSoundPool = builder.build();
-		} else {
-			mSoundPool = new SoundPool(MAX_STREAM_NUMBER, AudioManager.STREAM_MUSIC, 100);
+			attributesBuilder.setUsage(AudioAttributes.USAGE_GAME);			
 		}
 		
+		if(mAudioManager == null)
+			init(context);
 		
-		
-		mSoundMap = new HashMap<Integer, Integer>();
-		mAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-		
-		mBackgroundMusic = MediaPlayer.create(context, backgroundMusicId);
+		mBackgroundMusic = MediaPlayer.create(context, mSoundKeys.get(backgroundMusicId));
 		mBackgroundMusic.setLooping(true);
 		float dv = getDeviceVolume();
 		mBackgroundMusic.setVolume(dv, dv);
 	}
 	
-	public void registerSound(int index, int soundId) {
-		mSoundMap.put(index, mSoundPool.load(mContext, soundId, 1));
+	public void registerSound(int soundId, int soundResource) {
+		mSoundKeys.put(soundId, soundResource);
+		mSoundPools.loadSound(mContext, String.valueOf(soundId), soundResource);
 	}
 	
 	public void playBackgroundMusic() {
 		try{
 			if(!mBackgroundMusic.isPlaying()){
 					try {
-						mBackgroundMusic.prepare();
-					} catch (IOException e) {
-						Log.e(TAG, e.getMessage());
+						mBackgroundMusic.start();
 					} catch (IllegalStateException e){
 						Log.e(TAG, e.getMessage());
 					}
-				mBackgroundMusic.start();
 			}
     	}catch(IllegalStateException e){
     		Log.e(TAG, e.getMessage());
@@ -139,7 +144,9 @@ public class MusicManager{
 		editor.putFloat(Constants.PREF_DEVICE_VOLUME, mDeviceVolume);
 		editor.commit();
 		
-		mSoundPool.play((Integer) mSoundMap.get(index), mDeviceVolume, mDeviceVolume, 1, 0, 1f);
+		int resourceId = mSoundKeys.get(index);
+		
+		mSoundPools.playSound(mContext, String.valueOf(index), resourceId, false);
 	}
 
 	public void playSoundLoop (int index) {
@@ -151,7 +158,9 @@ public class MusicManager{
 		editor.putFloat(Constants.PREF_DEVICE_VOLUME, mDeviceVolume);
 		editor.commit();
 		
-		mSoundPool.play((Integer) mSoundMap.get(index), mDeviceVolume, mDeviceVolume, 1, -1, 1f);
+		int resourceId = mSoundKeys.get(index);
+		
+		mSoundPools.playSound(mContext, String.valueOf(index), resourceId, true);
 	}
 	
 	public float getDeviceVolume(){

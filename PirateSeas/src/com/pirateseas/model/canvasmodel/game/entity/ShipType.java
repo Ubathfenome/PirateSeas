@@ -5,7 +5,7 @@ import com.pirateseas.R;
 public enum ShipType {
 	LIGHT (R.drawable.txtr_ship_light, 100, 3, 1f),
 	MEDIUM (R.drawable.txtr_ship_medium, 250, 2, 1.5f),
-	HEAVY (R.drawable.txtr_ship_base, 400, 1, 2f);
+	HEAVY (R.drawable.txtr_ship_heavy, 400, 1, 2f);
 	
 	private final int mDrawableValue;
 	private final int mDefaultHealthPoints;

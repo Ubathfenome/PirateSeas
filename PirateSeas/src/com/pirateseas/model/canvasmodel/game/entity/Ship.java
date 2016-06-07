@@ -12,8 +12,11 @@ import com.pirateseas.global.Constants;
 import com.pirateseas.model.canvasmodel.game.scene.Island;
 
 public class Ship extends Entity {
-
-	private int mAmmunition = 0;
+	// Crear array de variables para almacenar la cantidad de cada tipo de municion
+	private int nAmmoTypes = Ammunitions.values().length;
+	private int[] nAmmunitions = new int[nAmmoTypes];
+	private Ammunitions selectedAmmo;
+	private int selectedAmmoIndex= 0;
 	
 	private int mReloadTime;
 	private float mPower;
@@ -28,9 +31,14 @@ public class Ship extends Entity {
 	
 	public Ship(){
 		super(null, 0, 0, 0, 0, new Point(0, 0), 90, 0, 0, 0);
-		this.mAmmunition = 0;
+		for(int i = 0; i < nAmmoTypes; i++){
+			nAmmunitions[i] = 0;
+		}
+		
 		this.sType = ShipType.LIGHT;
 		this.isPlayable = false;
+		this.selectedAmmo = Ammunitions.DEFAULT;
+		this.selectedAmmoIndex = Ammunitions.valueOf(selectedAmmo.getName()).ordinal();
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -41,7 +49,9 @@ public class Ship extends Entity {
 		
 		this.context = context;
 		
-		this.mAmmunition = ammo;
+		this.selectedAmmo = Ammunitions.DEFAULT;
+		this.selectedAmmoIndex = Ammunitions.valueOf(selectedAmmo.getName()).ordinal();
+		this.nAmmunitions[selectedAmmoIndex] = ammo;
 		
 		this.sType = sType;
 		this.mRange = sType.rangeMultiplier();
@@ -57,12 +67,13 @@ public class Ship extends Entity {
 			else{
 				switch(sType.ordinal()){
 					case 0:
+						setImage(context.getResources().getDrawable(R.drawable.enemy_light_front, null));
 						break;
 					case 1:
-						setImage(context.getResources().getDrawable(R.drawable.enemy_front_medium, null));
+						setImage(context.getResources().getDrawable(R.drawable.enemy_medium_front, null));
 						break;
 					case 2:
-						setImage(context.getResources().getDrawable(R.drawable.enemy_front_heavy, null));
+						setImage(context.getResources().getDrawable(R.drawable.enemy_heavy_front, null));
 						break;
 				}
 			}
@@ -72,12 +83,13 @@ public class Ship extends Entity {
 			else{
 				switch(sType.ordinal()){
 					case 0:
+						setImage(context.getResources().getDrawable(R.drawable.enemy_light_front));
 						break;
 					case 1:
-						setImage(context.getResources().getDrawable(R.drawable.enemy_front_medium));
+						setImage(context.getResources().getDrawable(R.drawable.enemy_medium_front));
 						break;
 					case 2:
-						setImage(context.getResources().getDrawable(R.drawable.enemy_front_heavy));
+						setImage(context.getResources().getDrawable(R.drawable.enemy_heavy_front));
 						break;
 				}
 			}
@@ -95,7 +107,9 @@ public class Ship extends Entity {
 		
 		this.context = context;
 		
-		this.mAmmunition = ammo;
+		this.nAmmunitions[0] = ammo;
+		this.selectedAmmo = Ammunitions.DEFAULT;
+		this.selectedAmmoIndex = Ammunitions.valueOf(selectedAmmo.getName()).ordinal();
 		
 		this.sType = sType;
 		this.mRange = sType.rangeMultiplier();
@@ -114,17 +128,47 @@ public class Ship extends Entity {
 			setStatus(Constants.STATE_ALIVE);
 	}
 	
-	public void gainAmmo(int ammo){
-		if(ammo > 0)
-			mAmmunition += ammo;
-		else
+	@SuppressLint("NewApi")
+	@SuppressWarnings("deprecation")
+	public Ship(Context context, Ship baseShip, ShipType sType, Point coordinates, int direction, int width, int height, int length, int health, int[] ammoTypes,
+			int selectedAmmoType) {
+		super(context, baseShip.x, baseShip.y, baseShip.mCanvasWidth, baseShip.mCanvasHeight, coordinates, direction, width, height, length);
+		
+		this.context = context;
+		
+		this.nAmmunitions = ammoTypes;
+		this.selectedAmmo = Ammunitions.values()[selectedAmmoType];
+		this.selectedAmmoIndex = selectedAmmoType;
+		
+		this.sType = sType;
+		this.mRange = sType.rangeMultiplier();
+		this.mPower = sType.powerMultiplier();
+		this.mReloadTime = (int) sType.powerMultiplier() * Constants.SHIP_RELOAD;
+		this.mMaxHealth = sType.defaultHealthPoints() > health ? sType.defaultHealthPoints() : health;
+		gainHealth(health);
+		
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+			setImage(context.getResources().getDrawable(sType.drawableValue(), null));
+		} else {
+			setImage(context.getResources().getDrawable(sType.drawableValue()));
+		}
+		
+		if(mHealthPoints > 0)
+			setStatus(Constants.STATE_ALIVE);
+		
+	}
+
+	public void gainAmmo(int ammo, Ammunitions ammoType){
+		if(ammo > 0){
+			nAmmunitions[Ammunitions.valueOf(ammoType.getName()).ordinal()] += ammo;
+		} else
 			throw new IllegalArgumentException("Encontrado valor de puntos negativo al modificar mAmmunition");
 	}
 	
 	public Shot shootFront() throws NoAmmoException {
 		Shot cannonballVector = null;
 
-		if (mAmmunition > 0 || mAmmunition == Constants.SHOT_AMMO_UNLIMITED) {
+		if (nAmmunitions[selectedAmmoIndex] > 0 || nAmmunitions[selectedAmmoIndex] == Constants.SHOT_AMMO_UNLIMITED) {
 			timestampLastShot = SystemClock.elapsedRealtime();
 			cannonballVector = new Shot(context, x + (mWidth / 2) - (Shot.shotWidth / 2), y,
 					this.mCanvasWidth, this.mCanvasHeight, new Point(
@@ -134,8 +178,8 @@ public class Ship extends Entity {
 									* sType.rangeMultiplier()), 90,
 					(int) (Constants.SHIP_BASIC_DAMAGE * sType
 							.powerMultiplier()), timestampLastShot);
-			if (mAmmunition != Constants.SHOT_AMMO_UNLIMITED)
-				mAmmunition--;
+			if (nAmmunitions[selectedAmmoIndex] != Constants.SHOT_AMMO_UNLIMITED)
+				nAmmunitions[selectedAmmoIndex]--;
 		} else {
 			throw new NoAmmoException(context.getResources().getString(
 					R.string.exception_ammo));
@@ -144,40 +188,33 @@ public class Ship extends Entity {
 		return cannonballVector;
 	}
 
-	public Shot[] shootSide(boolean isRight) throws NoAmmoException {
+	public Shot[] shootSide() throws NoAmmoException {
 		Shot[] cannonballArray = new Shot[3];
 		Shot cannonballVector = null;
+		
+		// TODO Ajustar tiro disperso hacia abajo en vez de hacia la derecha
 
-		if (mAmmunition >= 3 || mAmmunition == Constants.SHOT_AMMO_UNLIMITED) {
+		if (nAmmunitions[selectedAmmoIndex] >= 3 || nAmmunitions[selectedAmmoIndex] == Constants.SHOT_AMMO_UNLIMITED) {
 			timestampLastShot = SystemClock.elapsedRealtime();
 			for (int i = 0, length = cannonballArray.length; i < length; i++) {
-				if (isRight) {
-					Point ini = new Point(this.entityCoordinates.x + entityWidth / 2, this.entityCoordinates.y);
-					Point fin = new Point(Constants.SHIP_BASIC_RANGE * sType.rangeMultiplier(), i - 1);
-					int num = fin.y - ini.y;
-					int den = fin.x - ini.x;
-					float m = (num * 1.0f) / den;
-					double angM = Math.toDegrees(Math.atan(m));
-					cannonballVector = new Shot(context, x + (mWidth / 2), y
-							+ (mHeight / 4), this.mCanvasWidth,
-							this.mCanvasHeight, ini, fin, (int) (- angM),
-							(int) (Constants.SHIP_BASIC_DAMAGE * sType
-									.powerMultiplier()), timestampLastShot);
-				} else {
-					Point ini = new Point(this.entityCoordinates.x - entityWidth / 2, this.entityCoordinates.y);
-					Point fin = new Point(-Constants.SHIP_BASIC_RANGE * sType.rangeMultiplier(), i - 1);
-					int num = fin.y - ini.y;
-					int den = fin.x - ini.x;
-					float m = (num  * 1.0f) / den;
-					double angM = Math.toDegrees(Math.atan(m));
-					cannonballVector = new Shot(context, x, y + (mHeight / 4),
-							this.mCanvasWidth, this.mCanvasHeight, ini, fin, (int) (180 - angM),
-							(int) (Constants.SHIP_BASIC_DAMAGE * sType
-									.powerMultiplier()), timestampLastShot);
-				}
+
+				Point ini = new Point(this.entityCoordinates.x + entityWidth
+						/ 2, this.entityCoordinates.y);
+				Point fin = new Point(Constants.SHIP_BASIC_RANGE
+						* sType.rangeMultiplier(), i - 1);
+				int num = fin.y - ini.y;
+				int den = fin.x - ini.x;
+				float m = (num * 1.0f) / den;
+				double angM = Math.toDegrees(Math.atan(m));
+				cannonballVector = new Shot(context, x + (mWidth / 2), y
+						+ (mHeight / 4), this.mCanvasWidth, this.mCanvasHeight,
+						ini, fin, (int) (-angM),
+						(int) (Constants.SHIP_BASIC_DAMAGE * sType
+								.powerMultiplier()), timestampLastShot);
+
 				cannonballArray[i] = cannonballVector;
-				if (mAmmunition != Constants.SHOT_AMMO_UNLIMITED)
-					mAmmunition--;
+				if (nAmmunitions[selectedAmmoIndex] != Constants.SHOT_AMMO_UNLIMITED)
+					nAmmunitions[selectedAmmoIndex]--;
 			}
 		} else {
 			cannonballArray = null;
@@ -258,6 +295,48 @@ public class Ship extends Entity {
 	}
 */
 	
+	public void selectNextAmmo(){
+		int actualAmmoIndex = selectedAmmoIndex;
+		
+		if(actualAmmoIndex + 1 == nAmmoTypes)
+			actualAmmoIndex = 0;
+		else
+			actualAmmoIndex++;
+		
+		this.selectedAmmoIndex = actualAmmoIndex;
+		this.selectedAmmo = Ammunitions.values()[selectedAmmoIndex];
+	}
+	
+	public void selectPreviousAmmo(){
+		int actualAmmoIndex = selectedAmmoIndex;
+		
+		if(actualAmmoIndex == 0)
+			actualAmmoIndex = nAmmoTypes -1;
+		else
+			actualAmmoIndex--;
+		
+		this.selectedAmmoIndex = actualAmmoIndex;
+		this.selectedAmmo = Ammunitions.values()[selectedAmmoIndex];
+	}
+	
+	/*public boolean changeAmmoType () {
+			// Obtener indice actual
+			int nextIndexWithAmmo = -1; 
+			
+			for (int i = 0 ;i < nAmmoTypes; i++) {
+				if(nAmmunitions[i] > 0 && i != selectedAmmoIndex){
+					nextIndexWithAmmo = i;
+					break;
+				}
+			}
+			
+			if(nextIndexWithAmmo != -1 && nextIndexWithAmmo != selectedAmmoIndex) {
+				selectedAmmoIndex = nextIndexWithAmmo;
+				return true;
+			} else
+				return false;
+	}*/
+	
 	public boolean isReloaded(long timestamp){
 		return timestamp - timestampLastShot > (mReloadTime * 1000) ? true : false;
 	}
@@ -307,11 +386,12 @@ public class Ship extends Entity {
 		this.mMaxHealth = maxHealth;
 	}
 
-	/**
-	 * @return the mAmmunition
-	 */
-	public int getAmmunition() {
-		return mAmmunition;
+	public int[] getAmmunitions() {
+		return nAmmunitions;
+	}
+	
+	public int getAmmunition(Ammunitions a){
+		return nAmmunitions[a.ordinal()];
 	}
 
 	public boolean isPlayable() {
@@ -320,10 +400,14 @@ public class Ship extends Entity {
 
 	@Override
 	public String toString() {
-		return "Ship [sType=" + sType + ", mAmmunition=" + mAmmunition + ", mReloadTime="
+		return "Ship [sType=" + sType + ", nAmmunitions=" + nAmmunitions[selectedAmmoIndex] + ", mReloadTime="
 				+ mReloadTime + ", mRange=" + mRange + ", timestampLastShot="
 				+ timestampLastShot + ", entityDirection=" + entityDirection
 				+ ", entityCoordinates=" + entityCoordinates + "]";
+	}
+
+	public int getSelectedAmmunition() {
+		return nAmmunitions[selectedAmmoIndex];
 	}
 	
 }

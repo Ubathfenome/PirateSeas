@@ -225,4 +225,9 @@ public class Player implements Parcelable {
 			return new Player[size];
 		}
 	};
+
+	public void spendMap() {
+		if(hasCompleteMap)
+			this.hasCompleteMap = false;
+	}
 }

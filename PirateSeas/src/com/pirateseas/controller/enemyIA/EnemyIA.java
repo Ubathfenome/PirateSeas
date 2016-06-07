@@ -9,33 +9,31 @@ public class EnemyIA {
 	
 	private Ship playerShip;
 	private Ship enemyShip;
+	private double screenWidth;
 	
-	private String playerIsAt = "";
+	private String playerIsAt = Constants.EMPTY_STRING;
 	
-	private static final double DEGREES_TO_AUTOTURN = 30.0;
-	
-	public EnemyIA(Ship pShip, Ship eShip){
+	public EnemyIA(Ship pShip, Ship eShip, double nScreenWidth){
 		this.playerShip = pShip;
 		this.enemyShip = eShip;
+		this.screenWidth = nScreenWidth;
 		
 		setStatus(IAStatus.IDLE);
 	}
 	
 	public Ship getNextMove(){
 		Ship ship = null;
+		if(getStatus() == IAStatus.IDLE){
+			setStatus(IAStatus.MOVE);
+		}
 		
 		if(imHealthier() && playerWithinReach() && playerIsAligned()){
 			//SHOOT target
 			if(!playerIsAt.equals(Constants.EMPTY_STRING) && !playerIsAt.equals(Constants.BACK)){
 				switch(playerIsAt){
-				case Constants.FRONT:
-					setStatus(IAStatus.ATTACKF);
-					break;
 				case Constants.RIGHT:
-					setStatus(IAStatus.ATTACKSR);
-					break;
 				case Constants.LEFT:
-					setStatus(IAStatus.ATTACKSL);
+					setStatus(IAStatus.ATTACK);
 					break;
 				}
 			}
@@ -43,9 +41,7 @@ public class EnemyIA {
 			//TURN to align with target
 			if(playerIsAt.equals(Constants.EMPTY_STRING) || playerIsAt.equals(Constants.BACK)){
 				if(Math.random() <= 0.5)
-					setStatus(IAStatus.TURNR);
-				else
-					setStatus(IAStatus.TURNL);
+					setStatus(IAStatus.MOVE);
 			}
 		} else if (imHealthier() && !playerWithinReach() && playerIsAligned()){
 			//MOVE closer to target
@@ -57,39 +53,47 @@ public class EnemyIA {
 			setStatus(IAStatus.IDLE);
 		} else if (!imHealthier() && playerWithinReach()){
 			//RETREAT asap (MOVE further from player)
-			setStatus(IAStatus.RETREAT);
+			setStatus(IAStatus.MOVE);
+		} else {
+			setStatus(IAStatus.MOVE);
 		}
 		
 		// Check current status
+		ship = enemyShip;
+		if (ship.getEntityDirection() == 270){
+			ship.setEntityDirection(180);
+		}
 		switch(mStatus){
 		case IDLE:
-			// TODO Hold still
-			ship = new Ship();
+			// Hold still
+			
 			break;
 		case MOVE:
-			// TODO Move Enemy ship forwards
-			ship = new Ship();
+			// Move Enemy ship forwards in the direction it is facing
+			int direction = ship.getEntityDirection();
+			int mod_dir = 0;
+			final int ammount = 10; // X pixels moved
+			
+			if(direction > 90 && direction < 270)
+				mod_dir = -1;
+			else if (direction < 90 || direction > 270)
+				mod_dir= 1;
+			
+			if(!ship.isMoving()){
+				ship.increaseSpeedX();
+			}
+			ship.move(ship.getX() + mod_dir*ammount, ship.getY());
+			
+			if(ship.getX() == 0 && mod_dir == -1){
+				// Turn right
+				ship.setEntityDirection(0);
+			} else if ((ship.getX() + ship.getWidth()) >= (screenWidth - ship.getWidth()) && mod_dir == 1){
+				// Turn left
+				ship.setEntityDirection(180);
+			}
+			
 			break;
-		case TURNR:
-			// TODO Turn Enemy ship to the right
-			ship = new Ship();
-			break;
-		case TURNL:
-			// TODO Turn Enemy ship to the left
-			ship = new Ship();
-			break;
-		case ATTACKF:
-			ship = enemyShip;
-			break;
-		case ATTACKSR:
-			ship = enemyShip;
-			break;
-		case ATTACKSL:
-			ship = enemyShip;
-			break;
-		case RETREAT:
-			// TODO Establish retreat behaviour for enemy ships
-			ship = new Ship();
+		case ATTACK:
 			break;
 		}
 		

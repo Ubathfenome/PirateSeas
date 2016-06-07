@@ -29,7 +29,7 @@ public class DBHelper extends SQLiteOpenHelper{
             		Constants.TSHIP_COORD_Y + " INTEGER NOT NULL DEFAULT 0, " +
             		Constants.TSHIP_TYPE + " INTEGER NOT NULL DEFAULT 0, " +
             		Constants.TSHIP_HEALTH + " INTEGER NOT NULL, " +
-            		Constants.TSHIP_AMMO + " INTEGER NOT NULL" +
+            		Constants.TSHIP_AMMO_DEFAULT + " INTEGER NOT NULL" +
             " );";
     private static final String DICTIONARY_TABLE3_CREATE =
             "CREATE TABLE " + Constants.DATABASE_TGAME + " (" +

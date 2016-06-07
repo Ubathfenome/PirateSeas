@@ -61,7 +61,7 @@ public class SettingsActivity extends Activity {
 		
 		volumeValue = (int) mPreferences.getFloat(
 				Constants.PREF_DEVICE_VOLUME, MusicManager
-				.getInstance().getDeviceVolume());
+				.getInstance(this).getDeviceVolume());
 		controlValue = mPreferences.getBoolean(Constants.PREF_CONTROL_MODE, Constants.PREF_GAME_TOUCH);
 		ammoKeysEnabled = mPreferences.getBoolean(Constants.PREF_USE_AMMO_KEYS, false);
 
