@@ -11,6 +11,7 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -20,6 +21,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 
 import com.pirateseas.R;
@@ -31,6 +33,7 @@ import com.pirateseas.controller.sensors.events.EventWeatherMaelstrom;
 import com.pirateseas.controller.sensors.events.EventWeatherStorm;
 import com.pirateseas.global.Constants;
 import com.pirateseas.model.canvasmodel.game.scene.Island;
+import com.pirateseas.model.canvasmodel.ui.UIAdvance;
 import com.pirateseas.model.canvasmodel.ui.UIDisplayElement;
 import com.pirateseas.view.graphics.canvasview.CanvasView;
 
@@ -47,6 +50,8 @@ public class GameActivity extends Activity implements SensorEventListener {
 	private Context context;
 
 	private CanvasView mCanvasView;
+	private FrameLayout mRootLayout;
+	private UIAdvance mUIAdvanceView;
 
 	private static final int SENSOR_UPDATE_SECONDS = 2;
 
@@ -60,6 +65,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 
 	public ImageButton btnPause;
 	public UIDisplayElement mGold, mAmmo;
+	public ImageButton btnILeft, btnIFront, btnIRight;
 	
 	public EventEnemyTimer eventEnemy;
 
@@ -70,6 +76,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 
 		context = this;
 		mCanvasView = new CanvasView(this);
+		mRootLayout = (FrameLayout)findViewById(R.id.rootLayoutGame);
 		
 		Intent data = getIntent();
 		
@@ -101,6 +108,9 @@ public class GameActivity extends Activity implements SensorEventListener {
 		mGold.setElementValue(0);
 		mAmmo = (UIDisplayElement) findViewById(R.id.playerAmmunition);
 		mAmmo.setElementValue(0);
+		btnILeft = (ImageButton) findViewById(R.id.btnLeft);
+		btnIFront = (ImageButton) findViewById(R.id.btnFront);
+		btnIRight = (ImageButton) findViewById(R.id.btnRight);
 	}
 	
 	public boolean hasToLoadGame(){
@@ -127,7 +137,8 @@ public class GameActivity extends Activity implements SensorEventListener {
 
 		if (!CanvasView.nUpdateThread.isAlive()
 				&& CanvasView.nUpdateThread.getState() != Thread.State.NEW) {
-			Log.e(TAG, "MainLogic is DEAD. Re-starting...");
+			if (!Constants.isInDebugMode(Constants.MODE))
+				Log.e(TAG, "MainLogic is DEAD. Re-starting...");
 			mCanvasView.launchMainLogic();
 			CanvasView.nUpdateThread.start();
 		}
@@ -193,7 +204,8 @@ public class GameActivity extends Activity implements SensorEventListener {
 					float axisSpeedY = event.values[1];
 					float axisSpeedZ = event.values[2];
 
-					Log.d(TAG, "TYPE_ACCELEROMETER: Gravity (m/s^2): " + axisSpeedX + " / " + axisSpeedY + " / " + axisSpeedZ);
+					if (!Constants.isInDebugMode(Constants.MODE))
+						Log.d(TAG, "TYPE_ACCELEROMETER: Gravity (m/s^2): " + axisSpeedX + " / " + axisSpeedY + " / " + axisSpeedZ);
 					
 					// Event
 					if(EventWeatherMaelstrom.generateMaelstrom(axisSpeedX, axisSpeedY, axisSpeedZ)){
@@ -211,11 +223,13 @@ public class GameActivity extends Activity implements SensorEventListener {
 					float microTeslaY = event.values[1];
 					float microTeslaZ = event.values[2];
 					
-					Log.d(TAG, "TYPE_MAGNETIC_FIELD: Magnetic field (uT): " + microTeslaX + " / " + microTeslaY + " / " + microTeslaZ);
+					if (!Constants.isInDebugMode(Constants.MODE))
+						Log.d(TAG, "TYPE_MAGNETIC_FIELD: Magnetic field (uT): " + microTeslaX + " / " + microTeslaY + " / " + microTeslaZ);
 					
 					// Event
-					if(eventEnemy == null && !mCanvasView.hasEnemyShip())
-						eventEnemy = new EventEnemyTimer(microTeslaX, microTeslaY, microTeslaZ);
+					if(mCanvasView.getGamemode() == Constants.GAMEMODE_BATTLE)
+						if(eventEnemy == null && !mCanvasView.hasEnemyShip())
+							eventEnemy = new EventEnemyTimer(microTeslaX, microTeslaY, microTeslaZ);
 					
 					sensorLastTimestamp = event.timestamp;
 				}
@@ -226,8 +240,9 @@ public class GameActivity extends Activity implements SensorEventListener {
 					float axisSpeedX = event.values[0];
 					float axisSpeedY = event.values[1];
 					float axisSpeedZ = event.values[2];
-
-					Log.d(TAG, "TYPE_GYROSCOPE: Gyroscope (rad/s): x = " + axisSpeedX + "; y = " + axisSpeedY + "; z = " + axisSpeedZ);
+					
+					if (!Constants.isInDebugMode(Constants.MODE))
+						Log.d(TAG, "TYPE_GYROSCOPE: Gyroscope (rad/s): x = " + axisSpeedX + "; y = " + axisSpeedY + "; z = " + axisSpeedZ);
 										
 					// Event
 					// XXX Establish an event in a future version of the game
@@ -240,7 +255,8 @@ public class GameActivity extends Activity implements SensorEventListener {
 					// Parameters
 					float lux = event.values[0];
 					
-					Log.d(TAG, "TYPE_LIGHT: Light (l): " + lux);
+					if (!Constants.isInDebugMode(Constants.MODE))
+						Log.d(TAG, "TYPE_LIGHT: Light (l): " + lux);
 
 					// Event
 					EventWeatherFog.adjustScreenBrightness(context, lux % 100);
@@ -264,7 +280,8 @@ public class GameActivity extends Activity implements SensorEventListener {
 					// Parameters
 					float centimeters = event.values[0];
 					
-					Log.d(TAG, "TYPE_PROXIMITY: Proximity (cm): " + centimeters + " // " + sensor.getMaximumRange());
+					if (!Constants.isInDebugMode(Constants.MODE))
+						Log.d(TAG, "TYPE_PROXIMITY: Proximity (cm): " + centimeters + " // " + sensor.getMaximumRange());
 					
 					// Event
 					// XXX Establish an event in a future version of the game
@@ -281,7 +298,8 @@ public class GameActivity extends Activity implements SensorEventListener {
 					float linearAccelerationY = event.values[1];
 					float linearAccelerationZ = event.values[2];
 					
-					Log.d(TAG, "TYPE_LINEAR_ACCELERATION: Acceleration force (m/s^2): " + linearAccelerationX + " / " + linearAccelerationY + " / " + linearAccelerationZ);
+					if (!Constants.isInDebugMode(Constants.MODE))
+						Log.d(TAG, "TYPE_LINEAR_ACCELERATION: Acceleration force (m/s^2): " + linearAccelerationX + " / " + linearAccelerationY + " / " + linearAccelerationZ);
 					
 					// Event
 					// XXX Establish an event in a future version of the game
@@ -296,7 +314,8 @@ public class GameActivity extends Activity implements SensorEventListener {
 					// Parameters
 					float airHumidityPercent = event.values[0];
 					
-					Log.d(TAG, "TYPE_RELATIVE_HUMIDITY: Humidity (%): " + airHumidityPercent + " // " + sensor.getMaximumRange());
+					if (!Constants.isInDebugMode(Constants.MODE))
+						Log.d(TAG, "TYPE_RELATIVE_HUMIDITY: Humidity (%): " + airHumidityPercent + " // " + sensor.getMaximumRange());
 
 					// Event
 					mCanvasView.nClouds.setCloudy(EventWeatherStorm.setCloudyDay(airHumidityPercent));
@@ -320,8 +339,8 @@ public class GameActivity extends Activity implements SensorEventListener {
 
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
-		// Nothing
-		Log.d(TAG, "Sensor " + sensor.getName() + " got changed in " + accuracy);
+		if (!Constants.isInDebugMode(Constants.MODE))
+			Log.d(TAG, "Sensor " + sensor.getName() + " got changed in " + accuracy);
 	}
 	
 	@Override
@@ -330,6 +349,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 			case Constants.REQUEST_SHOP:
 				if(resultCode == Activity.RESULT_OK){
 					mCanvasView.destroyIsland();
+					
 				}
 				break;
 		}
@@ -355,5 +375,22 @@ public class GameActivity extends Activity implements SensorEventListener {
 	public void shutdownGame() {
 		mCanvasView = null;
 		finish();
+	}
+	
+	/**
+	 * @source: http://stackoverflow.com/questions/11200381/how-to-draw-a-custom-view-inside-a-surfaceview
+	 * @param v
+	 */
+	public void loadAdvanceScreen(View v){
+		mUIAdvanceView = new UIAdvance(context);
+		mUIAdvanceView.setBackgroundColor(Color.TRANSPARENT);
+		if(mRootLayout != null)
+			mRootLayout.addView(mUIAdvanceView);
+	}
+	
+	public void unloadAdvanceScreen(View v){
+		mUIAdvanceView = null;
+		if(mRootLayout != null)
+			mRootLayout.removeView(v);
 	}
 }

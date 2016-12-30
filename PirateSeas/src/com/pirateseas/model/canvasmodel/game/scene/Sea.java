@@ -73,7 +73,7 @@ public class Sea extends BasicModel{
 	}
 	
 	@Override
-	public void move(double xLength, double yLength){
+	public void move(double xLength, double yLength, boolean bounce){
 		x = x - xLength;
 		y = y + Math.abs(yLength);
 		

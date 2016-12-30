@@ -1,7 +1,9 @@
 package com.pirateseas.utils.approach2d;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -56,6 +58,24 @@ public class DrawableHelper{
 		Bitmap rotatedBitmap = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(),
 				bmp.getHeight(), matrix, true);
 		return rotatedBitmap;
+	}
+
+	public static double getWidth(Resources r, int drawableValue) {
+		BitmapFactory.Options dimensions = new BitmapFactory.Options(); 
+		dimensions.inJustDecodeBounds = true;
+		@SuppressWarnings("unused")
+		Bitmap mBitmap = BitmapFactory.decodeResource(r, drawableValue, dimensions);
+		int width =  dimensions.outWidth;
+		return width;
+	}
+	
+	public static double getHeight(Resources r, int drawableValue) {
+		BitmapFactory.Options dimensions = new BitmapFactory.Options(); 
+		dimensions.inJustDecodeBounds = true;
+		@SuppressWarnings("unused")
+		Bitmap mBitmap = BitmapFactory.decodeResource(r, drawableValue, dimensions);
+		int height =  dimensions.outHeight;
+		return height;
 	}
 	
 }

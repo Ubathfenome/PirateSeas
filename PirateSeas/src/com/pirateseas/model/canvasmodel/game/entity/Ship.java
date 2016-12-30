@@ -10,6 +10,7 @@ import com.pirateseas.R;
 import com.pirateseas.exceptions.NoAmmoException;
 import com.pirateseas.global.Constants;
 import com.pirateseas.model.canvasmodel.game.scene.Island;
+import com.pirateseas.utils.approach2d.DrawableHelper;
 
 public class Ship extends Entity {
 	// Crear array de variables para almacenar la cantidad de cada tipo de municion
@@ -24,6 +25,7 @@ public class Ship extends Entity {
 	private long timestampLastShot;
 	
 	private boolean isPlayable;
+	private boolean wasIdle;
 	
 	private ShipType sType;
 	
@@ -37,6 +39,7 @@ public class Ship extends Entity {
 		
 		this.sType = ShipType.LIGHT;
 		this.isPlayable = false;
+		this.setIdle(true);
 		this.selectedAmmo = Ammunitions.DEFAULT;
 		this.selectedAmmoIndex = Ammunitions.valueOf(selectedAmmo.getName()).ordinal();
 	}
@@ -238,6 +241,100 @@ public class Ship extends Entity {
 		return false;		
 	}
 	
+	@SuppressLint("NewApi")
+	@SuppressWarnings("deprecation")
+	public void updateImage(){
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+			if(isPlayable){
+				setImage(context.getResources().getDrawable(sType.drawableValue(), null));
+			} else {
+				switch(sType.ordinal()){
+				case 0:
+					if(entityDirection > 90 && entityDirection < 270){
+						setImage(context.getResources().getDrawable(R.drawable.enemy_light_left, null));
+					} else if(entityDirection < 90 || entityDirection > 270) {
+						setImage(context.getResources().getDrawable(R.drawable.enemy_light_right, null));
+					} else {
+						setImage(context.getResources().getDrawable(R.drawable.enemy_light_front, null));
+					}
+					
+					this.mCanvasWidth = DrawableHelper.getWidth(context.getResources(), ShipType.LIGHT.drawableValue());
+					this.mCanvasHeight = DrawableHelper.getHeight(context.getResources(), ShipType.LIGHT.drawableValue());
+					break;
+				case 1:
+					if(entityDirection > 90 && entityDirection < 270){
+						setImage(context.getResources().getDrawable(R.drawable.enemy_medium_left, null));
+					} else if(entityDirection < 90 || entityDirection > 270) {
+						setImage(context.getResources().getDrawable(R.drawable.enemy_medium_right, null));
+					} else {
+						setImage(context.getResources().getDrawable(R.drawable.enemy_medium_front, null));
+					}
+					
+					this.mCanvasWidth = DrawableHelper.getWidth(context.getResources(), ShipType.MEDIUM.drawableValue());
+					this.mCanvasHeight = DrawableHelper.getHeight(context.getResources(), ShipType.MEDIUM.drawableValue());
+					break;
+				case 2:
+					if(entityDirection > 90 && entityDirection < 270){
+						setImage(context.getResources().getDrawable(R.drawable.enemy_heavy_left, null));
+					} else if(entityDirection < 90 || entityDirection > 270) {
+						setImage(context.getResources().getDrawable(R.drawable.enemy_heavy_right, null));
+					} else {
+						setImage(context.getResources().getDrawable(R.drawable.enemy_heavy_front, null));
+					}
+					
+					this.mCanvasWidth = DrawableHelper.getWidth(context.getResources(), ShipType.HEAVY.drawableValue());
+					this.mCanvasHeight = DrawableHelper.getHeight(context.getResources(), ShipType.HEAVY.drawableValue());
+					break;
+				}
+			}
+			
+		} else {
+			if(isPlayable){
+				setImage(context.getResources().getDrawable(sType.drawableValue()));
+			} else {
+				switch(sType.ordinal()){
+				case 0:
+					if(entityDirection > 90 && entityDirection < 270){
+						setImage(context.getResources().getDrawable(R.drawable.enemy_light_left));
+					} else if(entityDirection < 90 || entityDirection > 270) {
+						setImage(context.getResources().getDrawable(R.drawable.enemy_light_right));
+					} else {
+						setImage(context.getResources().getDrawable(R.drawable.enemy_light_front));
+					}
+					
+					this.mCanvasWidth = DrawableHelper.getWidth(context.getResources(), ShipType.LIGHT.drawableValue());
+					this.mCanvasHeight = DrawableHelper.getHeight(context.getResources(), ShipType.LIGHT.drawableValue());
+					break;
+				case 1:
+					if(entityDirection > 90 && entityDirection < 270){
+						setImage(context.getResources().getDrawable(R.drawable.enemy_medium_left));
+					} else if(entityDirection < 90 || entityDirection > 270) {
+						setImage(context.getResources().getDrawable(R.drawable.enemy_medium_right));
+					} else {
+						setImage(context.getResources().getDrawable(R.drawable.enemy_medium_front));
+					}
+					
+					this.mCanvasWidth = DrawableHelper.getWidth(context.getResources(), ShipType.MEDIUM.drawableValue());
+					this.mCanvasHeight = DrawableHelper.getHeight(context.getResources(), ShipType.MEDIUM.drawableValue());
+					break;
+				case 2:
+					if(entityDirection > 90 && entityDirection < 270){
+						setImage(context.getResources().getDrawable(R.drawable.enemy_heavy_left));
+					} else if(entityDirection < 90 || entityDirection > 270) {
+						setImage(context.getResources().getDrawable(R.drawable.enemy_heavy_right));
+					} else {
+						setImage(context.getResources().getDrawable(R.drawable.enemy_heavy_front));
+					}
+					
+					this.mCanvasWidth = DrawableHelper.getWidth(context.getResources(), ShipType.HEAVY.drawableValue());
+					this.mCanvasHeight = DrawableHelper.getHeight(context.getResources(), ShipType.HEAVY.drawableValue());
+					break;
+				}
+			}
+			
+		}		
+	}
+	
 /*
 	public void turn(int degrees){
 		setEntityDirection(degrees);
@@ -408,6 +505,22 @@ public class Ship extends Entity {
 
 	public int getSelectedAmmunition() {
 		return nAmmunitions[selectedAmmoIndex];
+	}
+
+	public ShipType getShipType() {
+		return sType;
+	}
+	
+	public void setShipTypeDefaultSpeed(){
+		this.mSpeedXLevel = this.sType.getSpeed();
+	}
+
+	public boolean wasIdle() {
+		return wasIdle;
+	}
+
+	public void setIdle(boolean wasIdle) {
+		this.wasIdle = wasIdle;
 	}
 	
 }

@@ -38,17 +38,17 @@ public class BasicModel{
         this.mParallax = parallax;
 	}
 	
-	public void move(double xLength, double yLength){
+	public void move(double xLength, double yLength, boolean bounce){
 		x = x - xLength;
 		y = y - yLength;
 		
-		// TEST Changing mCanvasWidth for mWidth
+		if(bounce){
 		
-		if ( x > mWidth){
-			x = 0;
+		if ( x > mCanvasWidth){
+			x = mCanvasWidth - xLength;
 		} 
 		if ( x < 0){
-			x = mWidth;
+			x = 0;
 		}
 		
 		if ( y > mCanvasHeight){
@@ -56,6 +56,21 @@ public class BasicModel{
 		} 
 		if ( y < 0){
 			y = mCanvasHeight;
+		}
+		} else {
+			if ( x > mCanvasWidth){
+				x = 0;
+			} 
+			if ( x < 0){
+				x = mCanvasWidth;
+			}
+			
+			if ( y > mCanvasHeight){
+				y = 0;
+			} 
+			if ( y < 0){
+				y = mCanvasHeight;
+			}	
 		}
 	}
 	

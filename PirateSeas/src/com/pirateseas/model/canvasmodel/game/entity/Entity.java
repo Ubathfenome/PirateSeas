@@ -44,8 +44,8 @@ public class Entity extends BasicModel{
 		else
 			entityDirection = eDirection;
 		
-		mSpeedXLevel = Constants.ENTITY_SPEED[0];
-		mSpeedY = Constants.ENTITY_SPEED[0];
+		mSpeedXLevel = 0;
+		mSpeedY = 0;
 	}
 	
 	public boolean intersectionWithEntity(Entity other){
@@ -159,23 +159,6 @@ public class Entity extends BasicModel{
 		return mHealthPoints > 0 ? true : false;
 	}
 	
-	public void increaseSpeedX(){
-		if(mSpeedXLevel < Constants.ENTITY_SPEED.length - 1){
-			mSpeedXLevel++;
-		}
-	}
-	
-	public void decreaseSpeedX(){
-		if(mSpeedXLevel > 0){
-			mSpeedXLevel--;
-		}
-	}
-	
-	public void changeSpeedX(int speedLevel){
-		if(speedLevel >= 0 && speedLevel <= Constants.ENTITY_SPEED.length)
-			mSpeedXLevel =  Constants.ENTITY_SPEED[speedLevel];
-	}
-	
 	public int compareTo(Entity other){
 		int entityCompass = -1; // 0..359 degrees		
 		Point origin = new Point(0, 0);
@@ -223,5 +206,16 @@ public class Entity extends BasicModel{
 	 */
 	public void setEntityDirection(int entityDirection) {
 		this.entityDirection = entityDirection;
+	}
+
+	/**
+	 * @return the mSpeedXLevel
+	 */
+	public int getSpeedXLevel() {
+		return mSpeedXLevel;
+	}
+	
+	public void resetSpeedLevel(){
+		this.mSpeedXLevel = 0;
 	}
 }

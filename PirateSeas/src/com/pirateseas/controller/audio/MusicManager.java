@@ -2,11 +2,8 @@ package com.pirateseas.controller.audio;
 
 import java.util.HashMap;
 
-import com.pirateseas.global.Constants;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -134,32 +131,13 @@ public class MusicManager{
 		}
 	}
 	
-	public void playSound (int index) {
-		SharedPreferences mPreferences = mContext.getSharedPreferences(Constants.TAG_PREF_NAME, Context.MODE_PRIVATE);
-		SharedPreferences.Editor editor = mPreferences.edit();
-		
-		float mDeviceVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-		mDeviceVolume = mDeviceVolume / mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-		
-		editor.putFloat(Constants.PREF_DEVICE_VOLUME, mDeviceVolume);
-		editor.commit();
-		
-		int resourceId = mSoundKeys.get(index);
-		
+	public void playSound (int index) {		
+		int resourceId = mSoundKeys.get(index);		
 		mSoundPools.playSound(mContext, String.valueOf(index), resourceId, false);
 	}
 
 	public void playSoundLoop (int index) {
-		SharedPreferences mPreferences = mContext.getSharedPreferences(Constants.TAG_PREF_NAME, Context.MODE_PRIVATE);
-		SharedPreferences.Editor editor = mPreferences.edit();
-		
-		float mDeviceVolume = getDeviceVolume();
-		
-		editor.putFloat(Constants.PREF_DEVICE_VOLUME, mDeviceVolume);
-		editor.commit();
-		
 		int resourceId = mSoundKeys.get(index);
-		
 		mSoundPools.playSound(mContext, String.valueOf(index), resourceId, true);
 	}
 	

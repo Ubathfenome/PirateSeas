@@ -13,6 +13,16 @@
 		android:layout_width="fill_parent"
         android:layout_height="wrap_content">
 		
+	     <ImageButton
+	        android:id="@+id/btnChangeAmmo"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:alpha="0.45"
+	        android:background="@drawable/xml_btn_style"
+	        android:contentDescription="@string/icd_btn_change_ammo"
+	        android:paddingLeft="10dp"
+	        android:src="@drawable/txtr_ammo_default" />
+	    
 		<Space
 		    android:id="@+id/enemyHBarSpace"
 		    android:layout_width="0dp"

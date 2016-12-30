@@ -8,6 +8,7 @@ public class Constants{
 	
 	public static final int MODE = MODE_DEBUG;
 	
+	public static final int GAMEMODE_WAITFORFOE = 0x1;
 	public static final int GAMEMODE_ADVANCE = 0x2;
 	public static final int GAMEMODE_BATTLE = 0x3;
 	
@@ -48,9 +49,7 @@ public class Constants{
 	public static final int BAR_HEALTH = 0;
 	public static final int BAR_EXPERIENCE = 1;
 	
-	// Global variables
-	public static final int[] ENTITY_SPEED = {0, 1, 2, 5};
-	
+	// Global variables	
 	public static final int GAME_FPS = 30;				// FPS = Frames-Per-Second
 	public static final int GAME_MPIGD = 10;			// MPIGD = Minutes-Per-In-Game-Day
 	

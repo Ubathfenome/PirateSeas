@@ -22,12 +22,13 @@ public class EnemyIA {
 	}
 	
 	public Ship getNextMove(){
-		Ship ship = null;
-		if(getStatus() == IAStatus.IDLE){
-			setStatus(IAStatus.MOVE);
-		}
+		Ship ship = enemyShip;
+		boolean wasIdle = ship.wasIdle();
+		boolean healthier = imHealthier();
+		boolean inReach = playerWithinReach();
+		boolean isAligned = playerIsAligned();
 		
-		if(imHealthier() && playerWithinReach() && playerIsAligned()){
+		if(healthier && inReach && isAligned){
 			//SHOOT target
 			if(!playerIsAt.equals(Constants.EMPTY_STRING) && !playerIsAt.equals(Constants.BACK)){
 				switch(playerIsAt){
@@ -37,60 +38,76 @@ public class EnemyIA {
 					break;
 				}
 			}
-		} else if (imHealthier() && playerWithinReach() && !playerIsAligned()){
+		} else if (healthier && inReach && !isAligned){
 			//TURN to align with target
 			if(playerIsAt.equals(Constants.EMPTY_STRING) || playerIsAt.equals(Constants.BACK)){
 				if(Math.random() <= 0.5)
 					setStatus(IAStatus.MOVE);
 			}
-		} else if (imHealthier() && !playerWithinReach() && playerIsAligned()){
+		} else if (healthier && !inReach && isAligned){
 			//MOVE closer to target
 			if(!playerIsAt.equals(Constants.EMPTY_STRING) && !playerIsAt.equals(Constants.BACK)){
 				setStatus(IAStatus.MOVE);
 			}
-		} else if (imHealthier() && !playerWithinReach() && !playerIsAligned()){
+		} else if (healthier && !inReach && !isAligned){
 			//IDLE let him come
 			setStatus(IAStatus.IDLE);
-		} else if (!imHealthier() && playerWithinReach()){
+		} else if (!healthier && inReach){
 			//RETREAT asap (MOVE further from player)
 			setStatus(IAStatus.MOVE);
-		} else {
+		} else if (getStatus() == IAStatus.IDLE && wasIdle) {
 			setStatus(IAStatus.MOVE);
+		} else if (getStatus() == IAStatus.IDLE && !wasIdle) {
+			setStatus(IAStatus.IDLE);
+			
 		}
 		
 		// Check current status
-		ship = enemyShip;
 		if (ship.getEntityDirection() == 270){
 			ship.setEntityDirection(180);
 		}
+		if(ship.getEntityDirection() == 90) {
+			ship.setEntityDirection(0);
+		}
+		
 		switch(mStatus){
 		case IDLE:
 			// Hold still
-			
+			if(ship.isMoving()){
+				ship.resetSpeedLevel();
+				ship.setIdle(true);
+			} else {
+				ship.setIdle(false);
+			}
 			break;
 		case MOVE:
 			// Move Enemy ship forwards in the direction it is facing
 			int direction = ship.getEntityDirection();
 			int mod_dir = 0;
-			final int ammount = 10; // X pixels moved
+			int ammount = 0; // X pixels moved
 			
 			if(direction > 90 && direction < 270)
 				mod_dir = -1;
 			else if (direction < 90 || direction > 270)
 				mod_dir= 1;
+			else 
+				mod_dir = 0;
 			
 			if(!ship.isMoving()){
-				ship.increaseSpeedX();
+				ship.setShipTypeDefaultSpeed();
 			}
-			ship.move(ship.getX() + mod_dir*ammount, ship.getY());
+			ammount=ship.getShipType().getSpeed();
+			int leftLimit = (int) (ship.getX()-ammount);
+			int rightLimit = (int) (ship.getX() + ship.getWidth() + ammount); 
 			
-			if(ship.getX() == 0 && mod_dir == -1){
+			if(leftLimit <= 0 && mod_dir == -1){
 				// Turn right
 				ship.setEntityDirection(0);
-			} else if ((ship.getX() + ship.getWidth()) >= (screenWidth - ship.getWidth()) && mod_dir == 1){
+			} else if (rightLimit >= screenWidth && mod_dir == 1){
 				// Turn left
 				ship.setEntityDirection(180);
 			}
+			ship.move(mod_dir*ammount, 0, false);
 			
 			break;
 		case ATTACK:
@@ -115,72 +132,22 @@ public class EnemyIA {
 	}
 	
 	private boolean playerIsAligned(){
-		int direction = playerShip.compareTo(enemyShip);
 		int enemyDirection = enemyShip.getEntityDirection();
-		
-		switch(direction){
-			case 0:
-				if(enemyDirection == 0){
-					playerIsAt = Constants.BACK;
-					return true;
-				} else if (enemyDirection == 90) {
-					playerIsAt = Constants.LEFT;
-					return true;
-				} else if(enemyDirection == 180){
-					playerIsAt = Constants.FRONT;
-					return true;
-				} else if(enemyDirection == 270){
-					playerIsAt = Constants.RIGHT;
-					return true;
-				} 
-				break;
-			case 90:
-				if(enemyDirection == 0){
-					playerIsAt = Constants.RIGHT;
-					return true;
-				} else if(enemyDirection == 90){
-					playerIsAt = Constants.BACK;
-					return true;
-				} else if(enemyDirection == 180){
-					playerIsAt = Constants.LEFT;
-					return true;
-				} else if(enemyDirection == 270){
-					playerIsAt = Constants.FRONT;
-					return true;
-				}
-				break;
-			case 180:
-				if(enemyDirection == 0){
-					playerIsAt = Constants.FRONT;
-					return true;
-				} else if(enemyDirection == 90){
-					playerIsAt = Constants.RIGHT;
-					return true;
-				} else if(enemyDirection == 180){
-					playerIsAt = Constants.BACK;
-					return true;
-				} else if(enemyDirection == 270){
-					playerIsAt = Constants.LEFT;
-					return true;
-				}
-				break;
-			case 270:
-				if(enemyDirection == 0){
-					playerIsAt = Constants.LEFT;
-					return true;
-				} else if(enemyDirection == 90){
-					playerIsAt = Constants.FRONT;
-					return true;
-				} else if(enemyDirection == 180){
-					playerIsAt = Constants.RIGHT;
-					return true;
-				} else if(enemyDirection == 270){
-					playerIsAt = Constants.BACK;
-					return true;
-				}
-				break;
-		}
-		
+
+		if(enemyDirection == 0){
+			playerIsAt = Constants.RIGHT;
+			return true;
+		} else if (enemyDirection == 90) {
+			playerIsAt = Constants.BACK;
+			return true;
+		} else if(enemyDirection == 180){
+			playerIsAt = Constants.LEFT;
+			return true;
+		} else if(enemyDirection == 270){
+			playerIsAt = Constants.FRONT;
+			return true;
+		} 
+					
 		return false;
 	}	
 	
