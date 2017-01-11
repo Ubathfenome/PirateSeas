@@ -44,6 +44,8 @@
     <string name="tb_control_touch">Touch Control</string>
     <string name="lbl_control_mode">Control Mode</string>
     <string name="chk_change_ammo">Change ammo type with volume keys</string>
+    <string name="settings_sensorway">By sensor</string>
+    <string name="settings_manual">Manual</string>
     
     <!-- Shop strings -->
     <string name="shop_item_name">Item name</string>

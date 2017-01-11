@@ -86,7 +86,21 @@
 			android:layout_marginLeft="8dp"
 			android:layout_marginRight="8dp"
 			android:checked="false" />
-	</LinearLayout>"
+		
+		<ToggleButton 
+		    android:id="@+id/tglScreenSelection"
+		    android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textOn="@string/settings_sensorway"
+			android:textOff="@string/settings_manual" />
+		
+		<ToggleButton
+		    android:id="@+id/tglPauseSelection"
+		    android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textOn="@string/settings_sensorway"
+			android:textOff="@string/settings_manual" />
+	</LinearLayout>
 	
 	<Button
 		android:id="@+id/btnSettingsRestore"

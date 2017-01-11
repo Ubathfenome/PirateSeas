@@ -8,9 +8,8 @@ public class Constants{
 	
 	public static final int MODE = MODE_DEBUG;
 	
-	public static final int GAMEMODE_WAITFORFOE = 0x1;
-	public static final int GAMEMODE_ADVANCE = 0x2;
-	public static final int GAMEMODE_BATTLE = 0x3;
+	public static final int GAMEMODE_ADVANCE = 0x1;
+	public static final int GAMEMODE_BATTLE = 0x2;
 	
 	// Tags
 	public static final String TAG_EXE_MODE = "com.pirateseas.EXE_MODE";

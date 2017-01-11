@@ -43,6 +43,7 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 import android.widget.Toast;
 
 public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
@@ -55,6 +56,8 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 
 	private static final int HORIZON_Y_VALUE = 170;
 	private static final int BAR_INITIAL_X_VALUE = 150;
+	
+	private static final String WAIT = "WAIT";
 
 	private Context nContext;
 	public static MainLogic nUpdateThread;
@@ -173,8 +176,8 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 		nShotLastTimeChecked = null;
 		nCheatCounter = 0;
 		nSide = 0;
-		nDirection = Constants.EMPTY_STRING;
-		nGameMode = Constants.GAMEMODE_WAITFORFOE;
+		nGameMode = Constants.GAMEMODE_ADVANCE;
+		nDirection = WAIT;
 		nControlMode = nPreferences.getBoolean(Constants.PREF_CONTROL_MODE,
 				Constants.PREF_GAME_TOUCH);
 
@@ -459,9 +462,8 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 				((GameActivity) nContext).mAmmo.setReloading(true);
 
 			((GameActivity) nContext).mAmmo.postInvalidate();
-		} else if (nGameMode == Constants.GAMEMODE_WAITFORFOE){
-
 		} else if (nGameMode == Constants.GAMEMODE_ADVANCE){
+			
 			
 		}
 	}
@@ -471,6 +473,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 		case Constants.GAMEMODE_BATTLE:
 			if (nEnemyShip != null && !nEnemyShip.isAlive()) {
 				nGameMode = Constants.GAMEMODE_ADVANCE;
+				nDirection = WAIT;
 			}
 			break;
 		case Constants.GAMEMODE_ADVANCE:
@@ -503,26 +506,28 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 			
 
 			switch (nDirection) {
-			case Constants.LEFT:
-				if (nSide == 1 && nIsland != null)
-					((GameActivity) nContext).shop(nIsland);
-				break;
-			case Constants.FRONT:
-				if (nSide == 2 && nIsland != null)
-					((GameActivity) nContext).shop(nIsland);
-				break;
-			case Constants.RIGHT:
-				if (nSide == 3 && nIsland != null) {
-					((GameActivity) nContext).shop(nIsland);
-				}
-				break;
-			default:
-				nGameMode = Constants.GAMEMODE_BATTLE;
-				break;
+				case Constants.LEFT:
+					if (nSide == 1 && nIsland != null)
+						((GameActivity) nContext).shop(nIsland);
+					break;
+				case Constants.FRONT:
+					if (nSide == 2 && nIsland != null)
+						((GameActivity) nContext).shop(nIsland);
+					break;
+				case Constants.RIGHT:
+					if (nSide == 3 && nIsland != null) {
+						((GameActivity) nContext).shop(nIsland);
+					}
+					break;
+				case WAIT:
+					
+					break;
+				default:
+					nGameMode = Constants.GAMEMODE_BATTLE;
+					break;
 			}
 
 			nSide = 0;
-			nDirection = Constants.EMPTY_STRING;
 			break;
 		}
 	}
@@ -675,6 +680,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 			if (!nEnemyShip.isAlive()) {
 				nEnemyShip.setStatus(Constants.STATE_DEAD);
 				nGameMode = Constants.GAMEMODE_ADVANCE;
+				nDirection = WAIT;
 				((GameActivity) nContext).eventEnemy = null;
 				nPlayer.addGold(nEnemyShip.getType().defaultHealthPoints() / 5);
 				nPlayer.addExperience(nEnemyShip.getType()

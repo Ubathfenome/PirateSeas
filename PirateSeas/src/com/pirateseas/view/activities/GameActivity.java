@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -384,6 +385,13 @@ public class GameActivity extends Activity implements SensorEventListener {
 	public void loadAdvanceScreen(View v){
 		mUIAdvanceView = new UIAdvance(context);
 		mUIAdvanceView.setBackgroundColor(Color.TRANSPARENT);
+		
+		Window w = this.getWindow();
+		View gView = w.findViewById(R.layout.activity_game);
+		
+		
+		w.addContentView(v, null);
+		
 		if(mRootLayout != null)
 			mRootLayout.addView(mUIAdvanceView);
 	}
