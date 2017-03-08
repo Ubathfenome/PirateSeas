@@ -1,140 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE LinearLayout>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/rootLayoutSettings"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-	android:orientation="vertical"
-	android:background="@drawable/xml_border"
-	android:gravity="center">
-	
-	<TextView 
-		android:id="@+id/txtSettingsLabel"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:textSize="@dimen/title_size"
-		android:text="@string/label_settings"
-		android:paddingBottom="@dimen/padding_size"/>
-	
-	<LinearLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="horizontal"
-	    android:padding="5dp"
-	    android:gravity="center">
-			
-		<SeekBar
-			android:id="@+id/sbVolume"
-			android:layout_width="0dp"
-			android:layout_height="wrap_content"
-			android:layout_weight="1" />
-		
-		<TextView 
-			android:id="@+id/txtVolumeLabel"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textSize="@dimen/text_size"
-			android:labelFor="@id/sbVolume"
-			android:text="@string/lbl_volume"
-			android:layout_marginLeft="8dp"
-			android:layout_marginRight="8dp"/>
-	
-	</LinearLayout>
-	
-	<LinearLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="horizontal"
-	    android:padding="5dp"
-	    android:gravity="center">
-		
-	    <Switch
-		    android:id="@+id/tbControlMode"
-		    android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textOff="@string/tb_control_sensor"
-			android:textOn="@string/tb_control_touch"
-			android:splitTrack="true"
-			android:checked="true"
-			android:background="@drawable/xml_btn_style" />
-	    
-	    <TextView 
-			android:id="@+id/txtControlMode"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textSize="@dimen/text_size"
-			android:labelFor="@id/tbControlMode"
-			android:text="@string/lbl_control_mode"
-			android:layout_marginLeft="8dp"
-			android:layout_marginRight="8dp"/>
-	    
-	</LinearLayout>
-	
-	<LinearLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="horizontal"
-	    android:padding="5dp"
-	    android:gravity="center">
-	    
-		<CheckBox 
-		    android:id="@+id/chkChangeAmmo"
-		    android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textSize="@dimen/text_size"
-			android:text="@string/chk_change_ammo"
-			android:layout_marginLeft="8dp"
-			android:layout_marginRight="8dp"
-			android:checked="false" />
-		
-		<ToggleButton 
-		    android:id="@+id/tglScreenSelection"
-		    android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textOn="@string/settings_sensorway"
-			android:textOff="@string/settings_manual" />
-		
-		<ToggleButton
-		    android:id="@+id/tglPauseSelection"
-		    android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textOn="@string/settings_sensorway"
-			android:textOff="@string/settings_manual" />
-	</LinearLayout>
-	
-	<Button
-		android:id="@+id/btnSettingsRestore"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:text="@string/icd_rest_preferences"
-		android:layout_marginLeft="8dp"
-		android:layout_marginRight="8dp"
-		android:background="@drawable/xml_btn_style" />
-		
-	<LinearLayout
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:orientation="horizontal"
-		android:gravity="center|bottom">
-		
-		<Button
-		    style="?android:attr/buttonBarButtonStyle"
-			android:id="@+id/btnSettingsAccept"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="@string/btn_accept"
-			android:layout_marginLeft="8dp"
-			android:layout_marginRight="8dp"			
-			android:background="@drawable/xml_btn_style" />
-			
-		<Button
-		    style="?android:attr/buttonBarButtonStyle"
-			android:id="@+id/btnSettingsCancel" 
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="@string/btn_cancel"
-			android:layout_marginLeft="8dp"
-			android:layout_marginRight="8dp"
-			android:background="@drawable/xml_btn_style"/>
-	</LinearLayout>
+        android:id="@+id/rootLayoutSettings"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/xml_border"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:scrollbarAlwaysDrawVerticalTrack="true" >
+
+        <TextView
+            android:id="@+id/txtSettingsLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/padding_size"
+            android:paddingBottom="@dimen/padding_size"
+            android:text="@string/label_settings"
+            android:textSize="@dimen/title_size" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/large_padding_size"
+            android:paddingLeft="@dimen/large_padding_size"
+            android:paddingRight="@dimen/large_padding_size"
+            android:paddingBottom="@dimen/padding_size" >
+
+            <SeekBar
+                android:id="@+id/sbVolume"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/txtVolumeLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:labelFor="@id/sbVolume"
+                android:text="@string/lbl_volume"
+                android:textSize="@dimen/text_size" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnExtraSettings"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:background="@drawable/xml_btn_style"
+            android:text="@string/settings_extra" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center|bottom"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/btnSettingsAccept"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:background="@drawable/xml_btn_style"
+                android:text="@string/btn_accept" />
+
+            <Button
+                android:id="@+id/btnSettingsCancel"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:background="@drawable/xml_btn_style"
+                android:text="@string/btn_cancel" />
+        </LinearLayout>
+
 </LinearLayout>

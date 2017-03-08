@@ -43,9 +43,13 @@
     <string name="tb_control_sensor">Sensor Control</string>
     <string name="tb_control_touch">Touch Control</string>
     <string name="lbl_control_mode">Control Mode</string>
-    <string name="chk_change_ammo">Change ammo type with volume keys</string>
+    <string name="settings_change_ammo_volume">Change ammo type with volume keys</string>
+    <string name="settings_change_ammo_touch">Change ammo type by touch</string>
     <string name="settings_sensorway">By sensor</string>
     <string name="settings_manual">Manual</string>
+    <string name="settings_pause_mode">Pause game mode</string>
+    <string name="settings_select_mode">Select next level mode</string>
+    <string name="settings_extra">Extra settings</string>
     
     <!-- Shop strings -->
     <string name="shop_item_name">Item name</string>
@@ -170,6 +174,9 @@
     <string name="gameover_days">Days passed</string>
     <string name="app_about">About us&#8230;</string>
     <string name="tutorial_content">This is some tutorial content</string>
+    <string name="message_screenselection">Which direction go next, capt\'n?</string>
+    <string name="message_islanddetected">Capt\'n! Land in sight!</string>
+    <string name="message_nothinghere">Capt\'n! There\s nothing here! Which direction we go next?</string>
     
 
 </resources>

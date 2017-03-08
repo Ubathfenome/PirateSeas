@@ -7,7 +7,6 @@ import com.pirateseas.R;
 import com.pirateseas.global.Constants;
 import com.pirateseas.controller.sensors.SensorType;
 import com.pirateseas.controller.sensors.events.EventDayNightCycle;
-import com.pirateseas.controller.sensors.events.EventEnemyTimer;
 import com.pirateseas.controller.sensors.events.EventWeatherFog;
 import com.pirateseas.controller.sensors.events.EventWeatherMaelstrom;
 import com.pirateseas.controller.sensors.events.EventWeatherStorm;
@@ -150,7 +149,6 @@ public class SensorActivity extends Activity{
 		protected void onPreExecute(){
 			// Set event generator' sensor list
 			triggeredSensors.add(EventDayNightCycle.getSensorType());
-			triggeredSensors.add(EventEnemyTimer.getSensorType());
 			triggeredSensors.add(EventWeatherFog.getSensorType());
 			triggeredSensors.add(EventWeatherMaelstrom.getSensorType());
 			triggeredSensors.add(EventWeatherStorm.getSensorType());

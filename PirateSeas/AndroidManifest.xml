@@ -38,6 +38,14 @@
 			android:screenOrientation="landscape">
 		</activity>
 		<activity
+			android:name=".view.activities.LoadScreenActivity"
+			android:screenOrientation="landscape">
+		</activity>
+		<activity
+			android:name=".view.activities.ScreenSelectionActivity"
+			android:screenOrientation="landscape">
+		</activity>
+		<activity
 			android:name=".view.activities.SettingsActivity"
 			android:screenOrientation="landscape">
 		</activity>

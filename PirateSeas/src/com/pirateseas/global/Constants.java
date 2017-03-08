@@ -21,14 +21,20 @@ public class Constants{
 	public static final String TAG_PREF_NAME = "com.pirateseas.PREFERENCES";
 	public static final String TAG_BRIGHTNESS_LEVEL = "com.pirateseas.BRIGHTNESS";
 	public static final String TAG_REMOVE_PREFERENCES = "com.pirateseas.REMOVE_PREFERENCES";
+	public static final String TAG_SCREEN_SELECTION_ISLANDDATA = "com.pirateseas.SCREEN_SELECTION_ISLANDDATA";
+	public static final String TAG_SCREEN_SELECTION_PLAYERDATA = "com.pirateseas.SCREEN_SELECTION_PLAYERDATA";
+	public static final String TAG_LOAD_SCREEN = "com.pirateseas.LOAD_SCREEN";
+	public static final String TAG_RANDOM_ENCOUNTER = "com.pirateseas.RANDOM_ENCOUNTER";
 	
 	// Math factors	
 	public static final int BYTES_PER_FLOAT = 4;
 	
 	// Requests
 	public static final int REQUEST_SENSOR_LIST = 0x00;
-	public static final int REQUEST_SHOP = 0x01;
+	public static final int REQUEST_ISLAND = 0x01;
 	public static final int REQUEST_REMOVE_PREFERENCES = 0x02;
+	public static final int REQUEST_SCREEN_SELECTION = 0x03;
+	public static final int REQUEST_LOAD_SCREEN = 0x04;
 	
 	// Entities
 	public static final int STATE_ALIVE = 0;
@@ -55,6 +61,8 @@ public class Constants{
 	public static final int GAME_STATE_NORMAL = 0;
 	public static final int GAME_STATE_PAUSE = 1;
 	public static final int GAME_STATE_END = 2;
+	
+	public static final int LIGHT_THRESHOLD = 600;
 	
 	public static final int SECONDS_PER_IN_GAME_HOUR = 60;
 	public static final int HOURS_PER_DAY = GAME_MPIGD * SECONDS_PER_IN_GAME_HOUR;

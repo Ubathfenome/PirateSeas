@@ -9,7 +9,6 @@ import android.os.SystemClock;
 import com.pirateseas.R;
 import com.pirateseas.exceptions.NoAmmoException;
 import com.pirateseas.global.Constants;
-import com.pirateseas.model.canvasmodel.game.scene.Island;
 import com.pirateseas.utils.approach2d.DrawableHelper;
 
 public class Ship extends Entity {
@@ -226,19 +225,6 @@ public class Ship extends Entity {
 		}
 
 		return cannonballArray;
-	}
-	
-	public boolean arriveIsland(Island island){
-		double islandRightBorder = island.getX() + island.getWidth();
-		double islandBottomBorder = island.getY() + island.getHeight();
-		
-		if(this.y < islandBottomBorder){
-			if(this.x < (islandRightBorder) && this.x > island.getX())
-				return true;
-			if((this.x + this.mWidth) > (island.getX()) && (this.x + this.mWidth) < islandRightBorder)
-				return true;
-		}
-		return false;		
 	}
 	
 	@SuppressLint("NewApi")

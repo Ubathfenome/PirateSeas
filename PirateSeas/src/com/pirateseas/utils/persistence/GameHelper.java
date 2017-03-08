@@ -68,12 +68,12 @@ public class GameHelper {
 			return false;
 		DBInsertNewShip(context, ship);
 		if(lastShipRow == -1)
-			// TODO RollBack player?
+			// XXX RollBack player?
 			return false;
 		DBInsertNewGame(context);
 		if(lastGameRow == -1)
-			// TODO RollBack player?
-			// TODO RollBack ship?
+			// XXX RollBack player?
+			// XXX RollBack ship?
 			return false;
 		return true;
 	}

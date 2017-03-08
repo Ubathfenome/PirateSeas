@@ -69,7 +69,7 @@ public class SoundPools {
 
 			container.play(context, soundId, id, loop);
 		} catch (Exception e) {
-			Log.w(TAG, "Play sound error", e);
+			Log.w(TAG, "Play sound error for id:" + soundId, e);
 		}
 	}
 

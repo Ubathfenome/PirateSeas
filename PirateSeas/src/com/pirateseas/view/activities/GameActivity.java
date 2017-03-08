@@ -11,7 +11,6 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -20,21 +19,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 
 import com.pirateseas.R;
 import com.pirateseas.controller.androidGameAPI.Player;
 import com.pirateseas.controller.sensors.events.EventDayNightCycle;
-import com.pirateseas.controller.sensors.events.EventEnemyTimer;
-import com.pirateseas.controller.sensors.events.EventWeatherFog;
 import com.pirateseas.controller.sensors.events.EventWeatherMaelstrom;
 import com.pirateseas.controller.sensors.events.EventWeatherStorm;
 import com.pirateseas.global.Constants;
-import com.pirateseas.model.canvasmodel.game.scene.Island;
-import com.pirateseas.model.canvasmodel.ui.UIAdvance;
+import com.pirateseas.model.canvasmodel.game.entity.ShipType;
 import com.pirateseas.model.canvasmodel.ui.UIDisplayElement;
 import com.pirateseas.view.graphics.canvasview.CanvasView;
 
@@ -51,9 +45,6 @@ public class GameActivity extends Activity implements SensorEventListener {
 	private Context context;
 
 	private CanvasView mCanvasView;
-	private FrameLayout mRootLayout;
-	private UIAdvance mUIAdvanceView;
-
 	private static final int SENSOR_UPDATE_SECONDS = 2;
 
 	protected int[] sensorTypes = null;
@@ -61,15 +52,15 @@ public class GameActivity extends Activity implements SensorEventListener {
 	
 	boolean loadGame = false;
 	
+	private int islandSide = -1;
+	private int lightLevel;
+	
 	protected SensorManager mSensorManager;
 	protected List<Sensor> triggeringSensors;
 
 	public ImageButton btnPause;
 	public UIDisplayElement mGold, mAmmo;
-	public ImageButton btnILeft, btnIFront, btnIRight;
 	
-	public EventEnemyTimer eventEnemy;
-
 	@SuppressLint("ClickableViewAccessibility")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -77,7 +68,6 @@ public class GameActivity extends Activity implements SensorEventListener {
 
 		context = this;
 		mCanvasView = new CanvasView(this);
-		mRootLayout = (FrameLayout)findViewById(R.id.rootLayoutGame);
 		
 		Intent data = getIntent();
 		
@@ -109,9 +99,12 @@ public class GameActivity extends Activity implements SensorEventListener {
 		mGold.setElementValue(0);
 		mAmmo = (UIDisplayElement) findViewById(R.id.playerAmmunition);
 		mAmmo.setElementValue(0);
-		btnILeft = (ImageButton) findViewById(R.id.btnLeft);
-		btnIFront = (ImageButton) findViewById(R.id.btnFront);
-		btnIRight = (ImageButton) findViewById(R.id.btnRight);
+		
+		// Launch LoadScreenActivity
+		String firstMessage = getString(R.string.message_screenselection);
+		Intent loadScreenIntent = new Intent(this, LoadScreenActivity.class);
+		loadScreenIntent.putExtra(Constants.TAG_LOAD_SCREEN, firstMessage);
+		startActivityForResult(loadScreenIntent, Constants.REQUEST_LOAD_SCREEN);
 	}
 	
 	public boolean hasToLoadGame(){
@@ -228,9 +221,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 						Log.d(TAG, "TYPE_MAGNETIC_FIELD: Magnetic field (uT): " + microTeslaX + " / " + microTeslaY + " / " + microTeslaZ);
 					
 					// Event
-					if(mCanvasView.getGamemode() == Constants.GAMEMODE_BATTLE)
-						if(eventEnemy == null && !mCanvasView.hasEnemyShip())
-							eventEnemy = new EventEnemyTimer(microTeslaX, microTeslaY, microTeslaZ);
+					// XXX Establish an event in a future version of the game
 					
 					sensorLastTimestamp = event.timestamp;
 				}
@@ -260,7 +251,9 @@ public class GameActivity extends Activity implements SensorEventListener {
 						Log.d(TAG, "TYPE_LIGHT: Light (l): " + lux);
 
 					// Event
-					EventWeatherFog.adjustScreenBrightness(context, lux % 100);
+					// OLD EventWeatherFog.adjustScreenBrightness(context, lux % 100);
+					// Save light level as global variable
+					lightLevel = (int) lux;
 					
 					sensorLastTimestamp = event.timestamp;
 				}
@@ -330,6 +323,38 @@ public class GameActivity extends Activity implements SensorEventListener {
 		}
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch(requestCode){
+			case Constants.REQUEST_LOAD_SCREEN:
+				if(resultCode == Activity.RESULT_OK){
+					mCanvasView.selectScreen();
+				}
+				break;
+			case Constants.REQUEST_SCREEN_SELECTION:
+				if(resultCode == Activity.RESULT_OK){
+					// Get randomized encounter boolean value from Intent data
+					boolean encounter = data.getBooleanExtra(Constants.TAG_RANDOM_ENCOUNTER, false);
+					// If true check if light level is lower than XX level
+					if(encounter){
+						// TODO If it is lower, generate fog (where an enemy will be hiding)
+						if (lightLevel < Constants.LIGHT_THRESHOLD){
+							
+						}
+						// Else show enemy
+						else {
+							mCanvasView.spawnEnemyShip(ShipType.LIGHT);
+						}
+					}
+					// Else call mCanvasView.selecScreen(); again
+					else {
+						mCanvasView.selectScreen();
+					}
+				}
+				break;
+		}
+	}
+
 	private boolean arrayContainsValue(int[] array, int value) {
 		for (int i = 0; i < array.length; i++) {
 			if (array[i] == value)
@@ -343,18 +368,6 @@ public class GameActivity extends Activity implements SensorEventListener {
 		if (!Constants.isInDebugMode(Constants.MODE))
 			Log.d(TAG, "Sensor " + sensor.getName() + " got changed in " + accuracy);
 	}
-	
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		switch(requestCode){
-			case Constants.REQUEST_SHOP:
-				if(resultCode == Activity.RESULT_OK){
-					mCanvasView.destroyIsland();
-					
-				}
-				break;
-		}
-	}
 
 	public void gameOver(Player nPlayer) {
 		Intent gameOverIntent = new Intent(this, GameOverActivity.class);
@@ -364,12 +377,6 @@ public class GameActivity extends Activity implements SensorEventListener {
 		shutdownGame();
 	}
 
-	public void shop(Island nIsland) {
-		Intent shopIntent = new Intent(this, ShopActivity.class);
-		shopIntent.putExtra(Constants.ITEMLIST_NATURE, nIsland.hasShop() ? Constants.NATURE_SHOP : Constants.NATURE_TREASURE);
-		this.startActivityForResult(shopIntent, Constants.REQUEST_SHOP);
-	}
-
 	/**
 	 * Free resources
 	 */
@@ -377,28 +384,12 @@ public class GameActivity extends Activity implements SensorEventListener {
 		mCanvasView = null;
 		finish();
 	}
-	
-	/**
-	 * @source: http://stackoverflow.com/questions/11200381/how-to-draw-a-custom-view-inside-a-surfaceview
-	 * @param v
-	 */
-	public void loadAdvanceScreen(View v){
-		mUIAdvanceView = new UIAdvance(context);
-		mUIAdvanceView.setBackgroundColor(Color.TRANSPARENT);
-		
-		Window w = this.getWindow();
-		View gView = w.findViewById(R.layout.activity_game);
-		
-		
-		w.addContentView(v, null);
-		
-		if(mRootLayout != null)
-			mRootLayout.addView(mUIAdvanceView);
+
+	public int getIslandSide() {
+		return islandSide;
 	}
-	
-	public void unloadAdvanceScreen(View v){
-		mUIAdvanceView = null;
-		if(mRootLayout != null)
-			mRootLayout.removeView(v);
+
+	public void setIslandSide(int islandSide) {
+		this.islandSide = islandSide;
 	}
 }

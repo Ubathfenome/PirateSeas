@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/rootLayoutSettings"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/xml_border"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:scrollbarAlwaysDrawVerticalTrack="true" >
+        
+    	 <TextView
+            android:id="@+id/txtSettingsLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/padding_size"
+            android:paddingBottom="@dimen/padding_size"
+            android:text="@string/label_settings"
+            android:textSize="@dimen/title_size" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="5dp" >
+            
+             <LinearLayout
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:gravity="center"
+	            android:orientation="horizontal"
+	            android:padding="5dp" >
+	
+	            <Switch
+	                android:id="@+id/tbControlMode"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:background="@drawable/xml_btn_style"
+	                android:checked="true"
+	                android:splitTrack="true"
+	                android:textOff="@string/tb_control_sensor"
+	                android:textOn="@string/tb_control_touch" />
+	
+	            <TextView
+	                android:id="@+id/txtControlMode"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_marginLeft="8dp"
+	                android:layout_marginRight="8dp"
+	                android:labelFor="@id/tbControlMode"
+	                android:text="@string/lbl_control_mode"
+	                android:textSize="@dimen/text_size" />
+	        </LinearLayout>
+
+            <ToggleButton
+                android:id="@+id/tglChangeAmmo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/xml_toggle_style"
+                android:textOff="@string/settings_change_ammo_touch"
+                android:textOn="@string/settings_change_ammo_volume"
+                android:textSize="@dimen/text_size" 
+                android:checked="false"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="5dp" >
+
+                <ToggleButton
+                    android:id="@+id/tglScreenSelection"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/xml_toggle_style"
+                    android:textOff="@string/settings_manual"
+                    android:textOn="@string/settings_sensorway" />
+
+                <TextView
+                    android:id="@+id/txtScreenMode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:labelFor="@id/tglScreenSelection"
+                    android:text="@string/settings_select_mode"
+                    android:textSize="@dimen/text_size" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="5dp" >
+
+                <ToggleButton
+                    android:id="@+id/tglPauseSelection"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/xml_toggle_style"
+                    android:textOff="@string/settings_manual"
+                    android:textOn="@string/settings_sensorway" />
+
+                <TextView
+                    android:id="@+id/txtPauseMode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:labelFor="@id/tglPauseSelection"
+                    android:text="@string/settings_pause_mode"
+                    android:textSize="@dimen/text_size" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnSettingsRestore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/xml_btn_style"
+            android:text="@string/icd_rest_preferences" />
+</LinearLayout>
