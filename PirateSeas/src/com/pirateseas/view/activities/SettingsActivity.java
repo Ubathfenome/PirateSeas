@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class SettingsActivity extends Activity {
 	private TextView txtTitleLabel;
@@ -117,6 +118,11 @@ public class SettingsActivity extends Activity {
 	protected void onResume() {
 		findViewById(R.id.rootLayoutSettings).setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);		
 		super.onResume();
+	}
+
+	@Override
+	public void onBackPressed() {
+		Toast.makeText(context, getResources().getString(R.string.settings_exit_message), Toast.LENGTH_SHORT).show();
 	}
 
 }

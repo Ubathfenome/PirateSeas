@@ -19,6 +19,8 @@ public class MainLogic extends Thread {
 
 	private SurfaceHolder surface;
 	private CanvasView mCanvasView;
+	
+	private Canvas canvas;
 
 	private static boolean running;
 	private static boolean initialized;
@@ -32,7 +34,7 @@ public class MainLogic extends Thread {
 	public MainLogic(SurfaceHolder surface, CanvasView mainView) {
 		super();
 		this.surface = surface;
-		this.mCanvasView = mainView;
+		this.setCanvasViewInstance(mainView);
 	}
 
 	public void setRunning(boolean run) {
@@ -45,11 +47,11 @@ public class MainLogic extends Thread {
 
 	@Override
 	public void run() {
-		Canvas canvas;
 
-		if(!(initialized = this.mCanvasView.isInitialized())){
-			this.mCanvasView.initialize();
-			initialized = this.mCanvasView.isInitialized();
+		if(!(initialized = this.getCanvasViewInstance().isInitialized())){
+			this.getCanvasViewInstance().initialize();
+			initialized = this.getCanvasViewInstance().isInitialized();
+			Log.d(TAG, "Starting logic thread");
 		}
 
 		long initTime; // Loop initial time
@@ -58,48 +60,65 @@ public class MainLogic extends Thread {
 		int jumpedFrames; // Number of jumped frames
 
 		waitTime = 0;
+		canvas = null;
 
 		while (running && initialized) {
 			canvas = null;
 			try {
 				canvas = this.surface.lockCanvas();
-				canvas.getClipBounds();
-				synchronized (surface) {
-					initTime = System.currentTimeMillis();
-					jumpedFrames = 0;
-
-					this.mCanvasView.updateLogic();
-					this.mCanvasView.drawOnScreen(canvas);
-
-					diffTime = System.currentTimeMillis() - initTime;
-					waitTime = (int) (FRAME_TIME - diffTime);
-
-					if (waitTime > 0) {
-						try { // Save battery
-							Thread.sleep(waitTime);
-						} catch (InterruptedException e) {
+				if (canvas != null){
+					canvas.getClipBounds();
+					synchronized (surface) {
+						initTime = System.currentTimeMillis();
+						jumpedFrames = 0;
+	
+						this.getCanvasViewInstance().updateLogic();
+						this.getCanvasViewInstance().drawOnScreen(canvas);
+	
+						diffTime = System.currentTimeMillis() - initTime;
+						waitTime = (int) (FRAME_TIME - diffTime);
+	
+						if (waitTime > 0) {
+							try { // Save battery
+								Thread.sleep(waitTime);
+							} catch (InterruptedException e) {
+							}
+						}
+	
+						while (waitTime < 0 && jumpedFrames < MAX_JUMPED_FRAMES) {
+							this.getCanvasViewInstance().updateLogic();
+							waitTime += FRAME_TIME;
+							jumpedFrames++;
 						}
 					}
-
-					while (waitTime < 0 && jumpedFrames < MAX_JUMPED_FRAMES) {
-						this.mCanvasView.updateLogic();
-						waitTime += FRAME_TIME;
-						jumpedFrames++;
-					}
+				} else {
+					this.getCanvasViewInstance().updateLogic();
+					setRunning(false);
 				}
 			} catch (ArithmeticException arex){
 				Log.e(TAG, arex.getMessage());
 			} catch (Exception ex) {
 				if(canvas == null){
-					setRunning(false);
-					Log.e(TAG, "Stopping logic thread");
+					Log.e(TAG, "Canvas is not created or cannot be edited");
 				} else 
-					Log.e(TAG, "" + ex.getMessage());
+					Log.e(TAG, "Canvas not available");
 			} finally {
 				if (canvas != null) {
 					surface.unlockCanvasAndPost(canvas);
 				}
 			}
 		}
+		Log.d(TAG, "Stopping logic thread. De-initializing...");
+		// mCanvasView instance gets destroyed
+		if(getCanvasViewInstance().isInitialized())
+			initialized = false;	
+	}
+
+	public CanvasView getCanvasViewInstance() {
+		return mCanvasView;
+	}
+
+	public void setCanvasViewInstance(CanvasView mCanvasView) {
+		this.mCanvasView = mCanvasView;
 	}
 }

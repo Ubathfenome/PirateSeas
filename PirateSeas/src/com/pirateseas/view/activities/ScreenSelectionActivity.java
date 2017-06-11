@@ -7,16 +7,18 @@ import com.pirateseas.controller.androidGameAPI.Player;
 import com.pirateseas.global.Constants;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 public class ScreenSelectionActivity extends Activity {
 
-	@SuppressWarnings("unused")
 	private static final String TAG = "ScreenSelectionActivity";
 
 	private ImageView imgIslandLeft;
@@ -29,6 +31,9 @@ public class ScreenSelectionActivity extends Activity {
 
 	private int islandSide;
 	private Player p = null;
+	
+	@SuppressWarnings("unused")
+	private Context context;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,9 +41,15 @@ public class ScreenSelectionActivity extends Activity {
 
 		setContentView(R.layout.activity_screen_selection);
 
+		this.context = this;
+		
 		imgIslandLeft = (ImageView) findViewById(R.id.imgIslandLeft);
 		imgIslandFront = (ImageView) findViewById(R.id.imgIslandFront);
 		imgIslandRight = (ImageView) findViewById(R.id.imgIslandRight);
+		
+		btnLeft = (ImageButton) findViewById(R.id.btnLeft);
+		btnFront = (ImageButton) findViewById(R.id.btnFront);
+		btnRight = (ImageButton) findViewById(R.id.btnRight);
 
 		Intent intent = getIntent();
 
@@ -67,6 +78,8 @@ public class ScreenSelectionActivity extends Activity {
 			imgIslandRight.setVisibility(View.INVISIBLE);
 			break;
 		}
+		
+		final boolean encounter = randomEncounter();
 
 		btnLeft.setOnClickListener(new OnClickListener() {
 
@@ -74,10 +87,11 @@ public class ScreenSelectionActivity extends Activity {
 			public void onClick(View v) {
 				if (islandSide == 1) {
 					enterRandomIsland();
-				} else if (randomEncounter()) {
+				} else if (encounter) {
 					// Devolver el valor a la tarea "padre"
 					Intent data = new Intent();
 					data.putExtra(Constants.TAG_RANDOM_ENCOUNTER, true);
+					Log.d(TAG,"Finish ScreenSelection Activty");
 					setResult(RESULT_OK, data);
 					finish();
 				} else {
@@ -92,10 +106,11 @@ public class ScreenSelectionActivity extends Activity {
 			public void onClick(View v) {
 				if (islandSide == 2) {
 					enterRandomIsland();
-				} else if (randomEncounter()) {
+				} else if (encounter) {
 					// Devolver el valor a la tarea "padre"
 					Intent data = new Intent();
 					data.putExtra(Constants.TAG_RANDOM_ENCOUNTER, true);
+					Log.d(TAG,"Finish ScreenSelection Activty");
 					setResult(RESULT_OK, data);
 					finish();
 				} else {
@@ -110,10 +125,11 @@ public class ScreenSelectionActivity extends Activity {
 			public void onClick(View v) {
 				if (islandSide == 3) {
 					enterRandomIsland();
-				} else if (randomEncounter()) {
+				} else if (encounter) {
 					// Devolver el valor a la tarea "padre"
 					Intent data = new Intent();
 					data.putExtra(Constants.TAG_RANDOM_ENCOUNTER, true);
+					Log.d(TAG,"Finish ScreenSelection Activty");
 					setResult(RESULT_OK, data);
 					finish();
 				} else {
@@ -121,18 +137,24 @@ public class ScreenSelectionActivity extends Activity {
 				}
 			}
 		});
+		
+		
 	}
 
-	protected void reloadSelection() {
-		// Call activity LoadScreen with Result
-		Intent loadScreenIntent = new Intent(this, LoadScreenActivity.class);
-		loadScreenIntent.putExtra(Constants.TAG_LOAD_SCREEN, getString(R.string.message_nothinghere));
-		startActivityForResult(loadScreenIntent, Constants.REQUEST_LOAD_SCREEN);
+	@Override
+	protected void onResume() {
+		super.onResume();
 	}
 
 	protected boolean randomEncounter() {
 		// Generate random value with rate depending on player's level
-		int playerLevel = p.getLevel();
+		int playerLevel = 1;
+		if (p != null)
+			playerLevel = p.getLevel();
+		
+		if(playerLevel == 0)
+			playerLevel = 1;
+		
 		double logarythm = Math.log(playerLevel);
 		if (logarythm % 2 == 0)
 			return true;
@@ -145,27 +167,28 @@ public class ScreenSelectionActivity extends Activity {
 		boolean yesNo = rand.nextBoolean();
 		Intent shopIntent = new Intent(this, ShopActivity.class);
 		shopIntent.putExtra(Constants.ITEMLIST_NATURE, yesNo ? Constants.NATURE_SHOP : Constants.NATURE_TREASURE);
+		Log.d(TAG,"Start Shop ForResult Intent");
 		this.startActivityForResult(shopIntent, Constants.REQUEST_ISLAND);
+	}
+	
+	private void reloadSelection(){
+		Toast.makeText(this, getResources().getString(R.string.message_nothinghere), Toast.LENGTH_SHORT).show();
+		
+		Intent resetIntent = new Intent(this, ScreenSelectionActivity.class);
+		resetIntent.putExtra(Constants.TAG_SCREEN_SELECTION_ISLANDDATA, islandSide);
+		resetIntent.putExtra(Constants.TAG_SCREEN_SELECTION_PLAYERDATA, p);
+		Log.d(TAG,"Reset ScreenSelection Intent");
+		this.startActivity(resetIntent);
+		Log.d(TAG,"Finish ScreenSelection Activty");
+		finish();
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		switch (requestCode) {
-		case Constants.REQUEST_ISLAND:
-			if (resultCode == Activity.RESULT_OK) {
-				reloadSelection();
-			}
-			break;
-		case Constants.REQUEST_LOAD_SCREEN:
-			if (resultCode == Activity.RESULT_OK) {
-				Intent resetIntent = new Intent(this, ScreenSelectionActivity.class);
-				resetIntent.putExtra(Constants.TAG_SCREEN_SELECTION_ISLANDDATA, islandSide);
-				resetIntent.putExtra(Constants.TAG_SCREEN_SELECTION_PLAYERDATA, p);
-				this.startActivity(resetIntent);
-				finish();
-			}
-			break;
-		}
+		
+		Log.d(TAG, "ScreenSelectionActivity called by " + this.getCallingActivity().getClassName());
+		if (data != null && requestCode == Constants.REQUEST_ISLAND && resultCode == Activity.RESULT_OK)
+			reloadSelection();
 	}
 
 }

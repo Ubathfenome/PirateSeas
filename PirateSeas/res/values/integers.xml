@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     
-    <integer name="master_version">3</integer>
+    <integer name="master_version">5</integer>
     <integer name="commit_version">45</integer>
-    <integer name="compile_version">50</integer>
+    <integer name="compile_version">378</integer>
     
 </resources>

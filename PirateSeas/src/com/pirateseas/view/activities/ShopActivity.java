@@ -148,6 +148,7 @@ public class ShopActivity extends ListActivity{
 					LeaveActivityDialogFragment exitShopDialog = new LeaveActivityDialogFragment();
 					exitShopDialog.show(getFragmentManager(), "ExitShopDialog");
 				} else {
+					Log.d(TAG,"Finish Shop Activty");
 					finish();
 				}
 				

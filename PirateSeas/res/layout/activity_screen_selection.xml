@@ -21,14 +21,16 @@
                 android:id="@+id/imgIslandLeft"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/txtr_island" />
+                android:src="@drawable/txtr_island"
+                android:contentDescription="@string/icd_btn_island" />
 
             <ImageButton
                 android:id="@+id/btnLeft"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|center_horizontal"
-                android:background="@drawable/ico_arrow_left" >
+                android:background="@drawable/ico_arrow_left"
+                android:contentDescription="@string/icd_btn_arrow" >
             </ImageButton>
         </LinearLayout>
 
@@ -44,14 +46,16 @@
                 android:id="@+id/imgIslandFront"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/txtr_island" />
+                android:src="@drawable/txtr_island"
+                android:contentDescription="@string/icd_btn_island" />
 
             <ImageButton
                 android:id="@+id/btnFront"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|center_horizontal"
-                android:background="@drawable/ico_arrow_front" >
+                android:background="@drawable/ico_arrow_front"
+                android:contentDescription="@string/icd_btn_arrow" >
             </ImageButton>
         </LinearLayout>
 
@@ -67,14 +71,16 @@
                 android:id="@+id/imgIslandRight"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/txtr_island" />
+                android:src="@drawable/txtr_island"
+                android:contentDescription="@string/icd_btn_island" />
 
             <ImageButton
                 android:id="@+id/btnRight"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|center_horizontal"
-                android:background="@drawable/ico_arrow_right" >
+                android:background="@drawable/ico_arrow_right"
+                android:contentDescription="@string/icd_btn_arrow" >
             </ImageButton>
         </LinearLayout>
     </LinearLayout>
@@ -85,7 +91,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="@dimen/large_padding_size"
-        android:text="@string/message_screenselection"
+        android:text="@string/message_screenselection_detail"
         android:textSize="@dimen/title_size"
         android:background="@drawable/xml_border" />
 </LinearLayout>

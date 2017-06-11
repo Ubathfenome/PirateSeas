@@ -7,6 +7,7 @@ import android.content.Context;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Build;
 import android.util.Log;
 
@@ -96,6 +97,14 @@ public class MusicManager{
 			init(context);
 		
 		mBackgroundMusic = MediaPlayer.create(context, mSoundKeys.get(backgroundMusicId));
+		mBackgroundMusic.setOnPreparedListener(new OnPreparedListener() {
+			@Override
+			public void onPrepared(MediaPlayer mp) {
+				mp.start();				
+			}
+		});
+
+		
 		mBackgroundMusic.setLooping(true);
 		float dv = getDeviceVolume();
 		mBackgroundMusic.setVolume(dv, dv);
@@ -108,7 +117,10 @@ public class MusicManager{
 	
 	public void playBackgroundMusic() {
 		try{
-			if(!mBackgroundMusic.isPlaying()){
+			if (mBackgroundMusic == null){
+				mInstance.initSounds(mContext, MUSIC_GAME_MENU);
+			}
+			if(mBackgroundMusic!= null && !mBackgroundMusic.isPlaying()){
 					try {
 						mBackgroundMusic.start();
 					} catch (IllegalStateException e){
@@ -121,12 +133,12 @@ public class MusicManager{
 	}
 	
 	public void pauseBackgroundMusic(){
-		if(mBackgroundMusic.isPlaying()){
+		if(mBackgroundMusic!= null && mBackgroundMusic.isPlaying()){
 			mBackgroundMusic.pause();
 		}
 	}
 	public void stopBackgroundMusic(){
-		if(mBackgroundMusic.isPlaying()){
+		if(mBackgroundMusic!= null && mBackgroundMusic.isPlaying()){
 			mBackgroundMusic.stop();
 		}
 	}

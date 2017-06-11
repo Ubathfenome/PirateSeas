@@ -13,7 +13,6 @@ public class Sea extends BasicModel{
 	
 	private Drawable mImageAux;
 	private static int startingHeight;
-	private int degrees;
 	
 	@SuppressWarnings("deprecation")
 	@SuppressLint("NewApi")
@@ -22,7 +21,6 @@ public class Sea extends BasicModel{
 		super(context, x, y, mCanvasWidth, mCanvasHeight, null);
 		
 		startingHeight = (int) y;
-		degrees = 0;
 		
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
 			setImage(context.getResources().getDrawable(R.drawable.txtr_water, null));
@@ -61,17 +59,7 @@ public class Sea extends BasicModel{
 			mImageAux.draw(canvas);
 		}
 	}
-	
-	public void turn360degrees(){
-		if(degrees == 360){
-			degrees = 0;
-			return;
-		} else {
-			degrees += 30;
-			turn360degrees();
-		}		
-	}
-	
+		
 	@Override
 	public void move(double xLength, double yLength, boolean bounce){
 		x = x - xLength;

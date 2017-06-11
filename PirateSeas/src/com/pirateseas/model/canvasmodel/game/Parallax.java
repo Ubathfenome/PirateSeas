@@ -34,4 +34,21 @@ public class Parallax {
 		return layers;
 	}
 
+	public void setAlpha(int alpha) {
+		imageBase.setAlpha(alpha);
+		imageTop.setAlpha(alpha);
+	}
+	
+	public int getMaxHeight(){
+		int hBase = imageBase.getIntrinsicHeight();
+		int hTop = imageTop.getIntrinsicHeight();
+		return hBase >= hTop ? hBase : hTop;
+	}
+	
+	public int getMaxWidth(){
+		int wBase = imageBase.getIntrinsicWidth();
+		int wTop = imageTop.getIntrinsicWidth();
+		return wBase >= wTop ? wBase : wTop;
+	}
+
 }

@@ -42,7 +42,7 @@
     <string name="lbl_volume">Volume</string>
     <string name="tb_control_sensor">Sensor Control</string>
     <string name="tb_control_touch">Touch Control</string>
-    <string name="lbl_control_mode">Control Mode</string>
+    <string name="lbl_control_mode">Ship Control Mode</string>
     <string name="settings_change_ammo_volume">Change ammo type with volume keys</string>
     <string name="settings_change_ammo_touch">Change ammo type by touch</string>
     <string name="settings_sensorway">By sensor</string>
@@ -50,6 +50,7 @@
     <string name="settings_pause_mode">Pause game mode</string>
     <string name="settings_select_mode">Select next level mode</string>
     <string name="settings_extra">Extra settings</string>
+    <string name="settings_exit_message">Exit through \'Accept\' or \'Cancel\' buttons</string>
     
     <!-- Shop strings -->
     <string name="shop_item_name">Item name</string>
@@ -145,6 +146,8 @@
     <string name="icd_btn_help">Help button</string>
     <string name="icd_tutorial_image">Tutorial background image</string>
     <string name="icd_btn_change_ammo">Change ammo image</string>
+    <string name="icd_btn_island">Island image</string>
+    <string name="icd_btn_arrow">Arrow image</string>
     
 	<!-- Numeric values -->
 	<string name="version">Alpha</string>
@@ -161,13 +164,14 @@
         tristique auctor. Duis sit amet varius odio. Vestibulum eu dui justo. Phasellus tellus tortor, 
         molestie sollicitudin porta ac, maximus vitae orci. Nulla nibh massa, convallis egestas orci 
         quis, efficitur ultricies erat.</string>
+    <string name="empty_string"></string> 
         
     <!-- Game strings -->
     <string name="tutorial_1">Arrr Mate!! Welcome to PIRATE SEAS!!\nYarr want to rule these seas and loot all the booty.</string>
-    <string name="tutorial_2">You will have to move your mobile device to turn your ship. (Default setting)</string>
+    <string name="tutorial_2">If you find a cloudy day.. Beware! An enemy might be lurking behind it. Shake your mobile device to wipe out the clouds!</string>
     <string name="tutorial_3">Touch the screen to shoot your selected ammo.</string>
     <string name="tutorial_4">Cycle through your ammo types touching the selected ammo icon. (Default setting)</string>
-    <string name="tutorial_5">Colect booty by sinking your enemies or discovering treasures on the islands in your path.</string>
+    <string name="tutorial_5">Colect booty by sinking your enemies or discovering treasures using the maps you will find on the islands in your path.</string>
     <string name="gameover_title">Game Over</string>
     <string name="gameover_hint">(Press anywhere to restart game&#8230;)</string>
     <string name="gameover_score">Score</string>
@@ -175,8 +179,10 @@
     <string name="app_about">About us&#8230;</string>
     <string name="tutorial_content">This is some tutorial content</string>
     <string name="message_screenselection">Which direction go next, capt\'n?</string>
+    <string name="message_screenselection_detail">Please, select the next direction you want to go</string>
     <string name="message_islanddetected">Capt\'n! Land in sight!</string>
     <string name="message_nothinghere">Capt\'n! There\s nothing here! Which direction we go next?</string>
+    <string name="message_shakesleft">Shake your device %1$d more time(s)!</string>
     
 
 </resources>

@@ -10,6 +10,7 @@ public class Constants{
 	
 	public static final int GAMEMODE_ADVANCE = 0x1;
 	public static final int GAMEMODE_BATTLE = 0x2;
+	public static final int GAMEMODE_IDLE = 0x3;
 	
 	// Tags
 	public static final String TAG_EXE_MODE = "com.pirateseas.EXE_MODE";
@@ -34,7 +35,6 @@ public class Constants{
 	public static final int REQUEST_ISLAND = 0x01;
 	public static final int REQUEST_REMOVE_PREFERENCES = 0x02;
 	public static final int REQUEST_SCREEN_SELECTION = 0x03;
-	public static final int REQUEST_LOAD_SCREEN = 0x04;
 	
 	// Entities
 	public static final int STATE_ALIVE = 0;
@@ -130,6 +130,8 @@ public class Constants{
     public static final String TSHIP_AMMO_DOUBLE = "ammoDouble";
     public static final String TSHIP_AMMO_SWEEP = "ammoSweep";
 	public static final String TSHIP_SELECTED_AMMO = "ammoSelection";
+	
+	public static final int SHAKE_LIMIT = 2;
 		
 	public static boolean isInDebugMode(int mMode) {
 		return mMode == Constants.MODE_DEBUG ? true : false;

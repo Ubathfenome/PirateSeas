@@ -6,6 +6,8 @@ import android.graphics.Point;
 import android.os.Build;
 import android.os.SystemClock;
 
+import java.util.Random;
+
 import com.pirateseas.R;
 import com.pirateseas.exceptions.NoAmmoException;
 import com.pirateseas.global.Constants;
@@ -507,6 +509,13 @@ public class Ship extends Entity {
 
 	public void setIdle(boolean wasIdle) {
 		this.wasIdle = wasIdle;
+	}
+
+	public static ShipType randomShipType() {
+		ShipType[] types = ShipType.values();
+		int length = types.length;
+		int randomIndex = new Random().nextInt(length);
+		return types[randomIndex];
 	}
 	
 }

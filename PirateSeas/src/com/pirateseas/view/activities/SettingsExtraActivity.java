@@ -14,17 +14,17 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
 public class SettingsExtraActivity extends Activity {
 	
 	private Button btnRestore;
 	private Switch swControlMode;
-	private CheckBox chkUseAmmoKeys;
+	private ToggleButton tglChangeAmmo;
 	
 	private boolean controlValue = false;
 	private boolean ammoKeysEnabled = false;
@@ -55,9 +55,9 @@ public class SettingsExtraActivity extends Activity {
 			}
 		});
 		
-		chkUseAmmoKeys = (CheckBox) findViewById(R.id.tglChangeAmmo);
-		chkUseAmmoKeys.setChecked(ammoKeysEnabled);
-		chkUseAmmoKeys.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		tglChangeAmmo = (ToggleButton) findViewById(R.id.tglChangeAmmo);
+		tglChangeAmmo.setChecked(ammoKeysEnabled);
+		tglChangeAmmo.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			
 			@Override
 			public void onCheckedChanged(CompoundButton v, boolean isChecked) {

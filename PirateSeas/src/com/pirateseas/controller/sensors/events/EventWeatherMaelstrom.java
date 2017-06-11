@@ -15,8 +15,8 @@ public class EventWeatherMaelstrom {
 	}
 	
 	// Establish event effects on sensor trigger
-	public static boolean generateMaelstrom(float xSpeed, float ySpeed, float zSpeed){
-		double gHypot = Math.sqrt(xSpeed*xSpeed + ySpeed*ySpeed + zSpeed*zSpeed);
+	public static boolean generateMaelstrom(float ySpeed, float zSpeed){
+		double gHypot = Math.sqrt(ySpeed*ySpeed + zSpeed*zSpeed);
 		
 		// Log.d(TAG, "Gravity (m/s^2): " + gHypot);
 		

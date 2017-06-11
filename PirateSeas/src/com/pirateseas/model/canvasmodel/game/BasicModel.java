@@ -35,42 +35,41 @@ public class BasicModel{
         this.mCanvasHeight = mCanvasHeight;
         this.mCanvasWidth = mCanvasWidth;
         
-        this.mParallax = parallax;
+        setParallax(parallax);
 	}
 	
 	public void move(double xLength, double yLength, boolean bounce){
 		x = x - xLength;
 		y = y - yLength;
 		
-		if(bounce){
-		
-		if ( x > mCanvasWidth){
-			x = mCanvasWidth - xLength;
-		} 
-		if ( x < 0){
-			x = 0;
-		}
-		
-		if ( y > mCanvasHeight){
-			y = 0;
-		} 
-		if ( y < 0){
-			y = mCanvasHeight;
-		}
-		} else {
-			if ( x > mCanvasWidth){
+		if (bounce) {
+			if (x > mCanvasWidth) {
+				x = mCanvasWidth - xLength;
+			}
+			if (x < 0) {
 				x = 0;
-			} 
-			if ( x < 0){
+			}
+
+			if (y > mCanvasHeight) {
+				y = 0;
+			}
+			if (y < 0) {
+				y = mCanvasHeight;
+			}
+		} else {
+			if (x > mCanvasWidth) {
+				x = 0;
+			}
+			if (x < 0) {
 				x = mCanvasWidth;
 			}
-			
-			if ( y > mCanvasHeight){
+
+			if (y > mCanvasHeight) {
 				y = 0;
-			} 
-			if ( y < 0){
+			}
+			if (y < 0) {
 				y = mCanvasHeight;
-			}	
+			}
 		}
 	}
 	
@@ -105,6 +104,18 @@ public class BasicModel{
         this.mImage = image;
         this.mWidth = image.getIntrinsicWidth();
         this.mHeight = image.getIntrinsicHeight();
+    }
+    
+    public Parallax getParallax(){
+    	return this.mParallax;
+    }
+    
+    public void setParallax(Parallax parallax){
+    	this.mParallax = parallax;
+    	if(parallax != null){
+	    	this.mWidth = parallax.getMaxWidth();
+	    	this.mHeight = parallax.getMaxHeight();
+    	}
     }
  
     public Rect getBounds() {

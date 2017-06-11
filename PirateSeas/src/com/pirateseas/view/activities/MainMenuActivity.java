@@ -125,10 +125,7 @@ public class MainMenuActivity extends Activity {
 		});
 		
 		AsyncTask<Void, Integer, Boolean> loadSoundsTask = new LoadSounds();
-		
-		if (!Constants.isInDebugMode(mMode)){
-			loadSoundsTask.execute();
-		}
+		loadSoundsTask.execute();		
 	}
 
 	private void launchGame(boolean displayTutorial, int[] sensorTypes) {
@@ -151,13 +148,6 @@ public class MainMenuActivity extends Activity {
 	}
 
 	@Override
-	protected void onPause() {
-		if (!Constants.isInDebugMode(mMode))
-			MusicManager.getInstance().pauseBackgroundMusic();
-		super.onPause();
-	}
-
-	@Override
 	protected void onResume() {
 		findViewById(R.id.rootLayoutMainMenu).setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
 		Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, 
@@ -174,6 +164,11 @@ public class MainMenuActivity extends Activity {
 		super.onResume();
 	}
 	
+	@Override
+	protected void onDestroy() {
+		MusicManager.getInstance().stopBackgroundMusic();
+		super.onDestroy();
+	}	
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -275,8 +270,7 @@ public class MainMenuActivity extends Activity {
 		@Override
 		protected void onPostExecute(Boolean result) {
 			Log.d(TAG,"AudioPool loaded");
-			if (!Constants.isInDebugMode(mMode))
-				MusicManager.getInstance(context, MusicManager.MUSIC_GAME_MENU).playBackgroundMusic();
+			MusicManager.getInstance(context, MusicManager.MUSIC_GAME_MENU).playBackgroundMusic();
 		}		
 	}
 }

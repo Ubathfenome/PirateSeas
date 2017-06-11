@@ -7,7 +7,7 @@ import android.view.WindowManager;
 
 import com.pirateseas.controller.sensors.SensorType;
 
-public class EventWeatherFog {
+public class EventWeatherLight {
 
 	public static SensorType getSensorType() {
 		return SensorType.TYPE_LIGHT;

@@ -7,9 +7,9 @@ import com.pirateseas.R;
 import com.pirateseas.global.Constants;
 import com.pirateseas.controller.sensors.SensorType;
 import com.pirateseas.controller.sensors.events.EventDayNightCycle;
-import com.pirateseas.controller.sensors.events.EventWeatherFog;
+import com.pirateseas.controller.sensors.events.EventShakeClouds;
+import com.pirateseas.controller.sensors.events.EventWeatherLight;
 import com.pirateseas.controller.sensors.events.EventWeatherMaelstrom;
-import com.pirateseas.controller.sensors.events.EventWeatherStorm;
 
 import android.app.Activity;
 import android.content.Context;
@@ -149,9 +149,9 @@ public class SensorActivity extends Activity{
 		protected void onPreExecute(){
 			// Set event generator' sensor list
 			triggeredSensors.add(EventDayNightCycle.getSensorType());
-			triggeredSensors.add(EventWeatherFog.getSensorType());
+			triggeredSensors.add(EventWeatherLight.getSensorType());
 			triggeredSensors.add(EventWeatherMaelstrom.getSensorType());
-			triggeredSensors.add(EventWeatherStorm.getSensorType());
+			triggeredSensors.add(EventShakeClouds.getSensorType());
 			
 			// Start animation
 			tv.setText(getResources().getStringArray(R.array.loading_messages)[0]);

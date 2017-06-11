@@ -8,7 +8,7 @@
     <!-- http://stackoverflow.com/questions/12426750/how-to-automatically-modify-versionname-in-manifest-during-build -->
 
     <uses-sdk
-        android:minSdkVersion="15"
+        android:minSdkVersion="21"
         android:targetSdkVersion="22" />
     
     <!-- Ask for WRITE_PERMISSION to the user -->
@@ -38,15 +38,15 @@
 			android:screenOrientation="landscape">
 		</activity>
 		<activity
-			android:name=".view.activities.LoadScreenActivity"
-			android:screenOrientation="landscape">
-		</activity>
-		<activity
 			android:name=".view.activities.ScreenSelectionActivity"
 			android:screenOrientation="landscape">
 		</activity>
 		<activity
 			android:name=".view.activities.SettingsActivity"
+			android:screenOrientation="landscape">
+		</activity>
+		<activity
+			android:name=".view.activities.SettingsExtraActivity"
 			android:screenOrientation="landscape">
 		</activity>
 		<activity

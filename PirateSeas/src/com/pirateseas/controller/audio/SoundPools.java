@@ -6,9 +6,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
-
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.media.AudioAttributes;
 import android.media.SoundPool;
+import android.os.Build;
 import android.util.Log;
 
 /**
@@ -90,10 +92,19 @@ public class SoundPools {
 		Map<String, Integer> soundMap;
 		AtomicInteger size;
 
+		@SuppressLint("NewApi")
 		@SuppressWarnings("deprecation")
 		public SoundPoolContainer() {
-			this.soundPool = new SoundPool(MAX_STREAMS_PER_POOL,
-					android.media.AudioManager.STREAM_MUSIC, 0);
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+				AudioAttributes.Builder attrBuilder = new AudioAttributes.Builder()
+						.setLegacyStreamType(android.media.AudioManager.STREAM_MUSIC)
+						.setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).setUsage(AudioAttributes.USAGE_MEDIA);
+				SoundPool.Builder spBuilder = new SoundPool.Builder().setMaxStreams(MAX_STREAMS_PER_POOL)
+						.setAudioAttributes(attrBuilder.build());
+				this.soundPool = spBuilder.build();
+			} else {
+				this.soundPool = new SoundPool(MAX_STREAMS_PER_POOL, android.media.AudioManager.STREAM_MUSIC, 0);
+			}
 			this.soundMap = new ConcurrentHashMap<String, Integer>(
 					MAX_STREAMS_PER_POOL);
 			this.size = new AtomicInteger(0);
@@ -101,11 +112,13 @@ public class SoundPools {
 
 		public void load(Context context, String soundId, int id) {
 			try {
-				this.size.incrementAndGet();
-				soundMap.put(soundId, soundPool.load(context, id, 1));
+				if(soundPool != null){
+					this.size.incrementAndGet();
+					soundMap.put(soundId, soundPool.load(context, id, 1));
+				}
 			} catch (Exception e) {
 				this.size.decrementAndGet();
-				Log.w(TAG, "Load sound error", e);
+				Log.w(TAG, "Load sound error" + e.getMessage());
 			}
 		}
 

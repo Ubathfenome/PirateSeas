@@ -13,7 +13,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/padding_size"
-            android:paddingBottom="@dimen/padding_size"
+            android:paddingBottom="@dimen/small_padding_size"
             android:text="@string/label_settings"
             android:textSize="@dimen/title_size" />
 
@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical"
-            android:padding="5dp" >
+            android:paddingTop="5dp" >
             
              <LinearLayout
 	            android:layout_width="match_parent"
@@ -37,9 +37,9 @@
 	                android:layout_height="wrap_content"
 	                android:background="@drawable/xml_btn_style"
 	                android:checked="true"
-	                android:splitTrack="true"
 	                android:textOff="@string/tb_control_sensor"
-	                android:textOn="@string/tb_control_touch" />
+	                android:textOn="@string/tb_control_touch"
+	                android:textSize="@dimen/text_size" />
 	
 	            <TextView
 	                android:id="@+id/txtControlMode"
@@ -113,14 +113,15 @@
                     android:text="@string/settings_pause_mode"
                     android:textSize="@dimen/text_size" />
             </LinearLayout>
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/btnSettingsRestore"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:background="@drawable/xml_btn_style"
-            android:text="@string/icd_rest_preferences" />
+            
+            <Button
+	            android:id="@+id/btnSettingsRestore"
+	            style="?android:attr/buttonBarButtonStyle"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_marginLeft="8dp"
+	            android:layout_marginRight="8dp"
+	            android:background="@drawable/xml_btn_style"
+	            android:text="@string/icd_rest_preferences" />
+        </LinearLayout>        
 </LinearLayout>
